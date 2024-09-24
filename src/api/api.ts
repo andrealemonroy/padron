@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+axios.defaults.baseURL = import.meta.env.VITE_API_URL;
+
 // Set the token in axios headers
 axios.interceptors.request.use(
   (config) => {
@@ -13,3 +15,5 @@ axios.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+
+export default axios;
