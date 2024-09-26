@@ -9,7 +9,6 @@ interface SpinnerProps {
 
 const Spinner: React.FC<SpinnerProps> = ({
   loading,
-  size = 50,
   color = '#3498db',
 }) => {
   return (

@@ -25,12 +25,15 @@ const Dashboard = () => {
 
   const confirmDelete = async () => {
       if (userIdToDelete) {
+        setLoading(true);
           try {
               await deleteUser(userIdToDelete);
               setShowAlert(false);
               navigate('/dashboard');
           } catch (error) {
               console.error('Error al eliminar el usuario:', error);
+          } finally {
+            setLoading(false);
           }
       }
   };
@@ -135,7 +138,6 @@ const Dashboard = () => {
         <main className="grow">
           <div className='px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto'>
 
-            {/* Page header */}
             <div className="sm:flex sm:justify-between sm:items-center mb-5">
               {/* Add breadcrumb here */}
               <Breadcrumb items={breadcrumbItems} />

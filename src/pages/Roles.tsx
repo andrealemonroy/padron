@@ -6,7 +6,8 @@ import { fetchRoles, deleteRol } from '../api/rolApi';
 import Button from '../components/Button';
 import { useNavigate } from 'react-router-dom';
 import Alert from '../components/Alert';
-import LoadingSpinner from '../components/LoadingSpinner';
+import Spinner from '../components/Spinner';
+import Breadcrumb from '../components/BreadCrumb';
 
 const Roles = () => {
   const navigate = useNavigate();
@@ -17,7 +18,6 @@ const Roles = () => {
   const [roles, setRoles] = useState([]);
   const [loading, setLoading] = useState(true);
 
-
   const user = {
     name: 'Luis Monroy',
   };
@@ -25,6 +25,7 @@ const Roles = () => {
   useEffect(() => {
     const loadRoles = async () => {
       try {
+        setLoading(true);
         const data = await fetchRoles();
         setRoles(data);
       } catch (error) {
@@ -63,10 +64,6 @@ const Roles = () => {
       setIdToDelete(null);
   };
 
-  if (loading) {
-    return <LoadingSpinner />;
-  }
-
   const handleAdd = () => {
     navigate('/create-rol');
   };
@@ -74,6 +71,10 @@ const Roles = () => {
   const handleEdit = (id: number) => {
     navigate(`/edit-rol/${id}`);
   };
+
+  const breadcrumbItems = [
+    { label: 'Roles', path: '/roles' },
+  ];
 
   const addButton = (
     <>
@@ -117,16 +118,16 @@ const Roles = () => {
         <main className="grow">
           <div className='px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto'>
 
-            {/* Page header */}
             <div className="sm:flex sm:justify-between sm:items-center mb-5">
-              <div className="mb-4 sm:mb-0">
-                <h1 className="text-2xl md:text-3xl text-gray-800 dark:text-gray-100 font-bold">
-                  Roles
-                </h1>
-              </div>
+              {/* Add breadcrumb here */}
+              <Breadcrumb items={breadcrumbItems} />
             </div>
 
-            <Table
+            {loading ? (
+              <Spinner loading={loading} size={50} color="#3498db" /> // Show spinner while loading
+            ) : (
+              <>
+                <Table
               columns={[
                 {
                   header: 'Descripción',
@@ -141,6 +142,9 @@ const Roles = () => {
               onEdit={handleEdit}
               onDelete={handleDelete}
             />
+              </>
+            )}
+            
 
           </div>
 

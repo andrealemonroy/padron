@@ -2,174 +2,124 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
-import Form from '../components/Form';
-import FormInput from '../components/FormInput';
-import Button from '../components/Button';
 import { fetchRol, createRol, editRol } from '../api/rolApi';
-import LoadingSpinner from '../components/LoadingSpinner';
+import Spinner from '../components/Spinner';
 import { fetchPermissions } from '../api/permissionApi';
-import FormMultiSelect from '../components/FormMultiSelect';
-
-interface Option {
-  id: number;
-  name: string;
-}
+import Breadcrumb from '../components/BreadCrumb';
+import DynamicForm from '../components/DynamicForm';
 
 const CreateRol = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { id } = useParams<{ id: string }>();
+  const [loading, setLoading] = useState(true);
+  const [permissions, setPermissions] = useState([]);
+  const [defaultValues, setDefaultValues] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
-    const [sidebarOpen, setSidebarOpen] = useState(false);
-    const { id } = useParams<{ id: string }>();
-    const [loading, setLoading] = useState(true);
-    const [options, setOptions] = useState<{ value: number, label: string }[]>([]);
+  const user = {
+    name: 'Luis Monroy',
+  };
 
-    const user = {
-        name: 'Luis Monroy',
-    };
-  
-    const [formData, setFormData] = useState({
-        name: '',
-        permissions: [],
-    });
-
-    const [error, setError] = useState<string | null>(null);
-
-    useEffect(() => {
-
-      const loadRoles = async () => {
-          try {
-              const data = await fetchPermissions();
-              const fetchedOptions = data.map((option: Option) => ({
-                value: option.id,
-                label: option.name,
-              }));
-              if (id) {
-                try {
-                  const response = await fetchRol(id);
-                  const { name } = response;
-                  const permissions = response.permissions.map((option: Option) => ({
-                    value: option.id,
-                    label: option.name,
-                  }));
-                  setFormData((prev) => ({ ...prev, name, permissions }));
-
-                } catch (error) {
-                  setError(`Error al cargar los datos del usuario. ${error}`);
-                } finally {
-                  setLoading(false);
-                }
-              }
-              setOptions(fetchedOptions);
-          } catch (error) {
-
-              setError(`Error al cargar los datos del usuario. ${error}`);
-
-          } finally {
-
-            setLoading(false);
-
-          }
-        };
-
-      loadRoles();
-
-    }, [id]);
-
-    if (loading) {
-      return <LoadingSpinner />;
-    }
-  
-    const onSubmit = async (data) => {
-      
+  useEffect(() => {
+    const loadRoles = async () => {
       try {
+        setLoading(true);
+        const data = await fetchPermissions();
+        const formatted = data.map((permission) => ({
+          value: permission.id,
+          label: permission.name,
+        }));
+        
         if (id) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          data.permissions = data.permissions.map((option: any) => (option.label));
-          await editRol(data, Number(id));
-
-        } else {
-
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          data.permissions = data.permissions.map((option: any) => (option.label));
-          await createRol(data);
-
+          try {
+            const response = await fetchRol(id);
+            const { name, permissions } = response;
+            const selectedPermissions = permissions.map((perm) => ({
+              value: perm.id,
+              label: perm.name,
+            }));
+            setDefaultValues({
+              name,
+              permissions: selectedPermissions,
+            });
+          } catch (error) {
+            setError(`Error al cargar los datos del rol. ${error}`);
+          } finally {
+            setLoading(false);
+          }
         }
-
-        setError(null);
-        navigate('/roles');
+        setPermissions(formatted);
       } catch (error) {
-        setError(id ? 'Error al actualizar el roles.' : `Error al crear el roles. ${error}`);
+        setError(`Error al cargar los datos del rol. ${error}`);
+      } finally {
+        setLoading(false);
       }
-
     };
+
+    loadRoles();
+  }, [id]);
+
+  const onSubmit = async (data) => {
+    console.log(data);
+    try {
+      data.permissions = data.permissions.map((option) => option.value);
+      if (id) {
+        await editRol(data, Number(id));
+      } else {
+        await createRol(data);
+      }
+      setError(null);
+      navigate('/roles');
+    } catch (error) {
+      setError(id ? 'Error al actualizar el rol.' : `Error al crear el rol. ${error}`);
+    }
+  };
+
+  const formFields = [
+    {
+      name: 'name',
+      label: 'Nombre',
+      type: 'text',
+      validation: { required: 'Nombre es requerido' },
+    },
+    {
+      name: 'permissions',
+      label: 'Permisos',
+      type: 'select',
+      options: permissions,
+      validation: { required: 'Al menos un permiso es requerido' },
+      isMulti: true, // Habilitar multiselección
+    },
+  ];
+
+  const breadcrumbItems = [
+    { label: 'Roles', path: '/dashboard' },
+    { label: id ? 'Editar Rol' : 'Crear Rol', path: id ? `/edit-rol/${id}` : '/create-rol' },
+  ];
 
   return (
     <div className="flex h-[100dvh] overflow-hidden">
-        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-
-        <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-            <Header
-            sidebarOpen={sidebarOpen}
-            setSidebarOpen={setSidebarOpen}
-            user={user}
-            />
-
-            <main className="grow">
-
-                <div className='px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto'>
-
-                    <div className="sm:flex sm:justify-between sm:items-center mb-5">
-                        <div className="mb-4 sm:mb-0">
-                            <h1 className="text-2xl md:text-3xl text-gray-800 dark:text-gray-100 font-bold">
-                                {id ? 'Editar Rol' : 'Crear Rol'}
-                            </h1>
-                        </div>
-                    </div>
-
-                    {error && <p style={{ color: 'red' }}>{error}</p>}
-
-                    
-                    <Form onSubmit={onSubmit}>
-                        <div className="space-y-4 max-w-sm w-full px-4 py-8">
-                            
-                            <FormInput
-                                name="name"
-                                label="Nombre"
-                                type="text"
-                                validation={{ required: 'Nombre es requerido' }}
-                                defaultValue={formData.name}
-                            />
-
-                            <FormMultiSelect
-                                name="permissions"
-                                label="Opciones"
-                                options={options}
-                                placeholder="Opciones"
-                                defaultValue={formData.permissions || []}
-                                validation={{ required: 'Opciones es requerido' }}
-                            />
-                            
-                            <div className="flex items-center justify-between mt-8">
-                                <Button type="submit" variant="primary">
-                                {id ? 'Actualizar' : 'Registrar'}
-                                </Button>
-                            </div>
-                        
-                        </div>
-
-                    </Form>
-                </div>
-                
-            </main>
-            
-
-            
-        
-
-        </div>
-
+      <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+      <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
+        <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} user={user} />
+        <main className="grow">
+          <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
+            <div className="sm:flex sm:justify-between sm:items-center mb-5">
+              <Breadcrumb items={breadcrumbItems} />
+            </div>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {loading ? (
+              <Spinner loading={loading} size={50} color="#3498db" />
+            ) : (
+              permissions.length > 0 && (
+                <DynamicForm fields={formFields} onSubmit={onSubmit} defaultValues={defaultValues} />
+              )
+            )}
+          </div>
+        </main>
+      </div>
     </div>
-    
   );
 };
 
