@@ -7,6 +7,7 @@ import { AuthProvider } from './context/AuthProvider'; // Import your AuthProvid
 import PrivateRoute from './components/PrivateRoute'; // PrivateRoute component
 import LoginPage from './pages/Login'; // Example login page
 import Dashboard from './pages/Dashboard'; // Example private dashboard page
+import CreateUser from './pages/CreateUser';
 
 function App() {
   return (
@@ -22,6 +23,8 @@ function App() {
               </PrivateRoute>
             }
           />
+          <Route path="/create-user" element={<CreateUser />} />
+          <Route path="/edit-user/:id" element={<CreateUser />} />
         </Routes>
       </Router>
     </AuthProvider>
