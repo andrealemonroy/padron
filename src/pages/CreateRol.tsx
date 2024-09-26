@@ -5,19 +5,23 @@ import Header from '../components/Header';
 import Form from '../components/Form';
 import FormInput from '../components/FormInput';
 import Button from '../components/Button';
-import DropdownClassic from '../components/DropdownClassic';
-import { fetchRoles } from '../api/rolApi';
-import {createUser, fetchUser, editUser} from '../api/userApi';
+import { fetchRol, createRol, editRol } from '../api/rolApi';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { fetchPermissions } from '../api/permissionApi';
+import FormMultiSelect from '../components/FormMultiSelect';
 
-const CreateUser = () => {
+interface Option {
+  id: number;
+  name: string;
+}
+
+const CreateRol = () => {
     const navigate = useNavigate();
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
-    const [roles, setRoles] = useState([]);
     const { id } = useParams<{ id: string }>();
     const [loading, setLoading] = useState(true);
-    
+    const [options, setOptions] = useState<{ value: number, label: string }[]>([]);
 
     const user = {
         name: 'Luis Monroy',
@@ -25,8 +29,7 @@ const CreateUser = () => {
   
     const [formData, setFormData] = useState({
         name: '',
-        email: '',
-        roles: [],
+        permissions: [],
     });
 
     const [error, setError] = useState<string | null>(null);
@@ -35,14 +38,20 @@ const CreateUser = () => {
 
       const loadRoles = async () => {
           try {
-              const data = await fetchRoles();
-
+              const data = await fetchPermissions();
+              const fetchedOptions = data.map((option: Option) => ({
+                value: option.id,
+                label: option.name,
+              }));
               if (id) {
                 try {
-                  const response = await fetchUser(id);
-                  const { name, email, roles } = response;
-                  
-                  setFormData((prev) => ({ ...prev, name, email, roles }));
+                  const response = await fetchRol(id);
+                  const { name } = response;
+                  const permissions = response.permissions.map((option: Option) => ({
+                    value: option.id,
+                    label: option.name,
+                  }));
+                  setFormData((prev) => ({ ...prev, name, permissions }));
 
                 } catch (error) {
                   setError(`Error al cargar los datos del usuario. ${error}`);
@@ -50,7 +59,7 @@ const CreateUser = () => {
                   setLoading(false);
                 }
               }
-              setRoles(data);
+              setOptions(fetchedOptions);
           } catch (error) {
 
               setError(`Error al cargar los datos del usuario. ${error}`);
@@ -71,22 +80,25 @@ const CreateUser = () => {
     }
   
     const onSubmit = async (data) => {
-
+      
       try {
         if (id) {
-
-          await editUser(data, Number(id));
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          data.permissions = data.permissions.map((option: any) => (option.label));
+          await editRol(data, Number(id));
 
         } else {
 
-          await createUser(data);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          data.permissions = data.permissions.map((option: any) => (option.label));
+          await createRol(data);
 
         }
 
         setError(null);
-        navigate('/dashboard');
+        navigate('/roles');
       } catch (error) {
-        setError(id ? 'Error al actualizar el usuario.' : `Error al crear el usuario. ${error}`);
+        setError(id ? 'Error al actualizar el roles.' : `Error al crear el roles. ${error}`);
       }
 
     };
@@ -109,7 +121,7 @@ const CreateUser = () => {
                     <div className="sm:flex sm:justify-between sm:items-center mb-5">
                         <div className="mb-4 sm:mb-0">
                             <h1 className="text-2xl md:text-3xl text-gray-800 dark:text-gray-100 font-bold">
-                                {id ? 'Editar Usuario' : 'Crear Nuevo Usuario'}
+                                {id ? 'Editar Rol' : 'Crear Rol'}
                             </h1>
                         </div>
                     </div>
@@ -127,29 +139,19 @@ const CreateUser = () => {
                                 validation={{ required: 'Nombre es requerido' }}
                                 defaultValue={formData.name}
                             />
-                            <FormInput
-                                name="email"
-                                label="Correo electrónico"
-                                type="email"
-                                defaultValue={formData.email}
-                                validation={{ required: 'Correo electrónico es requerido' }}
+
+                            <FormMultiSelect
+                                name="permissions"
+                                label="Opciones"
+                                options={options}
+                                placeholder="Opciones"
+                                defaultValue={formData.permissions || []}
+                                validation={{ required: 'Opciones es requerido' }}
                             />
                             
-                            {roles.length > 0 ? (
-                                <DropdownClassic 
-                                label="Rol"
-                                name="role"
-                                options={roles}
-                                defaultSelected={formData.roles?.[0]?.id || roles[0]?.id}
-                                validation={{ required: 'El rol es requerido' }}
-                                />
-                            ) : (
-                                <p>Cargando roles...</p>
-                            )}
-
                             <div className="flex items-center justify-between mt-8">
                                 <Button type="submit" variant="primary">
-                                    Registrar
+                                {id ? 'Actualizar' : 'Registrar'}
                                 </Button>
                             </div>
                         
@@ -171,4 +173,4 @@ const CreateUser = () => {
   );
 };
 
-export default CreateUser;
+export default CreateRol;

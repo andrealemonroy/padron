@@ -35,7 +35,6 @@ export const fetchRoles = async (): Promise<Role[]> => {
     
     const response = await axios.get<Role[]>(`/roles`)
     .then(response => {
-        //console.log(response.data);
         return response;
     })
     .catch(error => {
@@ -47,9 +46,30 @@ export const fetchRoles = async (): Promise<Role[]> => {
   return response.data;
 };
 
-export const createRol = async (userData: Omit<Role, 'id'>): Promise<Role> => {
-  const response = await axios.post<Role>(`${import.meta.env.VITE_API_URL}/users`, userData);
+export const fetchRol = async (id): Promise<Role> => {
+    const response = await axios.get<Role>(`/roles/${id}`)
+    .then(response => {
+        return response;
+    })
+    .catch(error => {
+        console.error('Error fetching users:', error.response || error);
+        throw error;
+    });
   return response.data;
 };
 
-// Puedes agregar más funciones para editar, eliminar, etc.
+export const createRol = async (data: Omit<Role, 'id'>): Promise<Role> => {
+  const response = await axios.post<Role>(`${import.meta.env.VITE_API_URL}/roles`, {...data, guard_name: 'web'});
+  return response.data;
+};
+
+export const editRol = async (userData: Omit<Role, 'id'>, id: number): Promise<Role> => {
+    const response = await axios.put<Role>(`${import.meta.env.VITE_API_URL}/roles/${id}`, {...userData, guard_name: 'web' });
+    return response.data;
+};
+
+export const deleteRol = async (id: number): Promise<Role> => {
+    const response = await axios.delete<Role>(`${import.meta.env.VITE_API_URL}/roles/${id}`);
+    return response.data;
+};
+
