@@ -6,6 +6,7 @@ interface CustomSelectProps {
   name: string;
   label: string;
   options: { value: string | number; label: string }[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   validation?: Record<string, any>;
   isMulti?: boolean;
   defaultValue?: { value: string | number; label: string } | { value: string | number; label: string }[] | null;

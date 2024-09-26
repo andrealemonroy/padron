@@ -30,33 +30,32 @@ export const fetchPermissions = async (): Promise<Permission[]> => {
  
   return response.data;
 };
-/*
-export const createUser = async (userData: Omit<User, 'id'>): Promise<User> => {
-  const response = await axios.post<User>(`${import.meta.env.VITE_API_URL}/users`, {...userData, status_id: 1, password: '12345678' });
+
+export const createPermissions = async (userData: Omit<Permission, 'id'>): Promise<Permission> => {
+  const response = await axios.post<Permission>(`${import.meta.env.VITE_API_URL}/permissions`, {...userData, guard_name: 'web' });
   return response.data;
 };
 
-export const editUser = async (userData: Omit<User, 'id'>, id: number): Promise<User> => {
-    const response = await axios.put<User>(`${import.meta.env.VITE_API_URL}/users/${id}`, {...userData, status_id: 1, password: '12345678' });
+export const editPermissions = async (userData: Omit<Permission, 'id'>, id: number): Promise<Permission> => {
+    const response = await axios.put<Permission>(`${import.meta.env.VITE_API_URL}/permissions/${id}`, {...userData, guard_name: 'web' });
     return response.data;
 };
 
-export const deleteUser = async (id: number): Promise<User> => {
-    const response = await axios.delete<User>(`${import.meta.env.VITE_API_URL}/users/${id}`);
+export const deletePermissions = async (id: number): Promise<Permission> => {
+    const response = await axios.delete<Permission>(`${import.meta.env.VITE_API_URL}/permissions/${id}`);
     return response.data;
 };
 
-export const fetchUser = async (id): Promise<User> => {
+export const fetchPermission = async (id): Promise<Permission> => {
     console.log(id);
-    const response = await axios.get<User>(`/users/${id}`)
+    const response = await axios.get<Permission>(`/permissions/${id}`)
     .then(response => {
         return response;
     })
     .catch(error => {
-        console.error('Error fetching users:', error.response || error);
+        console.error('Error fetching permissions:', error.response || error);
         throw error;
     });
   return response.data;
 };
-*/
-// Puedes agregar más funciones para editar, eliminar, etc.
+

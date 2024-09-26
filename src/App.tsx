@@ -9,6 +9,8 @@ import Dashboard from './pages/Dashboard'; // Example private dashboard page
 import CreateUser from './pages/CreateUser';
 import Roles from './pages/Roles';
 import CreateRol from './pages/CreateRol';
+import Option from './pages/Option';
+import CreatePermission from './pages/CreatePermission';
 
 function App() {
   return (
@@ -30,6 +32,9 @@ function App() {
           <Route path="/roles" element={<Roles />} />
           <Route path="/create-rol" element={<CreateRol />} />
           <Route path="/edit-rol/:id" element={<CreateRol />} />
+          <Route path="/option" element={<Option />} />
+          <Route path="/create-option" element={<CreatePermission />} />
+          <Route path="/edit-option/:id" element={<CreatePermission />} />
         </Routes>
       </Router>
     </AuthProvider>
