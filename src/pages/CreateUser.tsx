@@ -1,173 +1,120 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
-import Form from '../components/Form';
-import FormInput from '../components/FormInput';
-import Button from '../components/Button';
-import DropdownClassic from '../components/DropdownClassic';
+import DynamicForm from '../components/DynamicForm';
+import Spinner from '../components/Spinner';
 import { fetchRoles } from '../api/rolApi';
-import {createUser, fetchUser, editUser} from '../api/userApi';
-import LoadingSpinner from '../components/LoadingSpinner';
+import { createUser, fetchUser, editUser } from '../api/userApi';
+import Breadcrumb from '../components/BreadCrumb';
 
 const CreateUser = () => {
-    const navigate = useNavigate();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [roles, setRoles] = useState([]);
+  const [loading, setLoading] = useState(true); // Loading state for all data
+  const { id } = useParams<{ id: string }>(); // Detect if it's an edit
+  const navigate = useNavigate(); // Initialize the navigate function
+  const [defaultValues, setDefaultValues] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
-    const [sidebarOpen, setSidebarOpen] = useState(false);
-    const [roles, setRoles] = useState([]);
-    const { id } = useParams<{ id: string }>();
-    const [loading, setLoading] = useState(true);
-    
-
-    const user = {
-        name: 'Luis Monroy',
-    };
-  
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        roles: [],
-    });
-
-    const [error, setError] = useState<string | null>(null);
-
-    useEffect(() => {
-
-      const loadRoles = async () => {
-          try {
-              const data = await fetchRoles();
-
-              if (id) {
-                try {
-                  const response = await fetchUser(id);
-                  const { name, email, roles } = response;
-                  
-                  setFormData((prev) => ({ ...prev, name, email, roles }));
-
-                } catch (error) {
-                  setError(`Error al cargar los datos del usuario. ${error}`);
-                } finally {
-                  setLoading(false);
-                }
-              }
-              setRoles(data);
-          } catch (error) {
-
-              setError(`Error al cargar los datos del usuario. ${error}`);
-
-          } finally {
-
-            setLoading(false);
-
-          }
-        };
-
-      loadRoles();
-
-    }, [id]);
-
-    if (loading) {
-      return <LoadingSpinner />;
-    }
-  
-    const onSubmit = async (data) => {
-
+  useEffect(() => {
+    const loadData = async () => {
       try {
+        setLoading(true); // Set loading to true before fetching data
+
+        const rolesData = await fetchRoles();
+        const formattedRoles = rolesData.map((role) => ({ value: role.id, label: role.name }));
+        setRoles(formattedRoles);
+
         if (id) {
-
-          await editUser(data, Number(id));
-
-        } else {
-
-          await createUser(data);
-
+          const response = await fetchUser(id);
+          const { name, email, roles } = response;
+          setDefaultValues({
+            name,
+            email,
+            role_id: roles[0]?.id, // Set the first role as default
+          });
         }
 
-        setError(null);
-        navigate('/dashboard');
+        setLoading(false); // Data has been fetched, stop loading
       } catch (error) {
-        setError(id ? 'Error al actualizar el usuario.' : `Error al crear el usuario. ${error}`);
+        setError(`Error al cargar los datos del usuario o los roles. ${error}`);
+        setLoading(false);
       }
-
     };
+
+    loadData();
+  }, [id]);
+
+  const onSubmit = async (data) => {
+    try {
+      if (id) {
+        await editUser(data, Number(id));
+      } else {
+        await createUser(data);
+      }
+      navigate('/dashboard'); // Navigate to dashboard after success
+    } catch (error) {
+      setError(id ? 'Error al actualizar el usuario.' : `Error al crear el usuario. ${error}`);
+    }
+  };
+
+  const formFields = [
+    {
+      name: 'name',
+      label: 'Nombre',
+      type: 'text',
+      validation: { required: 'Nombre es requerido' },
+    },
+    {
+      name: 'email',
+      label: 'Correo electrónico',
+      type: 'email',
+      validation: { required: 'Correo electrónico es requerido' },
+    },
+    {
+      name: 'role_id',
+      label: 'Rol',
+      type: 'select',
+      options: roles,
+      validation: { required: 'El rol es requerido' },
+    },
+  ];
+
+  // Define breadcrumb items
+  const breadcrumbItems = [
+    { label: 'Usuarios', path: '/dashboard' },
+    { label: id ? 'Editar Usuario' : 'Crear Usuario', path: `${id ? '/edit-user/' + id : '/create-user'}` },
+  ];
 
   return (
     <div className="flex h-[100dvh] overflow-hidden">
-        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+      <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+      <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
+        <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} user={{ name: 'Luis Monroy' }} />
 
-        <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-            <Header
-            sidebarOpen={sidebarOpen}
-            setSidebarOpen={setSidebarOpen}
-            user={user}
-            />
+        <main className="grow">
+          <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
+            <div className="sm:flex sm:justify-between sm:items-center mb-5">
+              {/* Add breadcrumb here */}
+              <Breadcrumb items={breadcrumbItems} />
+            </div>
 
-            <main className="grow">
+            {error && <p style={{ color: 'red' }}>{error}</p>}
 
-                <div className='px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto'>
-
-                    <div className="sm:flex sm:justify-between sm:items-center mb-5">
-                        <div className="mb-4 sm:mb-0">
-                            <h1 className="text-2xl md:text-3xl text-gray-800 dark:text-gray-100 font-bold">
-                                {id ? 'Editar Usuario' : 'Crear Nuevo Usuario'}
-                            </h1>
-                        </div>
-                    </div>
-
-                    {error && <p style={{ color: 'red' }}>{error}</p>}
-
-                    
-                    <Form onSubmit={onSubmit}>
-                        <div className="space-y-4 max-w-sm w-full px-4 py-8">
-                            
-                            <FormInput
-                                name="name"
-                                label="Nombre"
-                                type="text"
-                                validation={{ required: 'Nombre es requerido' }}
-                                defaultValue={formData.name}
-                            />
-                            <FormInput
-                                name="email"
-                                label="Correo electrónico"
-                                type="email"
-                                defaultValue={formData.email}
-                                validation={{ required: 'Correo electrónico es requerido' }}
-                            />
-                            
-                            {roles.length > 0 ? (
-                                <DropdownClassic 
-                                label="Rol"
-                                name="role"
-                                options={roles}
-                                defaultSelected={formData.roles?.[0]?.id || roles[0]?.id}
-                                validation={{ required: 'El rol es requerido' }}
-                                />
-                            ) : (
-                                <p>Cargando roles...</p>
-                            )}
-
-                            <div className="flex items-center justify-between mt-8">
-                                <Button type="submit" variant="primary">
-                                    Registrar
-                                </Button>
-                            </div>
-                        
-                        </div>
-
-                    </Form>
-                </div>
-                
-            </main>
-            
-
-            
-        
-
-        </div>
-
+            {loading ? (
+              <Spinner loading={loading} size={50} color="#3498db" /> // Show spinner while loading
+            ) : (
+              <>
+                {roles.length > 0 && (
+                  <DynamicForm fields={formFields} onSubmit={onSubmit} defaultValues={defaultValues} />
+                )}
+              </>
+            )}
+          </div>
+        </main>
+      </div>
     </div>
-    
   );
 };
 

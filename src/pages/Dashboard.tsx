@@ -6,7 +6,8 @@ import { fetchUsers, deleteUser } from '../api/userApi';
 import Button from '../components/Button';
 import { useNavigate } from 'react-router-dom';
 import Alert from '../components/Alert';
-import LoadingSpinner from '../components/LoadingSpinner';
+import Spinner from '../components/Spinner';
+import Breadcrumb from '../components/BreadCrumb';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -24,15 +25,12 @@ const Dashboard = () => {
 
   const confirmDelete = async () => {
       if (userIdToDelete) {
-        setLoading(true);
           try {
               await deleteUser(userIdToDelete);
               setShowAlert(false);
               navigate('/dashboard');
           } catch (error) {
               console.error('Error al eliminar el usuario:', error);
-          } finally {
-            setLoading(false);
           }
       }
   };
@@ -50,6 +48,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     const loadUsers = async () => {
+      setLoading(true);
       try {
         const data = await fetchUsers(); // Llama a la función para obtener datos
         setUsers(data);
@@ -63,10 +62,6 @@ const Dashboard = () => {
     loadUsers();
   }, []);
 
-  if (loading) {
-    return <LoadingSpinner />;
-  }
-
   const handleAddUser = () => {
     navigate('/create-user');
   };
@@ -78,6 +73,10 @@ const Dashboard = () => {
   const handleEdit = (id: number) => {
     navigate(`/edit-user/${id}`);
   };
+
+  const breadcrumbItems = [
+    { label: 'Usuarios', path: '/dashboard' },
+  ];
 
   const addButton = (
     <>
@@ -138,43 +137,46 @@ const Dashboard = () => {
 
             {/* Page header */}
             <div className="sm:flex sm:justify-between sm:items-center mb-5">
-              <div className="mb-4 sm:mb-0">
-                <h1 className="text-2xl md:text-3xl text-gray-800 dark:text-gray-100 font-bold">
-                  Usuarios
-                </h1>
-              </div>
+              {/* Add breadcrumb here */}
+              <Breadcrumb items={breadcrumbItems} />
             </div>
-
-            <Table
-              columns={[
-                {
-                  header: 'Apellidos y Nombres',
-                  accessorKey: 'name',
-                  cell: (info) => info.getValue(),
-                },
-                {
-                  header: 'Correo Electrónico',
-                  accessorKey: 'email',
-                  cell: (info) => info.getValue(),
-                },
-                {
-                  header: 'Rol',
-                  accessorKey: 'roles',
-                  cell: (info) => info.getValue()?.[0]?.name || 'Sin rol',
-                },
-                {
-                  header: 'Estado',
-                  accessorKey: 'status_id',
-                  cell: (info) => info.getValue() == 1 ? 'Activo' : 'Inactivo' ,
-                },
-              ]}
-              data={users}
-              fetchData={fetchUsers}
-              pageCount={1}
-              addButton={addButton}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-            />
+            {loading ? (
+              <Spinner loading={loading} size={50} color="#3498db" /> // Show spinner while loading
+            ) : (
+              <>
+                <Table
+                  columns={[
+                    {
+                      header: 'Apellidos y Nombres',
+                      accessorKey: 'name',
+                      cell: (info) => info.getValue(),
+                    },
+                    {
+                      header: 'Correo Electrónico',
+                      accessorKey: 'email',
+                      cell: (info) => info.getValue(),
+                    },
+                    {
+                      header: 'Rol',
+                      accessorKey: 'roles',
+                      cell: (info) => info.getValue()?.[0]?.name || 'Sin rol',
+                    },
+                    {
+                      header: 'Estado',
+                      accessorKey: 'status_id',
+                      cell: (info) => info.getValue() == 1 ? 'Activo' : 'Inactivo' ,
+                    },
+                  ]}
+                  data={users}
+                  fetchData={fetchUsers}
+                  pageCount={1}
+                  addButton={addButton}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
+                />
+              </>
+            )}
+            
 
           </div>
 

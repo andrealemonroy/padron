@@ -64,6 +64,7 @@ export const fetchUsers = async (): Promise<User[]> => {
 };
 
 export const createUser = async (userData: Omit<User, 'id'>): Promise<User> => {
+    console.log(userData);
   const response = await axios.post<User>(`${import.meta.env.VITE_API_URL}/users`, {...userData, status_id: 1, password: '12345678' });
   return response.data;
 };
