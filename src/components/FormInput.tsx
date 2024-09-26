@@ -6,12 +6,11 @@ interface FormInputProps {
   label: string;
   type?: string;
   placeholder?: string;
-  defaultValue?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   validation?: Record<string, any>;
 }
 
-const FormInput: React.FC<FormInputProps> = ({ name, label, type = 'text', placeholder, defaultValue, validation }) => {
+const FormInput: React.FC<FormInputProps> = ({ name, label, type = 'text', placeholder, validation }) => {
   const {
     register,
     formState: { errors },
@@ -26,8 +25,6 @@ const FormInput: React.FC<FormInputProps> = ({ name, label, type = 'text', place
         type={type}
         id={name}
         placeholder={placeholder}
-        defaultValue={defaultValue}
-        
         {...register(name, validation)}
         className={`block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm ${
           errors[name] ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : ''
