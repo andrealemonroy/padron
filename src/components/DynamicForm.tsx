@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useForm, FormProvider, SubmitHandler } from 'react-hook-form';
 import Button from './Button';
-import CustomSelect from './CustomSelect'; // Importar el componente de selección personalizada
-import SpinnerButton from './SpinnerButton'; // Asegúrate de tener un componente Spinner
+import CustomSelect from './CustomSelect';
+import SpinnerButton from './SpinnerButton';
 
 interface FormProps {
   fields: {
@@ -10,21 +10,18 @@ interface FormProps {
     label: string;
     type: string;
     placeholder?: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     validation?: Record<string, any>;
     options?: { value: string | number; label: string }[]; // Opciones para el select
     isMulti?: boolean;
   }[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSubmit: SubmitHandler<any>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   defaultValues?: Record<string, any>;
 }
 
 const DynamicForm: React.FC<FormProps> = ({ fields, onSubmit, defaultValues }) => {
   const methods = useForm();
   const { handleSubmit, reset, formState: { errors } } = methods;
-  const [isLoading, setIsLoading] = useState(false); // Estado de carga
+  const [isLoading, setIsLoading] = useState(false);
 
   // Reiniciar formulario cuando cambian los valores por defecto
   useEffect(() => {
@@ -33,18 +30,14 @@ const DynamicForm: React.FC<FormProps> = ({ fields, onSubmit, defaultValues }) =
     }
   }, [defaultValues, reset]);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onSubmitWithLoading = async (data: any) => {
-    console.log(data);
-    console.log('Valores del formulario:', methods.getValues());
-    setIsLoading(true); // Mostrar spinner al enviar el formulario
+    setIsLoading(true);
     try {
-      await onSubmit(data); // Llamar a la función de envío
+      await onSubmit(data);
     } catch (error) {
-      // Aquí podrías mostrar un error si ocurre
       console.error('Error al enviar el formulario:', error);
     } finally {
-      setIsLoading(false); // Ocultar el spinner después de enviar el formulario
+      setIsLoading(false);
     }
   };
 
@@ -63,6 +56,50 @@ const DynamicForm: React.FC<FormProps> = ({ fields, onSubmit, defaultValues }) =
                 defaultValue={defaultValues?.[field.name] || (field.isMulti ? [] : null)}
                 validation={field.validation}
               />
+            );
+          } else if (field.type === 'checkbox') {
+            return (
+              <div key={index} className="space-y-1">
+                <label className="inline-flex items-center">
+                  <input
+                    type="checkbox"
+                    id={field.name}
+                    {...methods.register(field.name, field.validation)}
+                    defaultChecked={defaultValues?.[field.name]}
+                    className={`mr-2`}
+                  />
+                  <span className="text-sm font-medium text-gray-700">{field.label}</span>
+                </label>
+                {errors[field.name] && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {(errors[field.name]?.message as string) || 'Este campo es requerido'}
+                  </p>
+                )}
+              </div>
+            );
+          } else if (field.type === 'radio' && field.options) {
+            return (
+              <div key={index} className="space-y-1">
+                <span className="block text-sm font-medium text-gray-700">{field.label}</span>
+                {field.options.map((option) => (
+                  <label key={option.value} className="inline-flex items-center mr-4">
+                    <input
+                      type="radio"
+                      id={option.value}
+                      value={option.value}
+                      {...methods.register(field.name, field.validation)}
+                      defaultChecked={defaultValues?.[field.name] === option.value}
+                      className={`mr-2`}
+                    />
+                    <span className="text-sm font-medium">{option.label}</span>
+                  </label>
+                ))}
+                {errors[field.name] && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {(errors[field.name]?.message as string) || 'Este campo es requerido'}
+                  </p>
+                )}
+              </div>
             );
           } else {
             return (
@@ -91,10 +128,10 @@ const DynamicForm: React.FC<FormProps> = ({ fields, onSubmit, defaultValues }) =
         })}
 
         <div className="flex justify-end mt-4">
-        <Button type="submit" variant="primary" disabled={isLoading}>
-          {isLoading && <SpinnerButton size={16} />} {/* Ahora el spinner tiene un tamaño de 16px */}
-          {isLoading ? ' Guardando...' : 'Guardar'}
-        </Button>
+          <Button type="submit" variant="primary" disabled={isLoading}>
+            {isLoading && <SpinnerButton size={16} />}
+            {isLoading ? ' Guardando...' : 'Guardar'}
+          </Button>
         </div>
       </form>
     </FormProvider>

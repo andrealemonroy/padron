@@ -16,7 +16,6 @@ const CustomSelect: React.FC<CustomSelectProps> = ({ name, label, options, valid
   const { control, formState: { errors }, getValues } = useFormContext();
 
   useEffect(() => {
-    console.log('Valor actualizado:', getValues(name));
   }, [control, name, getValues]);
 
   return (

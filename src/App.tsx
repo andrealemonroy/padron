@@ -11,6 +11,8 @@ import Roles from './pages/Roles';
 import CreateRol from './pages/CreateRol';
 import Option from './pages/Option';
 import CreatePermission from './pages/CreatePermission';
+import PersonalInformation from './pages/PersonalInformation';
+import CreatePersonalInformation from './pages/CreatePersonalInformation';
 
 function App() {
   return (
@@ -35,6 +37,9 @@ function App() {
           <Route path="/option" element={<Option />} />
           <Route path="/create-option" element={<CreatePermission />} />
           <Route path="/edit-option/:id" element={<CreatePermission />} />
+          <Route path="/basic" element={<PersonalInformation />} />
+          <Route path="/create-basic" element={<CreatePersonalInformation />} />
+          <Route path="/edit-basic/:id" element={<CreatePersonalInformation />} />
         </Routes>
       </Router>
     </AuthProvider>
