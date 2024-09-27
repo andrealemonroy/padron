@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import AuthImage from '../images/auth-image.jpg';
@@ -6,19 +5,11 @@ import { useAuth } from '../context/AuthProvider';
 import Form from '../components/Form';
 import FormInput from '../components/FormInput';
 import Button from '../components/Button'; // Import the Button component
-import { useDispatch } from 'react-redux';
-import { setCredentials } from '../features/auth/authSlice';
-import { saveUser } from '../hooks/user.localstore';
 
-interface SignInFormValues {
-  email: string;
-  password: string;
-}
 
 function Signin() {
   const navigate = useNavigate();
   const { login } = useAuth(); // Get the login function from Auth context
-  const dispatch = useDispatch();
 
   const onSubmit = async (data: any) => {
     try {

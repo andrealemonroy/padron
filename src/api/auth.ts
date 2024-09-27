@@ -21,7 +21,7 @@ export const signIn = async (
   );
   
   // Store token in localStorage
-  const { token, user } = response.data;
+  const { token } = response.data;
   localStorage.setItem('token', token);  // Store the token
 
   return response.data;

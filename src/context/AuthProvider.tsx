@@ -1,6 +1,6 @@
 // src/context/AuthProvider.tsx
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import axios from 'axios';
 
 // Define the user structure based on the login response
@@ -43,6 +43,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = async (email: string, password: string) => {
     try {
       setIsLoading(true);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/login-form`, { email, password }) as any;
 
       const { token, user: userData } = response.data
@@ -72,6 +73,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 };
 
 // useAuth hook
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {

@@ -85,7 +85,7 @@ const DynamicForm: React.FC<FormProps> = ({ fields, onSubmit, defaultValues }) =
                   <label key={option.value} className="inline-flex items-center mr-4">
                     <input
                       type="radio"
-                      id={option.value}
+                      id={String(option.value)}
                       value={option.value}
                       {...methods.register(field.name, field.validation)}
                       defaultChecked={defaultValues?.[field.name] === option.value}

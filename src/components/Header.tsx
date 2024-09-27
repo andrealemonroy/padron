@@ -1,5 +1,3 @@
-import React, { useState } from 'react';
-
 import Notifications from '../components/DropdownNotifications';
 import Help from '../components/DropdownHelp';
 import UserMenu from '../components/DropdownProfile';
