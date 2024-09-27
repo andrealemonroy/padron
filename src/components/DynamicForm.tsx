@@ -10,11 +10,14 @@ interface FormProps {
     label: string;
     type: string;
     placeholder?: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     validation?: Record<string, any>;
     options?: { value: string | number; label: string }[]; // Opciones para el select
     isMulti?: boolean;
   }[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSubmit: SubmitHandler<any>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   defaultValues?: Record<string, any>;
 }
 
@@ -30,6 +33,7 @@ const DynamicForm: React.FC<FormProps> = ({ fields, onSubmit, defaultValues }) =
     }
   }, [defaultValues, reset]);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onSubmitWithLoading = async (data: any) => {
     setIsLoading(true);
     try {

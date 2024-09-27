@@ -13,6 +13,8 @@ import Option from './pages/Option';
 import CreatePermission from './pages/CreatePermission';
 import PersonalInformation from './pages/PersonalInformation';
 import CreatePersonalInformation from './pages/CreatePersonalInformation';
+import Addresses from './pages/Addresses';
+import CreateAddresses from './pages/CreateAddresses';
 
 function App() {
   return (
@@ -38,8 +40,9 @@ function App() {
           <Route path="/create-option" element={<CreatePermission />} />
           <Route path="/edit-option/:id" element={<CreatePermission />} />
           <Route path="/basic" element={<PersonalInformation />} />
-          <Route path="/create-basic" element={<CreatePersonalInformation />} />
           <Route path="/edit-basic/:id" element={<CreatePersonalInformation />} />
+          <Route path="/addresses" element={<Addresses />} />
+          <Route path="/edit-addresses/:id" element={<CreateAddresses />} />
         </Routes>
       </Router>
     </AuthProvider>

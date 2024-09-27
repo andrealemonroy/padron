@@ -345,7 +345,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen, variant = 'default' }) {
                           <li className="mb-1 last:mb-0">
                             <NavLink
                               end
-                              to="/utility/roadmap"
+                              to="/addresses"
                               className={({ isActive }) =>
                                 'block transition duration-150 truncate ' +
                                 (isActive
