@@ -31,14 +31,14 @@ interface User {
   workCondition: WorkCondition;
 }
 
-export const fetchWorkExperiences = async (): Promise<User[]> => {
+export const fetchWorkConditions = async (): Promise<User[]> => {
     
-  const response = await axios.get<User[]>(`/work-experiences`)
+  const response = await axios.get<User[]>(`/work-conditions`)
   .then(response => {
       return response;
   })
   .catch(error => {
-      console.error('Error fetching work-experiences:', error.response || error);
+      console.error('Error fetching work-conditions:', error.response || error);
       throw error;
   });
 
@@ -47,19 +47,19 @@ return response.data;
 };
 
 
-export const editWorkExperiences = async (userData: Omit<User, 'id'>, id: number): Promise<User> => {
-  const response = await axios.put<User>(`${import.meta.env.VITE_API_URL}/work-experiences/${id}`, {...userData, status: '1' });
+export const editWorkCondition = async (userData: Omit<User, 'id'>, id: number): Promise<User> => {
+  const response = await axios.put<User>(`${import.meta.env.VITE_API_URL}/work-conditions/${id}`, {...userData, status: '1' });
   return response.data;
 };
 
-export const fetchWorkExperience = async (id): Promise<User> => {
+export const fetchWorkCondition = async (id): Promise<User> => {
   console.log(id);
-  const response = await axios.get<User>(`/work-experiences/${id}`)
+  const response = await axios.get<User>(`/work-conditions/${id}`)
   .then(response => {
       return response;
   })
   .catch(error => {
-      console.error('Error fetching work-experiences:', error.response || error);
+      console.error('Error fetching work-conditions:', error.response || error);
       throw error;
   });
 return response.data;

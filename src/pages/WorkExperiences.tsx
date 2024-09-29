@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import Alert from '../components/Alert';
 import Spinner from '../components/Spinner';
 import Breadcrumb from '../components/BreadCrumb';
-import { fetchWorkExperiences } from '../api/WorkExperiencesApi';
+import { fetchWorkExperiences } from '../api/workExperiencesApi';
 
 
 const WorkExperiences = () => {

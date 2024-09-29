@@ -2,13 +2,13 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
-
 import Spinner from '../components/Spinner';
 import Breadcrumb from '../components/BreadCrumb';
 import DynamicForm from '../components/DynamicForm';
-import { editWorkExperiences, fetchWorkExperience } from '../api/workExperiencesApi';
+import { editWorkCondition, fetchWorkCondition } from '../api/workConditionApi';
 
-const CreateWorkExperiences = () => {
+
+const CreateWorkCondition = () => {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { id } = useParams<{ id: string }>();
@@ -26,7 +26,7 @@ const CreateWorkExperiences = () => {
         setLoading(true);
 
         if (id) {
-          const response = await fetchWorkExperience(id);
+          const response = await fetchWorkCondition(id);
             setDefaultValues(response);
         }
       } catch (error) {
@@ -43,10 +43,10 @@ const CreateWorkExperiences = () => {
     console.log(data);
     try {
       if (id) {
-        await editWorkExperiences(data, Number(id));
+        await editWorkCondition(data, Number(id));
       }
       setError(null);
-      navigate('/work-experiences');
+      navigate('/work-condition');
     } catch (error) {
       setError(id ? 'Error al actualizar el permission.' : `Error al crear el permission. ${error}`);
     }
@@ -54,72 +54,47 @@ const CreateWorkExperiences = () => {
 
   const formFields = [
     {
-      name: 'last_experience_start_date',
-      label: 'Fecha de Inicio de Última Experiencia',
-      type: 'date',
-      validation: { required: 'Fecha de inicio es requerida' },
+      name: 'remote_work_condition',
+      label: 'Trabajo remoto',
+      type: 'checkbox',
+      validation: { required: 'El año de Trabajo remoto es requerido' },
     },
     {
-      name: 'last_experience_end_date',
-      label: 'Fecha de Fin de Última Experiencia',
-      type: 'date',
-      validation: { required: 'Fecha de fin es requerida' },
-    },
-    {
-      name: 'last_experience_organization',
-      label: 'Organización de Última Experiencia',
+      name: 'computer_type',
+      label: 'Tipo de Computadora',
       type: 'text',
-      validation: { required: 'Organización es requerida' },
+      validation: { required: 'El nivel Tipo de Computadora es requerido' },
     },
     {
-      name: 'last_experience_dismissal_reason',
-      label: 'Razón de Despido de Última Experiencia',
+      name: 'work_type',
+      label: 'Tipo Trabajo',
       type: 'text',
-      validation: { required: 'Razón de despido es requerida' },
+      validation: { required: 'El Tipo Trabajo es requerido' },
     },
     {
-      name: 'last_experience_salary',
-      label: 'Salario de Última Experiencia',
-      type: 'number',
-      validation: { required: 'Salario es requerido' },
-    },
-    {
-      name: 'penultimate_experience_start_date',
-      label: 'Fecha de Inicio de Penúltima Experiencia',
-      type: 'date',
-      validation: { required: 'Fecha de inicio es requerida' },
-    },
-    {
-      name: 'penultimate_experience_end_date',
-      label: 'Fecha de Fin de Penúltima Experiencia',
-      type: 'date',
-      validation: { required: 'Fecha de fin es requerida' },
-    },
-    {
-      name: 'penultimate_experience_organization',
-      label: 'Organización de Penúltima Experiencia',
+      name: 'internet_connection',
+      label: 'Conexión a Internet',
       type: 'text',
-      validation: { required: 'Organización es requerida' },
+      validation: { required: 'El Conexión a Internet es requerido' },
     },
     {
-      name: 'penultimate_experience_dismissal_reason',
-      label: 'Razón de Despido de Penúltima Experiencia',
+      name: 'adequate_home_environment',
+      label: 'Ambiente Hogareño Adecuado',
+      type: 'checkbox',
+      validation: { required: 'El Ambiente en Casa es requerido' },
+    },
+    {
+      name: 'home_furniture',
+      label: 'Ambiente en Casa',
       type: 'text',
-      validation: { required: 'Razón de despido es requerida' },
-    },
-    {
-      name: 'penultimate_experience_salary',
-      label: 'Salario de Penúltima Experiencia',
-      type: 'number',
-      validation: { required: 'Salario es requerido' },
+      validation: { required: 'El Ambiente en Casa es requerido' },
     },
   ];
   
-  
 
   const breadcrumbItems = [
-    { label: 'Datos basicos', path: '/basic' },
-    { label: id ? 'Editar Datos basicos' : 'Crear Datos basicos', path: id ? `/edit-basic/${id}` : '/create-basic' },
+    { label: 'Trabajo Remoto', path: '/work-condition' },
+    { label: id ? 'Editar Trabajo Remoto' : 'Crear Trabajo Remoto', path: id ? `/work-condition/${id}` : '/work-condition' },
   ];
 
   return (
@@ -145,4 +120,4 @@ const CreateWorkExperiences = () => {
   );
 };
 
-export default CreateWorkExperiences;
+export default CreateWorkCondition;

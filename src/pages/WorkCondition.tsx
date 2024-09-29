@@ -7,16 +7,17 @@ import { useNavigate } from 'react-router-dom';
 import Alert from '../components/Alert';
 import Spinner from '../components/Spinner';
 import Breadcrumb from '../components/BreadCrumb';
-import { fetchEducations } from '../api/EducationsApi';
+import { fetchWorkConditions } from '../api/workConditionApi';
 
 
-const Educations = () => {
+
+const WorkCondition = () => {
   const navigate = useNavigate();
 
   const [showAlert, setShowAlert] = useState(false);
   const [idToDelete, setIdToDelete] = useState<number | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [education, setEducation] = useState([]);
+  const [workConditions, setfetchWorkConditions] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const user = {
@@ -27,8 +28,8 @@ const Educations = () => {
     const load = async () => {
       try {
         setLoading(true);
-        const data = await fetchEducations();
-        setEducation(data);
+        const data = await fetchWorkConditions();
+        setfetchWorkConditions(data);
       } catch (error) {
         console.error('Error fetching :', error);
       } finally {
@@ -49,9 +50,9 @@ const Educations = () => {
         setLoading(true);
           try {
               //await editPensionSystems(idToDelete);
-              setEducation((prev) => prev.filter(dev => dev.id !== idToDelete));
+              setfetchWorkConditions((prev) => prev.filter(dev => dev.id !== idToDelete));
               setShowAlert(false);
-              navigate('/educations');
+              navigate('/work-condition');
           } catch (error) {
               console.error('Error al eliminar:', error);
           } finally {
@@ -66,11 +67,11 @@ const Educations = () => {
   };
 
   const handleEdit = (id: number) => {
-    navigate(`/edit-educations/${id}`);
+    navigate(`/edit-work-condition/${id}`);
   };
 
   const breadcrumbItems = [
-    { label: 'Datos Educativos', path: '/educations' },
+    { label: 'Trabajo Remoto', path: '/work-condition' },
   ];
 
   return (
@@ -112,28 +113,28 @@ const Educations = () => {
                   cell: (info) => info.getValue(),
                 },
                 {
-                  header: 'Año de Egreso',
-                  accessorKey: 'education.graduation_year',
-                  cell: (info) => info.getValue(),
-                },
-                {
-                  header: 'Profesión',
-                  accessorKey: 'education.profession_name',
-                  cell: (info) => info.getValue(),
-                },
-                {
-                  header: 'Especialización',
-                  accessorKey: 'education.educational_level',
-                  cell: (info) => info.getValue(),
-                },
-                {
                   header: 'Institución',
-                  accessorKey: 'education.study_center',
+                  accessorKey: 'work_condition.remote_work_condition',
+                  cell: (info) => info.getValue(),
+                },
+                {
+                  header: 'Tipo de Computadora',
+                  accessorKey: 'work_condition.computer_type',
+                  cell: (info) => info.getValue(),
+                },
+                {
+                  header: 'Conexión a Internet',
+                  accessorKey: 'work_condition.internet_connection',
+                  cell: (info) => info.getValue(),
+                },
+                {
+                  header: 'Ambiente en Casa',
+                  accessorKey: 'work_condition.adequate_home_environment',
                   cell: (info) => info.getValue(),
                 },
               ]}
-              data={education}
-              fetchData={fetchEducations}
+              data={workConditions}
+              fetchData={fetchWorkConditions}
               pageCount={1}
               addButton={null}
               onEdit={handleEdit}
@@ -152,4 +153,4 @@ const Educations = () => {
   );
 };
 
-export default Educations;
+export default WorkCondition;

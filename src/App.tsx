@@ -21,6 +21,8 @@ import WorkExperiences from './pages/WorkExperiences';
 import CreateWorkExperiences from './pages/CreateWorkExperiences';
 import Educations from './pages/Educations';
 import CreateEducations from './pages/CreateEducations';
+import WorkCondition from './pages/WorkCondition';
+import CreateWorkCondition from './pages/CreateWorkCondition';
 
 function App() {
   return (
@@ -55,6 +57,8 @@ function App() {
           <Route path="/edit-work-experiences/:id" element={<CreateWorkExperiences />} />
           <Route path="/educations" element={<Educations />} />
           <Route path="/edit-educations/:id" element={<CreateEducations />} />
+          <Route path="/work-condition" element={<WorkCondition />} />
+          <Route path="/edit-work-condition/:id" element={<CreateWorkCondition />} />
         </Routes>
       </Router>
     </AuthProvider>
