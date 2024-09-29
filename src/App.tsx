@@ -17,6 +17,10 @@ import Addresses from './pages/Addresses';
 import CreateAddresses from './pages/CreateAddresses';
 import PensionSystem from './pages/PensionSystem';
 import CreatePensionSystem from './pages/CreatePensionSystem';
+import WorkExperiences from './pages/WorkExperiences';
+import CreateWorkExperiences from './pages/CreateWorkExperiences';
+import Educations from './pages/Educations';
+import CreateEducations from './pages/CreateEducations';
 
 function App() {
   return (
@@ -47,6 +51,10 @@ function App() {
           <Route path="/edit-addresses/:id" element={<CreateAddresses />} />
           <Route path="/pension-systems" element={<PensionSystem />} />
           <Route path="/edit-pension-systems/:id" element={<CreatePensionSystem />} />
+          <Route path="/work-experiences" element={<WorkExperiences />} />
+          <Route path="/edit-work-experiences/:id" element={<CreateWorkExperiences />} />
+          <Route path="/educations" element={<Educations />} />
+          <Route path="/edit-educations/:id" element={<CreateEducations />} />
         </Routes>
       </Router>
     </AuthProvider>
