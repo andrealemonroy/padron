@@ -25,6 +25,8 @@ import WorkCondition from './pages/WorkCondition';
 import CreateWorkCondition from './pages/CreateWorkCondition';
 import Hobby from './pages/Hobby';
 import CreateHobbie from './pages/CreateHobbie';
+import Complementaries from './pages/Complementaries';
+import CreateComplementaries from './pages/CreateComplementaries';
 
 function App() {
   return (
@@ -63,6 +65,8 @@ function App() {
           <Route path="/edit-work-condition/:id" element={<CreateWorkCondition />} />
           <Route path="/hobbie" element={<Hobby />} />
           <Route path="/edit-hobbie/:id" element={<CreateHobbie />} />
+          <Route path="/complementaries" element={<Complementaries />} />
+          <Route path="/edit-complementaries/:id" element={<CreateComplementaries />} />
         </Routes>
       </Router>
     </AuthProvider>

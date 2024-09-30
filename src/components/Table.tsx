@@ -89,7 +89,7 @@ const Table: React.FC<TableProps> = ({ columns, data, pageCount, addButton, onEd
           <input
             className="block w-full pl-10 pr-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md leading-5 bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-300 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             type="text"
-            placeholder="Buscar Usuario"
+            placeholder="Buscar"
             onChange={(e) => setGlobalFilter(e.target.value)}
           />
         </div>
