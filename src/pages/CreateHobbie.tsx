@@ -2,96 +2,85 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
-import { fetchRol, createRol, editRol } from '../api/rolApi';
+
 import Spinner from '../components/Spinner';
-import { fetchPermissions } from '../api/permissionApi';
 import Breadcrumb from '../components/BreadCrumb';
 import DynamicForm from '../components/DynamicForm';
+import { editHobbie, fetchHobbie, fetchHobbiesList } from '../api/hobbyApi';
 
-const CreateRol = () => {
+const CreateHobbie = () => {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { id } = useParams<{ id: string }>();
   const [loading, setLoading] = useState(true);
-  const [permissions, setPermissions] = useState([]);
   const [defaultValues, setDefaultValues] = useState(null);
   const [error, setError] = useState<string | null>(null);
+  const [hobbies, setHobbies] = useState(null);
 
   const user = {
     name: 'Luis Monroy',
   };
 
   useEffect(() => {
-    const loadRoles = async () => {
+    const load = async () => {
       try {
         setLoading(true);
-        const data = await fetchPermissions();
-        const formatted = data.map((permission) => ({
-          value: permission.id,
-          label: permission.name,
+        const data = await fetchHobbiesList();
+        const formatted = data.map((value) => ({
+          value: value.id,
+          label: value.description,
         }));
-        
+        setHobbies(formatted);
+
         if (id) {
-          try {
-            const response = await fetchRol(id);
-            const { name, permissions } = response;
-            const selectedPermissions = permissions.map((perm) => (perm.id));
+          const response = await fetchHobbie(id);
+            const { name, hobbies } = response;
+            const selected = hobbies.map((perm) => (perm.id));
+            console.log(selected)
             setDefaultValues({
               name,
-              id: selectedPermissions,
+              hoobies: selected,
             });
-          } catch (error) {
-            setError(`Error al cargar los datos del rol. ${error}`);
-          } finally {
-            setLoading(false);
-          }
         }
-        setPermissions(formatted);
       } catch (error) {
-        setError(`Error al cargar los datos del rol. ${error}`);
+        setError(`Error al cargar los datos del permission. ${error}`);
       } finally {
         setLoading(false);
       }
     };
 
-    loadRoles();
+    load();
   }, [id]);
 
   const onSubmit = async (data) => {
     try {
-      data.permissions = data.id;
+      console.log(data);
       if (id) {
-        await editRol(data, Number(id));
-      } else {
-        await createRol(data);
+        await editHobbie(data, Number(id));
       }
       setError(null);
-      navigate('/roles');
+      navigate('/hobbie');
     } catch (error) {
-      setError(id ? 'Error al actualizar el rol.' : `Error al crear el rol. ${error}`);
+      setError(id ? 'Error al actualizar el permission.' : `Error al crear el permission. ${error}`);
     }
   };
 
   const formFields = [
     {
-      name: 'name',
-      label: 'Nombre',
-      type: 'text',
-      validation: { required: 'Nombre es requerido' },
-    },
-    {
-      name: 'id',
-      label: 'Permisos',
+      name: 'hoobies',
+      label: 'Hoobie',
       type: 'select',
-      options: permissions,
-      validation: { required: 'Al menos un permiso es requerido' },
-      isMulti: true, // Habilitar multiselección
+      options: hobbies,
+      isMulti: true,
+      validation: { required: 'Hoobie es requerida' },
     },
   ];
+  
+  
 
   const breadcrumbItems = [
-    { label: 'Roles', path: '/dashboard' },
-    { label: id ? 'Editar Rol' : 'Crear Rol', path: id ? `/edit-rol/${id}` : '/create-rol' },
+    { label: 'Hobbies', path: '/hobbie' },
+    { label: id ? 'Editar Hobby' : 'Crear Hobby', path: id ? `/edit-hobbie/${id}` : '/create-hobbie' },
   ];
 
   return (
@@ -108,9 +97,7 @@ const CreateRol = () => {
             {loading ? (
               <Spinner loading={loading} size={50} color="#3498db" />
             ) : (
-              permissions.length > 0 && (
-                <DynamicForm fields={formFields} onSubmit={onSubmit} defaultValues={defaultValues} />
-              )
+              <DynamicForm fields={formFields} onSubmit={onSubmit} defaultValues={defaultValues} />
             )}
           </div>
         </main>
@@ -119,4 +106,4 @@ const CreateRol = () => {
   );
 };
 
-export default CreateRol;
+export default CreateHobbie;

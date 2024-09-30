@@ -23,6 +23,8 @@ import Educations from './pages/Educations';
 import CreateEducations from './pages/CreateEducations';
 import WorkCondition from './pages/WorkCondition';
 import CreateWorkCondition from './pages/CreateWorkCondition';
+import Hobby from './pages/Hobby';
+import CreateHobbie from './pages/CreateHobbie';
 
 function App() {
   return (
@@ -59,6 +61,8 @@ function App() {
           <Route path="/edit-educations/:id" element={<CreateEducations />} />
           <Route path="/work-condition" element={<WorkCondition />} />
           <Route path="/edit-work-condition/:id" element={<CreateWorkCondition />} />
+          <Route path="/hobbie" element={<Hobby />} />
+          <Route path="/edit-hobbie/:id" element={<CreateHobbie />} />
         </Routes>
       </Router>
     </AuthProvider>
