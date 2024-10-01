@@ -27,6 +27,8 @@ import Hobby from './pages/Hobby';
 import CreateHobbie from './pages/CreateHobbie';
 import Complementaries from './pages/Complementaries';
 import CreateComplementaries from './pages/CreateComplementaries';
+import Dependent from './pages/Dependent';
+import CreateDependent from './pages/CreateDependent';
 
 function App() {
   return (
@@ -67,6 +69,8 @@ function App() {
           <Route path="/edit-hobbie/:id" element={<CreateHobbie />} />
           <Route path="/complementaries" element={<Complementaries />} />
           <Route path="/edit-complementaries/:id" element={<CreateComplementaries />} />
+          <Route path="/dependent" element={<Dependent />} />
+          <Route path="/edit-dependent/:id" element={<CreateDependent />} />
         </Routes>
       </Router>
     </AuthProvider>
