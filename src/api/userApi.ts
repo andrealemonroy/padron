@@ -51,7 +51,6 @@ export const fetchUsers = async (): Promise<User[]> => {
     
     const response = await axios.get<User[]>(`/users`)
     .then(response => {
-        //console.log(response.data);
         return response;
     })
     .catch(error => {

@@ -29,6 +29,8 @@ import Complementaries from './pages/Complementaries';
 import CreateComplementaries from './pages/CreateComplementaries';
 import Dependent from './pages/Dependent';
 import CreateDependent from './pages/CreateDependent';
+import Incidences from './pages/Incidences';
+import CreateIncidences from './pages/CreateIncidences';
 
 function App() {
   return (
@@ -71,6 +73,9 @@ function App() {
           <Route path="/edit-complementaries/:id" element={<CreateComplementaries />} />
           <Route path="/dependent" element={<Dependent />} />
           <Route path="/edit-dependent/:id" element={<CreateDependent />} />
+          <Route path="/incidences" element={<Incidences />} />
+          <Route path="/create-incidences" element={<CreateIncidences />} />
+          <Route path="/edit-incidences/:id" element={<CreateIncidences />} />
         </Routes>
       </Router>
     </AuthProvider>
