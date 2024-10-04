@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import App from './App';
 import store from './app/store';
 import './css/style.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 const queryClient = new QueryClient();
 

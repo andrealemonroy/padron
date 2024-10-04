@@ -8,6 +8,8 @@ import { useNavigate } from 'react-router-dom';
 import Alert from '../components/Alert';
 import Spinner from '../components/Spinner';
 import Breadcrumb from '../components/BreadCrumb';
+import { fetchImportUsersData } from '../api/ImportsApi';
+import { toast, ToastContainer } from 'react-toastify';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -17,6 +19,24 @@ const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+
+
+  useEffect(() => {
+    const loadUsers = async () => {
+      setLoading(true);
+      try {
+        const data = await fetchUsers();
+        setUsers(data);
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    loadUsers();
+  }, []);
+
 
   const handleDelete = async (id: number) => {
     setShowAlert(true);
@@ -47,30 +67,31 @@ const Dashboard = () => {
     name: 'Luis Monroy',
   };
 
-  
-
-  useEffect(() => {
-    const loadUsers = async () => {
-      setLoading(true);
-      try {
-        const data = await fetchUsers(); // Llama a la función para obtener datos
-        setUsers(data);
-      } catch (error) {
-        console.error('Error fetching users:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    loadUsers();
-  }, []);
-
   const handleAddUser = () => {
     navigate('/create-user');
   };
 
-  const handleAddMassiveUsers = () => {
-    console.log('Agregar usuarios masivos');
+  const handleAddMassiveUsers = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files || event.target.files.length === 0) {
+      toast.error('No se seleccionó ningún archivo');
+      return;
+    }
+
+    const file = event.target.files[0];
+    const formData = new FormData();
+    formData.append('file', file);
+
+    setLoading(true);
+    try {
+      const result = await fetchImportUsersData(formData);
+      console.log('Usuarios importados exitosamente:', result);
+      toast.success('Usuarios importados exitosamente');
+    } catch (error) {
+      console.error('Error al importar usuarios:', error);
+      toast.error('Error al importar usuarios. Por favor, intente de nuevo.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleEdit = (id: number) => {
@@ -98,11 +119,15 @@ const Dashboard = () => {
           </svg>
           <span className="max-xs:sr-only">Crear Usuario</span>
         </Button>
-        <Button 
-          type='button' 
-          className="w-80 btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white"
-          onClick={handleAddMassiveUsers}
+        <label 
+          className="w-80 btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white cursor-pointer"
         >
+          <input
+            type="file"
+            className="hidden"
+            onChange={handleAddMassiveUsers}
+            accept=".xlsx,.xls,.csv"
+          />
           <svg
             className="fill-current shrink-0 xs:hidden"
             width="16"
@@ -112,12 +137,13 @@ const Dashboard = () => {
             <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
           </svg>
           <span className="max-xs:sr-only">Crear Usuarios Masivo</span>
-        </Button>
+        </label>
     </>
   );
 
   return (
     <div className="flex h-[100dvh] overflow-hidden">
+      <ToastContainer />
       {showAlert && (
                 <Alert
                     message="¿Estás seguro de que deseas eliminar este usuario?"
