@@ -39,6 +39,8 @@ import MasterData from './pages/master-data/MasterData';
 import CreateMasterData from './pages/master-data/CreateMasterData';
 import PeriodicEvaluations from './pages/periodic-evaluations/PeriodicEvaluations';
 import CreatePeriodicEvaluations from './pages/periodic-evaluations/CreatePeriodicEvaluations';
+import Evaluations from './pages/evaluations/Evaluations';
+import CreateEvaluations from './pages/evaluations/CreateEvaluations';
 
 function App() {
   return (
@@ -95,6 +97,9 @@ function App() {
           <Route path="/periodic-evaluations" element={<PeriodicEvaluations />} />
           <Route path="/edit-periodic-evaluations/:id" element={<CreatePeriodicEvaluations />} />
           <Route path="/create-periodic-evaluations" element={<CreatePeriodicEvaluations />} />
+          <Route path="/evaluations" element={<Evaluations />} />
+          <Route path="/edit-evaluations/:id" element={<CreateEvaluations />} />
+          <Route path="/create-evaluations" element={<CreateEvaluations />} />
         </Routes>
       </Router>
     </AuthProvider>
