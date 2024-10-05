@@ -37,6 +37,8 @@ import Project from './pages/projects/Project';
 import CreateProject from './pages/projects/CreateProject';
 import MasterData from './pages/master-data/MasterData';
 import CreateMasterData from './pages/master-data/CreateMasterData';
+import PeriodicEvaluations from './pages/periodic-evaluations/PeriodicEvaluations';
+import CreatePeriodicEvaluations from './pages/periodic-evaluations/CreatePeriodicEvaluations';
 
 function App() {
   return (
@@ -90,6 +92,9 @@ function App() {
           <Route path="/master-data" element={<MasterData />} />
           <Route path="/edit-master-data/:id" element={<CreateMasterData />} />
           <Route path="/create-master-data" element={<CreateMasterData />} />
+          <Route path="/periodic-evaluations" element={<PeriodicEvaluations />} />
+          <Route path="/edit-periodic-evaluations/:id" element={<CreatePeriodicEvaluations />} />
+          <Route path="/create-periodic-evaluations" element={<CreatePeriodicEvaluations />} />
         </Routes>
       </Router>
     </AuthProvider>

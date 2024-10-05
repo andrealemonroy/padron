@@ -87,8 +87,7 @@ function DropdownProfile({ align, user }) {
               {user.name}
             </div>
             <div className="text-xs text-gray-500 dark:text-gray-400 italic">
-              {/* {user.roles[0].name} */}
-              Administrador
+              {user.roles[0].name}
             </div>
           </div>
           <ul>

@@ -995,7 +995,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen, variant = 'default' }) {
                           <li className="mb-1 last:mb-0">
                             <NavLink
                               end
-                              to="/utility/changelog"
+                              to="/periodic-evaluations"
                               className={({ isActive }) =>
                                 'block transition duration-150 truncate ' +
                                 (isActive
