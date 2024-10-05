@@ -35,6 +35,8 @@ import UserBanks from './pages/UserBanks';
 import CreateUserBanks from './pages/CreateUserBanks';
 import Project from './pages/projects/Project';
 import CreateProject from './pages/projects/CreateProject';
+import MasterData from './pages/master-data/MasterData';
+import CreateMasterData from './pages/master-data/CreateMasterData';
 
 function App() {
   return (
@@ -85,6 +87,9 @@ function App() {
           <Route path="/projects" element={<Project />} />
           <Route path="/create-projects" element={<CreateProject />} />
           <Route path="/edit-projects/:id" element={<CreateProject />} />
+          <Route path="/master-data" element={<MasterData />} />
+          <Route path="/edit-master-data/:id" element={<CreateMasterData />} />
+          <Route path="/create-master-data" element={<CreateMasterData />} />
         </Routes>
       </Router>
     </AuthProvider>
