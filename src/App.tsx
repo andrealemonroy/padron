@@ -33,6 +33,8 @@ import Incidences from './pages/Incidences';
 import CreateIncidences from './pages/CreateIncidences';
 import UserBanks from './pages/UserBanks';
 import CreateUserBanks from './pages/CreateUserBanks';
+import Project from './pages/projects/Project';
+import CreateProject from './pages/projects/CreateProject';
 
 function App() {
   return (
@@ -80,6 +82,9 @@ function App() {
           <Route path="/edit-incidences/:id" element={<CreateIncidences />} />
           <Route path="/user-banks" element={<UserBanks />} />
           <Route path="/edit-user-banks/:id" element={<CreateUserBanks />} />
+          <Route path="/projects" element={<Project />} />
+          <Route path="/create-projects" element={<CreateProject />} />
+          <Route path="/edit-projects/:id" element={<CreateProject />} />
         </Routes>
       </Router>
     </AuthProvider>
