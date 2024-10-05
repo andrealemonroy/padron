@@ -17,10 +17,6 @@ const PersonalInformation = () => {
   const [PpersonalInformation, setPersonalInformation] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const user = {
-    name: 'Luis Monroy',
-  };
-
   useEffect(() => {
     const load = async () => {
       try {
@@ -87,7 +83,6 @@ const PersonalInformation = () => {
         <Header
           sidebarOpen={sidebarOpen}
           setSidebarOpen={setSidebarOpen}
-          user={user}
         />
 
         <main className="grow">

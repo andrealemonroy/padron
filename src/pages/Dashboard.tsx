@@ -63,10 +63,6 @@ const Dashboard = () => {
       setUserIdToDelete(null);
   };
 
-  const user = {
-    name: 'Luis Monroy',
-  };
-
   const handleAddUser = () => {
     navigate('/create-user');
   };
@@ -158,7 +154,7 @@ const Dashboard = () => {
         <Header
           sidebarOpen={sidebarOpen}
           setSidebarOpen={setSidebarOpen}
-          user={user}
+          
         />
 
         <main className="grow">

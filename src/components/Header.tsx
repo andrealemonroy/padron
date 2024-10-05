@@ -1,9 +1,30 @@
+import { useState, useEffect } from 'react';
 import Notifications from '../components/DropdownNotifications';
 import Help from '../components/DropdownHelp';
 import UserMenu from '../components/DropdownProfile';
 import ThemeToggle from '../components/ThemeToggle';
 
-function Header({ sidebarOpen, setSidebarOpen, variant = 'default', user }) {
+interface User {
+  name: string;
+  // Añade aquí otras propiedades del usuario que necesites
+}
+
+function Header({ sidebarOpen, setSidebarOpen, variant = 'default' }) {
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const userString = localStorage.getItem('user');
+    if (userString) {
+      try {
+        const parsedUser = JSON.parse(userString);
+        setUser(parsedUser);
+      } catch (error) {
+        console.error('Error al parsear el usuario del localStorage:', error);
+      }
+    } else {
+      console.log('No se encontró usuario en el localStorage');
+    }
+  }, []);
 
   return (
     <header
@@ -55,7 +76,7 @@ function Header({ sidebarOpen, setSidebarOpen, variant = 'default', user }) {
             <ThemeToggle />
             {/*  Divider */}
             <hr className="w-px h-6 bg-gray-200 dark:bg-gray-700/60 border-none" />
-            <UserMenu align="right" user={user} />
+            {user && <UserMenu align="right" user={user} />}
           </div>
         </div>
       </div>

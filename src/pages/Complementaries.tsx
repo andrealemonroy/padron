@@ -16,10 +16,6 @@ const Complementaries = () => {
   const [complementary, setComplementary] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const user = {
-    name: 'Luis Monroy',
-  };
-
   useEffect(() => {
     const load = async () => {
       try {
@@ -57,7 +53,6 @@ const Complementaries = () => {
         <Header
           sidebarOpen={sidebarOpen}
           setSidebarOpen={setSidebarOpen}
-          user={user}
         />
 
         <main className="grow">

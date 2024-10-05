@@ -11,6 +11,7 @@ function Signin() {
   const navigate = useNavigate();
   const { login } = useAuth(); // Get the login function from Auth context
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onSubmit = async (data: any) => {
     try {
       await login(data.email, data.password);

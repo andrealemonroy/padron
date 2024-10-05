@@ -19,10 +19,6 @@ const Educations = () => {
   const [education, setEducation] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const user = {
-    name: 'Luis Monroy',
-  };
-
   useEffect(() => {
     const load = async () => {
       try {
@@ -89,7 +85,6 @@ const Educations = () => {
         <Header
           sidebarOpen={sidebarOpen}
           setSidebarOpen={setSidebarOpen}
-          user={user}
         />
 
         <main className="grow">
