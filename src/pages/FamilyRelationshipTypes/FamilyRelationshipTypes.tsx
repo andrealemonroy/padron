@@ -9,10 +9,9 @@ import Spinner from '../../components/Spinner';
 import Breadcrumb from '../../components/BreadCrumb';
 import Button from '../../components/Button';
 import Alert from '../../components/Alert';
-import { deleteMasterData, fetchMasterDatas } from '../../api/masterDataApi';
-import { fetchImportMasterData } from '../../api/ImportsApi';
+import { deleteFamilyRelationshipType, fetchFamilyRelationshipTypes } from '../../api/familyRelationshipTypesApi';
 
-const MasterData = () => {
+const FamilyRelationshipTypes = () => {
   const navigate = useNavigate();
   const [showAlert, setShowAlert] = useState(false);
   const [idToDelete, setIdToDelete] = useState<number | null>(null);
@@ -24,11 +23,11 @@ const MasterData = () => {
     const load = async () => {
       try {
         setLoading(true);
-        const data = await fetchMasterDatas();
+        const data = await fetchFamilyRelationshipTypes();
         setDataValues(data);
       } catch (error) {
-        console.error('Error fetching data:', error);
-        toast.error('Error al cargar los datos');
+        console.error('Error fetching family-relationship-types:', error);
+        toast.error('Error al cargar los tipos de parentesco');
       } finally {
         setLoading(false);
       }
@@ -38,7 +37,7 @@ const MasterData = () => {
   }, []);
 
   const handleEdit = (id: number) => {
-    navigate(`/edit-master-data/${id}`);
+    navigate(`/edit-family-relationship-types/${id}`);
   };
 
   const handleDelete = async (id: number) => {
@@ -50,14 +49,14 @@ const MasterData = () => {
     if (idToDelete) {
       setLoading(true);
         try {
-            await deleteMasterData(idToDelete);
+            await deleteFamilyRelationshipType(idToDelete);
             setDataValues((prev) => prev.filter(dev => dev.id !== idToDelete));
             setShowAlert(false);
-            toast.success('Master Data Base eliminado exitosamente');
-            navigate('/master-data');
+            toast.success('Tipo de parentesco eliminado exitosamente');
+            navigate('/family-relationship-types');
         } catch (error) {
-            console.error('Error al eliminar el Master Data Base:', error);
-            toast.error('Error al eliminar el Master Data Base');
+            console.error('Error al eliminar el proyecto:', error);
+            toast.error('Error al eliminar el proyecto');
         } finally {
           setLoading(false);
         }
@@ -70,35 +69,11 @@ const MasterData = () => {
   };
 
   const breadcrumbItems = [
-    { label: 'Master Data Base', path: '/master-data' },
+    { label: 'Tipos de parentesco', path: '/family-relationship-types' },
   ];
 
   const handleAdd = () => {
-    navigate('/create-master-data');
-  };
-
-  const handleAddMassiveMasterData = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!event.target.files || event.target.files.length === 0) {
-      toast.error('No se seleccionó ningún archivo');
-      return;
-    }
-
-    const file = event.target.files[0];
-    const formData = new FormData();
-    formData.append('file', file);
-
-    setLoading(true);
-    try {
-      const result = await fetchImportMasterData(formData);
-      console.log('Master Data Base importados exitosamente:', result);
-      toast.success('Master Data Base importados exitosamente');
-    } catch (error) {
-      console.error('Error al importar Master Data Base:', error);
-      toast.error('Error al importar Master Data Base. Por favor, intente de nuevo.');
-    } finally {
-      setLoading(false);
-      navigate('/master-data');
-    }
+    navigate('/create-family-relationship-types');
   };
 
   const addButton = (
@@ -116,28 +91,8 @@ const MasterData = () => {
           >
             <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1z" />
           </svg>
-          <span className="max-xs:sr-only">Crear Master Data Base</span>
+          <span className="max-xs:sr-only">Crear Tipo de parentesco</span>
         </Button>
-
-        <label 
-          className="w-80 btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white cursor-pointer"
-        >
-          <input
-            type="file"
-            className="hidden"
-            onChange={handleAddMassiveMasterData}
-            accept=".xlsx,.xls,.csv"
-          />
-          <svg
-            className="fill-current shrink-0 xs:hidden"
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-          >
-            <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
-          </svg>
-          <span className="max-xs:sr-only">Crear Data Base Masivo</span>
-        </label>
     </>
   );
 
@@ -175,28 +130,18 @@ const MasterData = () => {
                 <Table
               columns={[
                 {
-                  header: 'Nombres',
-                  accessorKey: 'name',
+                  header: 'Codigo',
+                  accessorKey: 'code',
                   cell: (info) => info.getValue(),
                 },
                 {
-                  header: 'Tipo de Documento',
-                  accessorKey: 'DNIType',
-                  cell: (info) => info.getValue(),
-                },
-                {
-                  header: 'Documento',
-                  accessorKey: 'DNINumber',
-                  cell: (info) => info.getValue(),
-                },
-                {
-                  header: 'Apellidos',
-                  accessorKey: 'surname1',
+                  header: 'Descripción',
+                  accessorKey: 'description',
                   cell: (info) => info.getValue(),
                 },
               ]}
               data={dataValues}
-              fetchData={fetchMasterDatas}
+              fetchData={fetchFamilyRelationshipTypes}
               pageCount={1}
               addButton={addButton}
               onEdit={handleEdit}
@@ -214,4 +159,4 @@ const MasterData = () => {
   );
 };
 
-export default MasterData;
+export default FamilyRelationshipTypes;

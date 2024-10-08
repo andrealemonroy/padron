@@ -41,6 +41,8 @@ import PeriodicEvaluations from './pages/periodic-evaluations/PeriodicEvaluation
 import CreatePeriodicEvaluations from './pages/periodic-evaluations/CreatePeriodicEvaluations';
 import Evaluations from './pages/evaluations/Evaluations';
 import CreateEvaluations from './pages/evaluations/CreateEvaluations';
+import CreateFamilyRelationshipTypes from './pages/FamilyRelationshipTypes/CreateFamilyRelationshipTypes';
+import FamilyRelationshipTypes from './pages/FamilyRelationshipTypes/FamilyRelationshipTypes';
 
 function App() {
   return (
@@ -100,6 +102,9 @@ function App() {
           <Route path="/evaluations" element={<Evaluations />} />
           <Route path="/edit-evaluations/:id" element={<CreateEvaluations />} />
           <Route path="/create-evaluations" element={<CreateEvaluations />} />
+          <Route path="/family-relationship-types" element={<FamilyRelationshipTypes />} />
+          <Route path="/edit-family-relationship-types/:id" element={<CreateFamilyRelationshipTypes />} />
+          <Route path="/create-family-relationship-types" element={<CreateFamilyRelationshipTypes />} />
         </Routes>
       </Router>
     </AuthProvider>
