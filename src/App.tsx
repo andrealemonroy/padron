@@ -45,6 +45,8 @@ import CreateFamilyRelationshipTypes from './pages/family-relationship-types/Cre
 import FamilyRelationshipTypes from './pages/family-relationship-types/FamilyRelationshipTypes';
 import BeneficiaryProofDocuments from './pages/beneficiary-proof-documents/BeneficiaryProofDocuments';
 import CreateBeneficiaryProofDocuments from './pages/beneficiary-proof-documents/CreateBeneficiaryProofDocuments';
+import CreateQualityRatings from './pages/quality-ratings/CreateQualityRatings';
+import QualityRatings from './pages/quality-ratings/QualityRatings';
 
 function App() {
   return (
@@ -110,6 +112,9 @@ function App() {
           <Route path="/beneficiary-proof-documents" element={<BeneficiaryProofDocuments />} />
           <Route path="/edit-beneficiary-proof-documents/:id" element={<CreateBeneficiaryProofDocuments />} />
           <Route path="/create-beneficiary-proof-documents" element={<CreateBeneficiaryProofDocuments />} />
+          <Route path="/quality-ratings" element={<QualityRatings />} />
+          <Route path="/edit-quality-ratings/:id" element={<CreateQualityRatings />} />
+          <Route path="/create-quality-ratings" element={<CreateQualityRatings />} />
         </Routes>
       </Router>
     </AuthProvider>
