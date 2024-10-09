@@ -41,8 +41,10 @@ import PeriodicEvaluations from './pages/periodic-evaluations/PeriodicEvaluation
 import CreatePeriodicEvaluations from './pages/periodic-evaluations/CreatePeriodicEvaluations';
 import Evaluations from './pages/evaluations/Evaluations';
 import CreateEvaluations from './pages/evaluations/CreateEvaluations';
-import CreateFamilyRelationshipTypes from './pages/FamilyRelationshipTypes/CreateFamilyRelationshipTypes';
-import FamilyRelationshipTypes from './pages/FamilyRelationshipTypes/FamilyRelationshipTypes';
+import CreateFamilyRelationshipTypes from './pages/family-relationship-types/CreateFamilyRelationshipTypes';
+import FamilyRelationshipTypes from './pages/family-relationship-types/FamilyRelationshipTypes';
+import BeneficiaryProofDocuments from './pages/beneficiary-proof-documents/BeneficiaryProofDocuments';
+import CreateBeneficiaryProofDocuments from './pages/beneficiary-proof-documents/CreateBeneficiaryProofDocuments';
 
 function App() {
   return (
@@ -105,6 +107,9 @@ function App() {
           <Route path="/family-relationship-types" element={<FamilyRelationshipTypes />} />
           <Route path="/edit-family-relationship-types/:id" element={<CreateFamilyRelationshipTypes />} />
           <Route path="/create-family-relationship-types" element={<CreateFamilyRelationshipTypes />} />
+          <Route path="/beneficiary-proof-documents" element={<BeneficiaryProofDocuments />} />
+          <Route path="/edit-beneficiary-proof-documents/:id" element={<CreateBeneficiaryProofDocuments />} />
+          <Route path="/create-beneficiary-proof-documents" element={<CreateBeneficiaryProofDocuments />} />
         </Routes>
       </Router>
     </AuthProvider>

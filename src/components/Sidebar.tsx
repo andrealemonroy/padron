@@ -331,7 +331,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen, variant = 'default' }) {
                           <li className="mb-1 last:mb-0">
                             <NavLink
                               end
-                              to="/acreditation"
+                              to="/beneficiary-proof-documents"
                               className={({ isActive }) =>
                                 'block transition duration-150 truncate ' +
                                 (isActive
@@ -363,7 +363,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen, variant = 'default' }) {
                           <li className="mb-1 last:mb-0">
                             <NavLink
                               end
-                              to="/evaluation-para"
+                              to="/quality-ratings"
                               className={({ isActive }) =>
                                 'block transition duration-150 truncate ' +
                                 (isActive
