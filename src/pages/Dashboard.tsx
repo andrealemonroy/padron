@@ -183,12 +183,24 @@ const Dashboard = () => {
                     {
                       header: 'Rol',
                       accessorKey: 'roles',
-                      cell: (info) => info.getValue()?.[0]?.name || 'Sin rol',
+                      cell: ({ row }) => {
+                        const roles = row.getValue('roles') as { name: string }[];
+                        return roles[0]?.name || 'Sin rol';
+                      },
+                      filterFn: (row, id, value) => {
+                        const roles = row.getValue(id) as { name: string }[];
+                        return roles[0]?.name?.toLowerCase().includes(value.toLowerCase());
+                      },
                     },
                     {
                       header: 'Estado',
                       accessorKey: 'status_id',
-                      cell: (info) => info.getValue() == 1 ? 'Activo' : 'Inactivo' ,
+                      cell: (info) => info.getValue() === 1 ? 'Activo' : 'Inactivo',
+                      filterFn: (row, id, value) => {
+                        const statusId = row.getValue(id) as number;
+                        const estado = statusId === 1 ? 'Activo' : 'Inactivo';
+                        return estado.toLowerCase().includes(value.toLowerCase());
+                      },
                     },
                   ]}
                   data={users}

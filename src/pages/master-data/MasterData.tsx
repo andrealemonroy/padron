@@ -181,7 +181,7 @@ const MasterData = () => {
                 },
                 {
                   header: 'Tipo de Documento',
-                  accessorKey: 'DNIType',
+                  accessorKey: 'document.description',
                   cell: (info) => info.getValue(),
                 },
                 {

@@ -7,6 +7,7 @@ import {
   getSortedRowModel,
   ColumnDef,
   flexRender,
+  ColumnFiltersState,
 } from '@tanstack/react-table';
 
 import Button from '../components/Button';
@@ -34,13 +35,28 @@ const Table: React.FC<TableProps> = ({ columns, data, pageCount, addButton, onEd
     pageIndex: 0,
     pageSize: 10,
   });
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
-  
   const paginatedData = React.useMemo(() => {
     const start = pagination.pageIndex * pagination.pageSize;
     const end = start + pagination.pageSize;
     return data.slice(start, end); // Devuelve solo los datos de la página actual
   }, [data, pagination]);
+
+  const customFilter = (row, columnId, filterValue) => {
+    const cellValue = row.getValue(columnId);
+    console.log('row, columnId, filterValue', row, columnId, filterValue);
+    if (columnId === 'roles') {
+      return cellValue[0]?.name?.toLowerCase().includes(filterValue.toLowerCase());
+    }
+    
+    if (columnId === 'estado') {
+      return cellValue?.toLowerCase().includes(filterValue.toLowerCase());
+    }
+    
+    // Para otros campos
+    return String(cellValue).toLowerCase().includes(filterValue.toLowerCase());
+  };
 
   const table = useReactTable({
     columns,
@@ -49,21 +65,59 @@ const Table: React.FC<TableProps> = ({ columns, data, pageCount, addButton, onEd
       globalFilter,
       sorting,
       pagination,
+      columnFilters,
     },
     onGlobalFilterChange: setGlobalFilter,
     onSortingChange: setSorting,
     onPaginationChange: setPagination,
+    onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
     manualPagination: true,
     pageCount,
-    globalFilterFn: (row, columnId, value) => {
-      const rowValue = row.getValue(columnId);
-      return rowValue !== undefined ? String(rowValue).toLowerCase().includes(value.toLowerCase()) : false;
+    filterFns: {
+      customFilter,
     },
+    globalFilterFn: customFilter,
   });
+
+  const handleColumnFilterChange = (columnId: string, value: string) => {
+    setColumnFilters((prev) => {
+      console.log('prev', prev);
+      const newFilters = prev.filter((filter) => filter.id !== columnId);
+      console.log(newFilters, value, columnId);
+      
+      if (value) {
+        if (columnId === 'roles') {
+          // Filtrar por el nombre del rol
+          newFilters.push({
+            id: columnId,
+            value: value,
+            filterFn: (row) => {
+              const roles = row.getValue('roles');
+              return roles[0]?.name?.toLowerCase().includes(value.toLowerCase());
+            }
+          });
+        } else if (columnId === 'status_id') {
+          // Filtrar por estado
+          newFilters.push({
+            id: columnId,
+            value: value,
+            filterFn: (row) => {
+              const estado = row.getValue('status_id');
+              return estado?.toLowerCase().includes(value.toLowerCase());
+            }
+          });
+        } else {
+          // Para otras columnas, usar el filtro estándar
+          newFilters.push({ id: columnId, value: value });
+        }
+      }
+      return newFilters;
+    });
+  };
 
   return (
     <>
@@ -71,6 +125,7 @@ const Table: React.FC<TableProps> = ({ columns, data, pageCount, addButton, onEd
 
         {/* Global Filter */}
         <header className="px-5 py-4 flex gap-4">
+        {/*
         <div className="relative w-full">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <svg
@@ -93,6 +148,7 @@ const Table: React.FC<TableProps> = ({ columns, data, pageCount, addButton, onEd
             onChange={(e) => setGlobalFilter(e.target.value)}
           />
         </div>
+        */}
         {addButton}
         
         </header>
@@ -101,40 +157,48 @@ const Table: React.FC<TableProps> = ({ columns, data, pageCount, addButton, onEd
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <th
-                    key={header.id}
-                    className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap uppercase "
-                  >
-                    <div className="font-semibold text-left">
-                      {header.isPlaceholder ? null : (
-                        <div
-                          {...{
-                            className: header.column.getCanSort()
-                              ? 'cursor-pointer select-none'
-                              : '',
-                            onClick: header.column.getToggleSortingHandler(),
-                          }}
-                        >
-                          {flexRender(header.column.columnDef.header, header.getContext())}
-                          {header.column.getIsSorted()
-                            ? header.column.getIsSorted() === 'desc'
-                              ? ' 🔽'
-                              : ' 🔼'
-                            : null}
-                        </div>
-                      )}
-                    </div>
-                    
+              <React.Fragment key={headerGroup.id}>
+                <tr>
+                  {headerGroup.headers.map((header) => (
+                    <th key={header.id} className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap uppercase">
+                      <div className="font-semibold text-left">
+                        {header.isPlaceholder ? null : (
+                          <div
+                            {...{
+                              className: header.column.getCanSort() ? 'cursor-pointer select-none' : '',
+                              onClick: header.column.getToggleSortingHandler(),
+                            }}
+                          >
+                            {flexRender(header.column.columnDef.header, header.getContext())}
+                            {header.column.getIsSorted()
+                              ? header.column.getIsSorted() === 'desc'
+                                ? ' 🔽'
+                                : ' 🔼'
+                              : null}
+                          </div>
+                        )}
+                      </div>
+                    </th>
+                  ))}
+                  <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                    <div className="font-semibold text-left">ACCIONES</div>
                   </th>
-                ))}
-                <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                  <div className="font-semibold text-left">
-                    ACCIONES
-                  </div>
-                </th>
-              </tr>
+                </tr>
+                <tr>
+                  {headerGroup.headers.map((header) => (
+                    <th key={header.id} className="px-2 first:pl-5 last:pr-5 py-2 whitespace-nowrap">
+                      <input
+                        type="text"
+                        value={columnFilters.find((filter) => filter.id === header.column.id)?.value || ''}
+                        onChange={(e) => handleColumnFilterChange(header.column.id, e.target.value)}
+                        placeholder={`Filtrar ${header.column.columnDef.header}`}
+                        className="w-full px-2 py-1 text-sm border rounded"
+                      />
+                    </th>
+                  ))}
+                  <th></th>
+                </tr>
+              </React.Fragment>
             ))}
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
