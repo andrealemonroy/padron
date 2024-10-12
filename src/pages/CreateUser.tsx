@@ -53,7 +53,7 @@ const CreateUser = () => {
       } else {
         await createUser(data);
       }
-      navigate('/dashboard'); // Navigate to dashboard after success
+      navigate('/usuarios'); // Navigate to usuarios after success
     } catch (error) {
       setError(id ? 'Error al actualizar el usuario.' : `Error al crear el usuario. ${error}`);
     }
@@ -83,7 +83,7 @@ const CreateUser = () => {
 
   // Define breadcrumb items
   const breadcrumbItems = [
-    { label: 'Usuarios', path: '/dashboard' },
+    { label: 'Usuarios', path: '/usuarios' },
     { label: id ? 'Editar Usuario' : 'Crear Usuario', path: `${id ? '/edit-user/' + id : '/create-user'}` },
   ];
 

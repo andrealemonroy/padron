@@ -11,7 +11,7 @@ import Breadcrumb from '../components/BreadCrumb';
 import { fetchImportUsersData } from '../api/ImportsApi';
 import { toast, ToastContainer } from 'react-toastify';
 
-const Dashboard = () => {
+const User = () => {
   const navigate = useNavigate();
 
   const [showAlert, setShowAlert] = useState(false);
@@ -49,7 +49,7 @@ const Dashboard = () => {
           try {
               await deleteUser(userIdToDelete);
               setShowAlert(false);
-              navigate('/dashboard');
+              navigate('/usuarios');
           } catch (error) {
               console.error('Error al eliminar el usuario:', error);
           } finally {
@@ -95,7 +95,7 @@ const Dashboard = () => {
   };
 
   const breadcrumbItems = [
-    { label: 'Usuarios', path: '/dashboard' },
+    { label: 'Usuarios', path: '/usuarios' },
   ];
 
   const addButton = (
@@ -222,4 +222,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default User;

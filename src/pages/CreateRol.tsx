@@ -86,7 +86,7 @@ const CreateRol = () => {
   ];
 
   const breadcrumbItems = [
-    { label: 'Roles', path: '/dashboard' },
+    { label: 'Roles', path: '/usuarios' },
     { label: id ? 'Editar Rol' : 'Crear Rol', path: id ? `/edit-rol/${id}` : '/create-rol' },
   ];
 

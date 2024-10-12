@@ -14,7 +14,7 @@ interface User {
 // Define the AuthContext type
 interface AuthContextType {
   user: User | null;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
   isLoading: boolean;
   isAuthenticated: boolean;
@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setIsLoading(false);
   }, []);
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string): Promise<boolean> => {
     try {
       setIsLoading(true);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -52,8 +52,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       localStorage.setItem('user', JSON.stringify(userData));
       
       setUser({ ...userData, token });
+      return true;
     } catch (error) {
       console.error('Login error:', error);
+      return false;
     } finally {
       setIsLoading(false);
     }
@@ -66,7 +68,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isLoading, isAuthenticated: !!user }}>
+    <AuthContext.Provider value={{ 
+      user, 
+      login: async (email, password) => await login(email, password), 
+      logout, 
+      isLoading, 
+      isAuthenticated: !!user 
+    }}>
       {!isLoading && children}
     </AuthContext.Provider>
   );

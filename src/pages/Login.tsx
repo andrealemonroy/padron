@@ -1,10 +1,11 @@
 import { Link, useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast';
 import AuthImage from '../images/auth-image.jpg';
 import { useAuth } from '../context/AuthProvider';
 import Form from '../components/Form';
 import FormInput from '../components/FormInput';
 import Button from '../components/Button'; // Import the Button component
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 function Signin() {
@@ -14,19 +15,22 @@ function Signin() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onSubmit = async (data: any) => {
     try {
-      await login(data.email, data.password);
-
-      navigate('/dashboard');
+      const response = await login(data.email, data.password);
+      
+      if (response) {
+          navigate('/dashboard');
+      } else {
+        toast.error('Usuario o contraseña incorrectos');
+      }
     } catch (error) {
-      toast.error(
-        'Ocurrió un error al iniciar sesión, por favor, revisa tus credenciales'
-      );
-      console.error('Sign-in error', error);
+      // Capturamos cualquier error y mostramos un toast
+      toast.error(error instanceof Error ? error.message : 'Error en el inicio de sesión');
     }
   };
 
   return (
     <main className="bg-white dark:bg-gray-900">
+       <ToastContainer />
       <div className="relative md:flex">
         {/* Content */}
         <div className="md:w-1/2">
