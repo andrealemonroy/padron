@@ -26,6 +26,7 @@ interface TableProps {
   onDelete: (id: number) => void;
   showEditButton?: boolean;
   showDeleteButton?: boolean;
+  filterFn?: (row: unknown, id: string, value: string) => boolean;
 }
 
 const Table: React.FC<TableProps> = ({ columns, data, pageCount, addButton, onEdit, onDelete,  showEditButton = true, showDeleteButton = true, }) => {
@@ -95,20 +96,12 @@ const Table: React.FC<TableProps> = ({ columns, data, pageCount, addButton, onEd
           newFilters.push({
             id: columnId,
             value: value,
-            filterFn: (row) => {
-              const roles = row.getValue('roles');
-              return roles[0]?.name?.toLowerCase().includes(value.toLowerCase());
-            }
           });
         } else if (columnId === 'status_id') {
           // Filtrar por estado
           newFilters.push({
             id: columnId,
             value: value,
-            filterFn: (row) => {
-              const estado = row.getValue('status_id');
-              return estado?.toLowerCase().includes(value.toLowerCase());
-            }
           });
         } else {
           // Para otras columnas, usar el filtro estándar
@@ -189,7 +182,7 @@ const Table: React.FC<TableProps> = ({ columns, data, pageCount, addButton, onEd
                     <th key={header.id} className="px-2 first:pl-5 last:pr-5 py-2 whitespace-nowrap">
                       <input
                         type="text"
-                        value={columnFilters.find((filter) => filter.id === header.column.id)?.value || ''}
+                        value={columnFilters.find((filter) => filter.id === header.column.id)?.value as string || ''}
                         onChange={(e) => handleColumnFilterChange(header.column.id, e.target.value)}
                         placeholder={`Filtrar ${header.column.columnDef.header}`}
                         className="w-full px-2 py-1 text-sm border rounded"
