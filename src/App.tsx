@@ -56,7 +56,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/" element={<LoginPage />} />
           <Route
-            path="/dashboard"
+            path="/usuarios"
             element={
               <PrivateRoute>
                 <Dashboard />
