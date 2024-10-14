@@ -8,7 +8,7 @@ import Spinner from '../../components/Spinner';
 import Breadcrumb from '../../components/BreadCrumb';
 import DynamicForm from '../../components/DynamicForm';
 import { fetchUsers } from '../../api/userApi';
-import { createEvaluation, editEvaluation, fetchEvaluation } from '../../api/EvaluationsApi';
+import { createEvaluation, editEvaluation, fetchEvaluation } from '../../api/evaluationsApi';
 
 const CreateEvaluation = () => {
   const navigate = useNavigate();
