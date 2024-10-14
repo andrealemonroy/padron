@@ -143,7 +143,7 @@ function Table<TData extends object>({
                           width: customWidth,
                           minWidth: customWidth,
                         }}
-                        className="sticky top-0 bg-white z-10 p-2"
+                        className="sticky top-0 z-10 p-2 bg-white dark:bg-gray-800"
                       >
                         {header.isPlaceholder
                           ? null
@@ -156,7 +156,7 @@ function Table<TData extends object>({
                   })}
                   {actions && actions.length > 0 && (
                     <th
-                      className="sticky top-0 bg-white z-10 p-2"
+                      className="sticky top-0 bg-white dark:bg-gray-800 z-10 p-2"
                       style={{ minWidth: '100px' }}
                     >
                       Acciones
@@ -175,7 +175,7 @@ function Table<TData extends object>({
                           width: customWidth,
                           minWidth: customWidth,
                         }}
-                        className="sticky top-[40px] bg-white z-10 p-2"
+                        className="sticky top-[40px] bg-white dark:bg-gray-800 z-10 p-2"
                       >
                         {header.column.getCanFilter() &&
                         header.column.columnDef.meta?.filterComponent
@@ -188,7 +188,7 @@ function Table<TData extends object>({
                   })}
                   {actions && actions.length > 0 && (
                     <th
-                      className="sticky top-[40px] bg-white z-10 p-2"
+                      className="sticky top-[40px] bg-white dark:bg-gray-800 z-10 p-2"
                       style={{ minWidth: '100px' }}
                     />
                   )}
@@ -209,7 +209,7 @@ function Table<TData extends object>({
                         width: customWidth,
                         minWidth: customWidth,
                       }}
-                      className="whitespace-nowrap overflow-hidden text-ellipsis p-2 bg-white border-b"
+                      className="whitespace-nowrap overflow-hidden text-ellipsis p-2 bg-white border-b dark:bg-gray-800"
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
@@ -219,7 +219,7 @@ function Table<TData extends object>({
                   );
                 })}
                 {actions && actions.length > 0 && (
-                  <td style={{ minWidth: '100px' }} className='bg-white border-b'>
+                  <td style={{ minWidth: '100px' }} className='bg-white border-b dark:bg-gray-800'>
                     <div className="flex justify-center gap-2">
                       {actions.map((action, index) => (
                         <button

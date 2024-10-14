@@ -27,7 +27,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
 }) => {
   return (
     <nav
-      className="flex justify-between bg-white w-full px-4 py-2 rounded-md h-14 mb-4"
+      className="flex justify-between w-full px-4 py-2 rounded-md h-14 mb-4 bg-white dark:bg-gray-800 shadow-sm dark:shadow-none"
       aria-label="Breadcrumb"
     >
       <ol className="inline-flex items-center space-x-1 md:space-x-3">
