@@ -10,6 +10,7 @@ import Breadcrumb from '../../components/BreadCrumb';
 import { deleteProject, fetchProjects } from '../../api/projectApi';
 import Button from '../../components/Button';
 import Alert from '../../components/Alert';
+import { getActions } from '../../utils/actions';
 
 const Project = () => {
   const navigate = useNavigate();
@@ -118,51 +119,100 @@ const Project = () => {
         <main className="grow">
           <div className='px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto'>
 
-            <div className="sm:flex sm:justify-between sm:items-center mb-5">
+            <div className="sm:flex sm:justify-between sm:items-center">
               {/* Add breadcrumb here */}
-              <Breadcrumb items={breadcrumbItems} />
+              <Breadcrumb items={breadcrumbItems} buttons={[{ text: 'Crear Proyecto', action: handleAdd }]} />
             </div>
 
             {loading ? (
-              <Spinner loading={loading} size={50} color="#3498db" /> // Show spinner while loading
+              <Spinner loading={loading} size={50} color="#3498db" />
             ) : (
-              <>
                 <Table
               columns={[
                 {
-                  header: 'Codigo',
+                  header: 'Código',
                   accessorKey: 'code',
                   cell: (info) => info.getValue(),
+                  meta: {
+                    width: '120px',
+                    filterComponent: (column) => (
+                      <input
+                        type="text"
+                        value={(column.getFilterValue() ?? '') as string}
+                        onChange={(e) => column.setFilterValue(e.target.value)}
+                        placeholder="Filtrar Código"
+                        className="w-full px-2 py-1 text-sm border rounded"
+                      />
+                    ),
+                  },
                 },
                 {
                   header: 'Nombre',
                   accessorKey: 'name',
                   cell: (info) => info.getValue(),
+                  meta: {
+                    width: '350px',
+                    filterComponent: (column) => (
+                      <input
+                        type="text"
+                        value={(column.getFilterValue() ?? '') as string}
+                        onChange={(e) => column.setFilterValue(e.target.value)}
+                        placeholder="Filtrar Nombre"
+                        className="w-full px-2 py-1 text-sm border rounded"
+                      />
+                    ),
+                  },
                 },
                 {
                   header: 'Cliente',
                   accessorKey: 'client',
                   cell: (info) => info.getValue(),
+                  meta: {
+                    filterComponent: (column) => (
+                      <input
+                        type="text"
+                        value={(column.getFilterValue() ?? '') as string}
+                        onChange={(e) => column.setFilterValue(e.target.value)}
+                        placeholder="Filtrar Cliente"
+                        className="w-full px-2 py-1 text-sm border rounded"
+                      />
+                    ),
+                  },
                 },
                 {
                   header: 'Fecha de inicio',
                   accessorKey: 'start_date',
                   cell: (info) => info.getValue(),
+                  meta: {
+                    filterComponent: (column) => (
+                      <input
+                        type="date"
+                        value={(column.getFilterValue() ?? '') as string}
+                        onChange={(e) => column.setFilterValue(e.target.value)}
+                        className="w-full px-2 py-1 text-sm border rounded"
+                      />
+                    ),
+                  },
                 },
                 {
                   header: 'Fecha de finalización',
                   accessorKey: 'end_date',
                   cell: (info) => info.getValue(),
+                  meta: {
+                    filterComponent: (column) => (
+                      <input
+                        type="date"
+                        value={(column.getFilterValue() ?? '') as string}
+                        onChange={(e) => column.setFilterValue(e.target.value)}
+                        className="w-full px-2 py-1 text-sm border rounded"
+                      />
+                    ),
+                  },
                 },
               ]}
               data={dataValues}
-              fetchData={fetchProjects}
-              pageCount={1}
-              addButton={addButton}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
+              actions={getActions({ handleEdit, handleDelete })}
             />
-              </>
             )}
             
 

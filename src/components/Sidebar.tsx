@@ -3,6 +3,7 @@ import { NavLink, useLocation } from 'react-router-dom';
 
 import SidebarLinkGroup from './SidebarLinkGroup';
 import { fetchMenu } from '../api/menuApi';
+import { HiAnnotation, HiBell, HiDocument, HiDocumentReport, HiPaperClip, HiTable, HiUser, HiUserCircle, HiUsers } from 'react-icons/hi';
 
 function Sidebar({ sidebarOpen, setSidebarOpen, variant = 'default' }) {
   const [menuStructure, setMenuStructure] = useState(null);
@@ -23,7 +24,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen, variant = 'default' }) {
       try {
         // Primero, intentamos obtener los datos del localStorage
         const cachedMenuData = localStorage.getItem('menuStructure');
-        
+
         if (cachedMenuData) {
           // Si los datos existen en localStorage, los usamos
           setMenuStructure(JSON.parse(cachedMenuData));
@@ -32,10 +33,12 @@ function Sidebar({ sidebarOpen, setSidebarOpen, variant = 'default' }) {
           // Si no hay datos en localStorage, hacemos la petición al backend
           const menuData = await fetchMenu();
           setMenuStructure(menuData);
-          
+
           // Guardamos los datos en localStorage para futuras visitas
           localStorage.setItem('menuStructure', JSON.stringify(menuData));
-          console.log('Datos del menú cargados desde el backend y guardados en localStorage');
+          console.log(
+            'Datos del menú cargados desde el backend y guardados en localStorage'
+          );
         }
       } catch (error) {
         console.error('Error al cargar la estructura del menú:', error);
@@ -43,7 +46,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen, variant = 'default' }) {
     };
 
     loadMenuStructure();
-    
+
     const clickHandler = ({ target }) => {
       if (!sidebar.current || !trigger.current) return;
       if (
@@ -128,108 +131,112 @@ function Sidebar({ sidebarOpen, setSidebarOpen, variant = 'default' }) {
 
         <div className="space-y-8">
           {/* Pages group */}
-          {menuStructure && menuStructure.map((item, index) => (
-            <div key={index}>
-            <h3 className="text-xs uppercase text-gray-400 dark:text-gray-500 font-semibold pl-3">
-              <span
-                className="hidden lg:block lg:sidebar-expanded:hidden 2xl:hidden text-center w-6"
-                aria-hidden="true"
-              >
-                •••
-              </span>
-              <span className="lg:hidden lg:sidebar-expanded:block 2xl:block">
-                {item.title}
-              </span>
-            </h3>
-            <ul className="mt-3">
-              {Object.entries(item.children).map(([key, child]) => (
-                <SidebarLinkGroup
-                key={key}
-                activecondition={pathname.includes((child as { route: string }).route)}
-              >
-                {(handleClick, open) => {
-                  return (
-                    <React.Fragment>
-                      <a
-                        href="#0"
-                        className={`block text-gray-800 dark:text-gray-100 truncate transition duration-150 ${
-                          pathname.includes('trabajador')
-                            ? ''
-                            : 'hover:text-gray-900 dark:hover:text-white'
-                        }`}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleClick();
-                          setSidebarExpanded(true);
-                        }}
-                      >
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center">
-                            <svg
-                              className={`shrink-0 fill-current ${
-                                pathname.includes('utility')
-                                  ? 'text-violet-500'
-                                  : 'text-gray-400 dark:text-gray-500'
+          {menuStructure &&
+            menuStructure.map((item, index) => (
+              <div key={index}>
+                <h3 className="text-xs uppercase text-gray-400 dark:text-gray-500 font-semibold pl-3">
+                  <span
+                    className="hidden lg:block lg:sidebar-expanded:hidden 2xl:hidden text-center w-6"
+                    aria-hidden="true"
+                  >
+                    •••
+                  </span>
+                  <span className="lg:hidden lg:sidebar-expanded:block 2xl:block">
+                    {item.title}
+                  </span>
+                </h3>
+                <ul className="mt-3">
+                  {Object.entries(item.children).map(([key, child]: any) => (
+                    <SidebarLinkGroup
+                      key={key}
+                      activecondition={pathname.includes(
+                        (child as { route: string }).route
+                      )}
+                    >
+                      {(handleClick, open) => {
+                        return (
+                          <React.Fragment>
+                            <a
+                              href="#0"
+                              className={`block text-gray-800 dark:text-gray-100 truncate transition duration-150 ${
+                                pathname.includes('trabajador')
+                                  ? ''
+                                  : 'hover:text-gray-900 dark:hover:text-white'
                               }`}
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="16"
-                              height="16"
-                              viewBox="0 0 16 16"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleClick();
+                                setSidebarExpanded(true);
+                              }}
                             >
-                              <path d="M14.75 2.5a1.25 1.25 0 1 0 0-2.5 1.25 1.25 0 0 0 0 2.5ZM14.75 16a1.25 1.25 0 1 0 0-2.5 1.25 1.25 0 0 0 0 2.5ZM2.5 14.75a1.25 1.25 0 1 1-2.5 0 1.25 1.25 0 0 1 2.5 0ZM1.25 2.5a1.25 1.25 0 1 0 0-2.5 1.25 1.25 0 0 0 0 2.5Z" />
-                              <path d="M8 2a6 6 0 1 0 0 12A6 6 0 0 0 8 2ZM4 8a4 4 0 1 1 8 0 4 4 0 0 1-8 0Z" />
-                            </svg>
-                            <span className="text-sm font-medium ml-4 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                            {(child as { title: string })?.title}
-                            </span>
-                          </div>
-                          {/* Icon */}
-                          <div className="flex shrink-0 ml-2">
-                            <svg
-                              className={`w-3 h-3 shrink-0 ml-1 fill-current text-gray-400 dark:text-gray-500 ${
-                                open && 'rotate-180'
-                              }`}
-                              viewBox="0 0 12 12"
-                            >
-                              <path d="M5.9 11.4L.5 6l1.4-1.4 4 4 4-4L11.3 6z" />
-                            </svg>
-                          </div>
-                        </div>
-                      </a>
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center">
+                                  {/* Icon */}
+                                  <span className="w-6 h-6 flex-shrink-0 m-auto">
+                                    {child.title === 'Usuarios' ? <HiUser size={20} /> : null}
+                                    {child.title === 'Tablas' ? <HiTable size={20}/> : null}
+                                    {child.title === 'Notificaciones' ? <HiBell size={20}/> : null}
+                                    {child.title === 'Trabajador' ? <HiUserCircle size={20} /> : null}
+                                    {child.title === 'RRHH' ? <HiUsers size={20} /> : null}
+                                    {child.title === 'Nóminas' ? <HiPaperClip size={20} /> : null}
+                                    {child.title === 'Contratos' ? <HiDocument size={20} /> : null}
+                                    {child.title === 'Evaluación' ? <HiAnnotation size={20} /> : null}
+                                    {child.title === 'Reportes' ? <HiDocumentReport size={20} /> : null}
+                                  </span>
+                                  <span className="text-sm font-medium ml-4 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                                    {(child as { title: string })?.title}
+                                  </span>
+                                </div>
+                                {/* Icon */}
+                                <div className="flex shrink-0 ml-2">
+                                  <svg
+                                    className={`w-3 h-3 shrink-0 ml-1 fill-current text-gray-400 dark:text-gray-500 ${
+                                      open && 'rotate-180'
+                                    }`}
+                                    viewBox="0 0 12 12"
+                                  >
+                                    <path d="M5.9 11.4L.5 6l1.4-1.4 4 4 4-4L11.3 6z" />
+                                  </svg>
+                                </div>
+                              </div>
+                            </a>
 
-                      <div className="lg:hidden lg:sidebar-expanded:block 2xl:block">
-                        <ul className={`pl-8 mt-1 ${!open && 'hidden'}`}>
-                          {Object.entries((child as { children: Record<string, unknown> }).children).map(([keyi, subChild]) => (
-                            <li key={keyi} className="mb-1 last:mb-0">
-                            <NavLink
-                              end
-                              to={(subChild as { route: string }).route}
-                              className={({ isActive }) =>
-                                'block transition duration-150 truncate ' +
-                                (isActive
-                                  ? 'text-violet-500'
-                                  : 'text-gray-500/90 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200')
-                              }
-                            >
-                              <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                                {(subChild as { title: string }).title}
-                              </span>
-                            </NavLink>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </React.Fragment>
-                  );
-                }}
-              </SidebarLinkGroup>
-              ))}
-            </ul>
-          </div>
-
-          ))}
-          
-          
+                            <div className="lg:hidden lg:sidebar-expanded:block 2xl:block">
+                              <ul className={`pl-8 mt-1 ${!open && 'hidden'}`}>
+                                {Object.entries(
+                                  (
+                                    child as {
+                                      children: Record<string, unknown>;
+                                    }
+                                  ).children
+                                ).map(([keyi, subChild]) => (
+                                  <li key={keyi} className="mb-1 last:mb-0">
+                                    <NavLink
+                                      end
+                                      to={(subChild as { route: string }).route}
+                                      className={({ isActive }) =>
+                                        'block transition duration-150 truncate ' +
+                                        (isActive
+                                          ? 'text-violet-500'
+                                          : 'text-gray-500/90 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200')
+                                      }
+                                    >
+                                      <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                                        {(subChild as { title: string }).title}
+                                      </span>
+                                    </NavLink>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          </React.Fragment>
+                        );
+                      }}
+                    </SidebarLinkGroup>
+                  ))}
+                </ul>
+              </div>
+            ))}
         </div>
 
         {/* Expand / collapse button */}

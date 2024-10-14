@@ -8,7 +8,7 @@ import Alert from '../components/Alert';
 import Spinner from '../components/Spinner';
 import Breadcrumb from '../components/BreadCrumb';
 import { fetchWorkExperiences } from '../api/workExperiencesApi';
-
+import { getActions } from '../utils/actions';
 
 const WorkExperiences = () => {
   const navigate = useNavigate();
@@ -31,7 +31,7 @@ const WorkExperiences = () => {
         setLoading(false);
       }
     };
-    
+
     load();
   }, []);
 
@@ -41,24 +41,26 @@ const WorkExperiences = () => {
   };
 
   const confirmDelete = async () => {
-      if (idToDelete) {
-        setLoading(true);
-          try {
-              //await editPensionSystems(idToDelete);
-              setWorkExperiences((prev) => prev.filter(dev => dev.id !== idToDelete));
-              setShowAlert(false);
-              navigate('/work-experiences');
-          } catch (error) {
-              console.error('Error al eliminar:', error);
-          } finally {
-            setLoading(false);
-          }
+    if (idToDelete) {
+      setLoading(true);
+      try {
+        //await editPensionSystems(idToDelete);
+        setWorkExperiences((prev) =>
+          prev.filter((dev) => dev.id !== idToDelete)
+        );
+        setShowAlert(false);
+        navigate('/work-experiences');
+      } catch (error) {
+        console.error('Error al eliminar:', error);
+      } finally {
+        setLoading(false);
       }
+    }
   };
 
   const cancelDelete = () => {
-      setShowAlert(false);
-      setIdToDelete(null);
+    setShowAlert(false);
+    setIdToDelete(null);
   };
 
   const handleEdit = (id: number) => {
@@ -72,25 +74,21 @@ const WorkExperiences = () => {
   return (
     <div className="flex h-[100dvh] overflow-hidden">
       {showAlert && (
-                <Alert
-                    message="¿Estás seguro de que deseas eliminar este registro?"
-                    onConfirm={confirmDelete}
-                    onCancel={cancelDelete}
-                />
-            )}
+        <Alert
+          message="¿Estás seguro de que deseas eliminar este registro?"
+          onConfirm={confirmDelete}
+          onCancel={cancelDelete}
+        />
+      )}
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       {/* Content area */}
       <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
         {/* Site header */}
-        <Header
-          sidebarOpen={sidebarOpen}
-          setSidebarOpen={setSidebarOpen}
-        />
+        <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
         <main className="grow">
-          <div className='px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto'>
-
-            <div className="sm:flex sm:justify-between sm:items-center mb-5">
+          <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
+            <div className="sm:flex sm:justify-between sm:items-center">
               {/* Add breadcrumb here */}
               <Breadcrumb items={breadcrumbItems} />
             </div>
@@ -98,44 +96,35 @@ const WorkExperiences = () => {
             {loading ? (
               <Spinner loading={loading} size={50} color="#3498db" /> // Show spinner while loading
             ) : (
-              <>
-                <Table
-              columns={[
-                {
-                  header: 'Nombre',
-                  accessorKey: 'name',
-                  cell: (info) => info.getValue(),
-                },
-                {
-                  header: 'Fecha Inicio',
-                  accessorKey: 'work_experience.last_experience_start_date',
-                  cell: (info) => info.getValue(),
-                },
-                {
-                  header: 'Fecha Fin',
-                  accessorKey: 'work_experience.last_experience_end_date',
-                  cell: (info) => info.getValue(),
-                },
-                {
-                  header: 'Descripcion',
-                  accessorKey: 'work_experience.last_experience_dismissal_reason',
-                  cell: (info) => info.getValue(),
-                },
-              ]}
-              data={workExperiences}
-              fetchData={fetchWorkExperiences}
-              pageCount={1}
-              addButton={null}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-              showDeleteButton={false}
-            />
-              </>
+              <Table
+                columns={[
+                  {
+                    header: 'Nombre',
+                    accessorKey: 'name',
+                    cell: (info) => info.getValue(),
+                  },
+                  {
+                    header: 'Fecha Inicio',
+                    accessorKey: 'work_experience.last_experience_start_date',
+                    cell: (info) => info.getValue(),
+                  },
+                  {
+                    header: 'Fecha Fin',
+                    accessorKey: 'work_experience.last_experience_end_date',
+                    cell: (info) => info.getValue(),
+                  },
+                  {
+                    header: 'Descripcion',
+                    accessorKey:
+                      'work_experience.last_experience_dismissal_reason',
+                    cell: (info) => info.getValue(),
+                  },
+                ]}
+                data={workExperiences}
+                actions={getActions({ handleEdit, handleDelete })}
+              />
             )}
-            
-
           </div>
-
         </main>
       </div>
     </div>

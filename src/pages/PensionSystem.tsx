@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import Alert from '../components/Alert';
 import Spinner from '../components/Spinner';
 import Breadcrumb from '../components/BreadCrumb';
+import { getActions } from '../utils/actions';
 
 const PensionSystem = () => {
   const navigate = useNavigate();
@@ -88,7 +89,7 @@ const PensionSystem = () => {
         <main className="grow">
           <div className='px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto'>
 
-            <div className="sm:flex sm:justify-between sm:items-center mb-5">
+            <div className="sm:flex sm:justify-between sm:items-center">
               {/* Add breadcrumb here */}
               <Breadcrumb items={breadcrumbItems} />
             </div>
@@ -96,7 +97,6 @@ const PensionSystem = () => {
             {loading ? (
               <Spinner loading={loading} size={50} color="#3498db" /> // Show spinner while loading
             ) : (
-              <>
                 <Table
               columns={[
                 {
@@ -121,14 +121,8 @@ const PensionSystem = () => {
                 },
               ]}
               data={pensionSystemses}
-              fetchData={fetchPensionSystemses}
-              pageCount={1}
-              addButton={null}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-              showDeleteButton={false}
+              actions={getActions({ handleEdit, handleDelete })}
             />
-              </>
             )}
             
 

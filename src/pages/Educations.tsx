@@ -2,17 +2,15 @@ import { useEffect, useState } from 'react';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
 import Table from '../components/Table';
-
 import { useNavigate } from 'react-router-dom';
 import Alert from '../components/Alert';
 import Spinner from '../components/Spinner';
 import Breadcrumb from '../components/BreadCrumb';
 import { fetchEducations } from '../api/EducationsApi';
-
+import { getActions } from '../utils/actions';
 
 const Educations = () => {
   const navigate = useNavigate();
-
   const [showAlert, setShowAlert] = useState(false);
   const [idToDelete, setIdToDelete] = useState<number | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -26,7 +24,7 @@ const Educations = () => {
         const data = await fetchEducations();
         setEducation(data);
       } catch (error) {
-        console.error('Error fetching :', error);
+        console.error('Error fetching:', error);
       } finally {
         setLoading(false);
       }
@@ -41,24 +39,23 @@ const Educations = () => {
   };
 
   const confirmDelete = async () => {
-      if (idToDelete) {
-        setLoading(true);
-          try {
-              //await editPensionSystems(idToDelete);
-              setEducation((prev) => prev.filter(dev => dev.id !== idToDelete));
-              setShowAlert(false);
-              navigate('/educations');
-          } catch (error) {
-              console.error('Error al eliminar:', error);
-          } finally {
-            setLoading(false);
-          }
+    if (idToDelete) {
+      setLoading(true);
+      try {
+        setEducation((prev) => prev.filter((dev) => dev.id !== idToDelete));
+        setShowAlert(false);
+        navigate('/educations');
+      } catch (error) {
+        console.error('Error al eliminar:', error);
+      } finally {
+        setLoading(false);
       }
+    }
   };
 
   const cancelDelete = () => {
-      setShowAlert(false);
-      setIdToDelete(null);
+    setShowAlert(false);
+    setIdToDelete(null);
   };
 
   const handleEdit = (id: number) => {
@@ -72,75 +69,115 @@ const Educations = () => {
   return (
     <div className="flex h-[100dvh] overflow-hidden">
       {showAlert && (
-                <Alert
-                    message="¿Estás seguro de que deseas eliminar este registro?"
-                    onConfirm={confirmDelete}
-                    onCancel={cancelDelete}
-                />
-            )}
+        <Alert
+          message="¿Estás seguro de que deseas eliminar este registro?"
+          onConfirm={confirmDelete}
+          onCancel={cancelDelete}
+        />
+      )}
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       {/* Content area */}
       <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
         {/* Site header */}
-        <Header
-          sidebarOpen={sidebarOpen}
-          setSidebarOpen={setSidebarOpen}
-        />
+        <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
         <main className="grow">
-          <div className='px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto'>
-
-            <div className="sm:flex sm:justify-between sm:items-center mb-5">
-              {/* Add breadcrumb here */}
+          <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
+            <div className="sm:flex sm:justify-between sm:items-center">
               <Breadcrumb items={breadcrumbItems} />
             </div>
 
             {loading ? (
-              <Spinner loading={loading} size={50} color="#3498db" /> // Show spinner while loading
+              <Spinner loading={loading} size={50} color="#3498db" />
             ) : (
-              <>
-                <Table
-              columns={[
-                {
-                  header: 'Nombre',
-                  accessorKey: 'name',
-                  cell: (info) => info.getValue(),
-                },
-                {
-                  header: 'Año de Egreso',
-                  accessorKey: 'education.graduation_year',
-                  cell: (info) => info.getValue(),
-                },
-                {
-                  header: 'Profesión',
-                  accessorKey: 'education.profession_name',
-                  cell: (info) => info.getValue(),
-                },
-                {
-                  header: 'Especialización',
-                  accessorKey: 'education.educational_level',
-                  cell: (info) => info.getValue(),
-                },
-                {
-                  header: 'Institución',
-                  accessorKey: 'education.study_center',
-                  cell: (info) => info.getValue(),
-                },
-              ]}
-              data={education}
-              fetchData={fetchEducations}
-              pageCount={1}
-              addButton={null}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-              showDeleteButton={false}
-            />
-              </>
+              <Table
+                columns={[
+                  {
+                    header: 'Nombre',
+                    accessorKey: 'name',
+                    cell: (info) => info.getValue(),
+                    meta: {
+                      filterComponent: (column) => (
+                        <input
+                          type="text"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          placeholder="Filtrar Nombre"
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
+                  },
+                  {
+                    header: 'Año de Egreso',
+                    accessorKey: 'education.graduation_year',
+                    cell: (info) => info.getValue(),
+                    meta: {
+                      filterComponent: (column) => (
+                        <input
+                          type="number"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          placeholder="Filtrar Año de Egreso"
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
+                  },
+                  {
+                    header: 'Profesión',
+                    accessorKey: 'education.profession_name',
+                    cell: (info) => info.getValue(),
+                    meta: {
+                      filterComponent: (column) => (
+                        <input
+                          type="text"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          placeholder="Filtrar Profesión"
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
+                  },
+                  {
+                    header: 'Especialización',
+                    accessorKey: 'education.educational_level',
+                    cell: (info) => info.getValue(),
+                    meta: {
+                      filterComponent: (column) => (
+                        <input
+                          type="text"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          placeholder="Filtrar Especialización"
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
+                  },
+                  {
+                    header: 'Institución',
+                    accessorKey: 'education.study_center',
+                    cell: (info) => info.getValue(),
+                    meta: {
+                      filterComponent: (column) => (
+                        <input
+                          type="text"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          placeholder="Filtrar Institución"
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
+                  },
+                ]}
+                data={education}
+                actions={getActions({ handleEdit, handleDelete })}
+              />
             )}
-            
-
           </div>
-
         </main>
       </div>
     </div>
