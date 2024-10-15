@@ -48,6 +48,8 @@ import CreateBeneficiaryProofDocuments from './pages/beneficiary-proof-documents
 import CreateQualityRatings from './pages/quality-ratings/CreateQualityRatings';
 import QualityRatings from './pages/quality-ratings/QualityRatings';
 import Dashboard from './pages/dashboard/Dashboard';
+import FormUsers from './pages/form-users/FormUsers';
+import CreateFormUsers from './pages/form-users/CreateFormUsers';
 
 function App() {
   return (
@@ -117,6 +119,9 @@ function App() {
           <Route path="/quality-ratings" element={<QualityRatings />} />
           <Route path="/edit-quality-ratings/:id" element={<CreateQualityRatings />} />
           <Route path="/create-quality-ratings" element={<CreateQualityRatings />} />
+          <Route path="/form" element={<FormUsers />} />
+          <Route path="/edit-form/:id" element={<CreateFormUsers />} />
+          <Route path="/create-form" element={<CreateFormUsers />} />
         </Routes>
       </Router>
     </AuthProvider>

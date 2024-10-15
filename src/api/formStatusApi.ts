@@ -1,16 +1,15 @@
 import axios from './api';
 
-interface Nationality {
+interface FormStatus {
     id: number;
-    code: string;
     description: string;
     created_at: string;
     updated_at: string;
 }
 
-export const fetchNationality = async (): Promise<Nationality[]> => {
+export const fetchFormStatus = async (): Promise<FormStatus[]> => {
     
-    const response = await axios.get<Nationality[]>(`/nationality`)
+    const response = await axios.get<FormStatus[]>(`/form-status`)
     .then(response => {
         //console.log(response.data);
         return response;
