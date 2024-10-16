@@ -1,213 +1,324 @@
-import React, { useState, useMemo } from 'react';
+import React from 'react';
 import {
   useReactTable,
-  getCoreRowModel,
-  getPaginationRowModel,
-  getFilteredRowModel,
-  getSortedRowModel,
   ColumnDef,
   flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
   ColumnFiltersState,
+  SortingState,
+  FilterFn,
 } from '@tanstack/react-table';
 
-import Button from '../components/Button';
+import {
+  HiChevronLeft,
+  HiChevronRight,
+  HiChevronDoubleLeft,
+  HiChevronDoubleRight,
+} from 'react-icons/hi';
 
-// Table Props
-interface TableProps {
-  columns: ColumnDef<any, any>[];
-  data: any[];
-  addButton: React.ReactNode;
-  onEdit: (id: number) => void;
-  onDelete: (id: number) => void;
-  showEditButton?: boolean;
-  showDeleteButton?: boolean;
+interface ActionConfig<TData> {
+  label?: string;
+  icon?: React.ReactNode;
+  onClick: (row: TData) => void;
 }
 
-const Table: React.FC<TableProps> = ({ 
-  columns, 
-  data, 
-  addButton, 
-  onEdit, 
-  onDelete, 
-  showEditButton = true, 
-  showDeleteButton = true 
-}) => {
-  const [globalFilter, setGlobalFilter] = useState('');
-  const [sorting, setSorting] = useState([]);
-  const [pagination, setPagination] = useState({
-    pageIndex: 0,
-    pageSize: 10,
-  });
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+interface TableProps<TData extends object> {
+  columns: ColumnDef<TData, any>[];
+  data: TData[];
+  actions?: ActionConfig<TData>[]; // Updated: Use actions prop instead of renderActions
+}
 
-  const table = useReactTable({
-    columns,
-    data,
-    state: {
-      globalFilter,
-      sorting,
-      pagination,
-      columnFilters,
-    },
-    onGlobalFilterChange: setGlobalFilter,
-    onSortingChange: setSorting,
-    onPaginationChange: setPagination,
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
+function Table<TData extends object>({
+  columns,
+  data,
+  actions,
+}: TableProps<TData>) {
+  const [state, setState] = React.useState({
+    pagination: { pageIndex: 0, pageSize: 10 },
+    sorting: [] as SortingState,
+    columnFilters: [] as ColumnFiltersState,
   });
 
-  const handleColumnFilterChange = (columnId: string, value: string) => {
-    setColumnFilters(prev => {
-      const newFilters = prev.filter((filter) => filter.id !== columnId);
-      if (value) {
-        newFilters.push({ id: columnId, value: value });
-      }
-      return newFilters;
-    });
+  // Define custom filter functions
+  const rolesFilterFn: FilterFn<TData> = (row, columnId, filterValue) => {
+    const roles = row.getValue(columnId) as { name: string }[];
+    if (!filterValue) return true; // Show all if filter is empty
+    return roles.some((role) =>
+      role.name.toLowerCase().includes(filterValue.toLowerCase())
+    );
   };
 
-  return (
-    <>
-      <div className="bg-white dark:bg-gray-800 shadow-sm rounded-xl relative">
-        <header className="px-5 py-4 flex gap-4">
-          {addButton}
-        </header>
+  const statusFilterFn: FilterFn<TData> = (row, columnId, filterValue) => {
+    const statusId = row.getValue(columnId) as number;
+    const status = statusId === 1 ? 'Activo' : 'Inactivo';
+    if (!filterValue) return true; // Show all if filter is empty
+    return status.toLowerCase().includes(filterValue.toLowerCase());
+  };
 
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+  const table = useReactTable({
+    data,
+    columns,
+    pageCount: Math.ceil(data.length / state.pagination.pageSize),
+    state: {
+      pagination: state.pagination,
+      sorting: state.sorting,
+      columnFilters: state.columnFilters,
+    },
+    onPaginationChange: (updater) => {
+      setState((prev) => ({
+        ...prev,
+        pagination:
+          typeof updater === 'function' ? updater(prev.pagination) : updater,
+      }));
+    },
+    onSortingChange: (sorting) => {
+      setState((prev) => ({
+        ...prev,
+        sorting:
+          typeof sorting === 'function' ? sorting(prev.sorting) : sorting,
+      }));
+    },
+    onColumnFiltersChange: (updater) => {
+      setState((prev) => {
+        const newFilters =
+          typeof updater === 'function' ? updater(prev.columnFilters) : updater;
+        return { ...prev, columnFilters: newFilters ?? [] };
+      });
+    },
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    filterFns: {
+      rolesFilter: rolesFilterFn,
+      statusFilter: statusFilterFn,
+    },
+  });
+
+  const {
+    getState,
+    setPageIndex,
+    setPageSize,
+    previousPage,
+    nextPage,
+    getCanPreviousPage,
+    getCanNextPage,
+    getPageCount,
+  } = table;
+
+  const { pageIndex, pageSize } = getState().pagination;
+
+  return (
+    <div className="table-container">
+      {/* Scrollable container with fixed height and overflow */}
+      <div
+        style={{
+          maxHeight: '480px', // Set the desired max height
+          overflowY: 'auto',
+          overflowX: 'auto', // Enable horizontal scrolling
+        }}
+        className="rounded-lg"
+      >
+        <table
+          className="table"
+          style={{
+            tableLayout: 'fixed',
+            width: 'max-content',
+            minWidth: '100%',
+          }}
+        >
+          <thead>
             {table.getHeaderGroups().map((headerGroup) => (
               <React.Fragment key={headerGroup.id}>
+                {/* First Header Row */}
                 <tr>
-                  {headerGroup.headers.map((header) => (
-                    <th key={header.id} className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap uppercase">
-                      <div className="font-semibold text-left">
-                        {header.isPlaceholder ? null : (
-                          <div
-                            {...{
-                              className: header.column.getCanSort() ? 'cursor-pointer select-none' : '',
-                              onClick: header.column.getToggleSortingHandler(),
-                            }}
-                          >
-                            {flexRender(header.column.columnDef.header, header.getContext())}
-                            {header.column.getIsSorted()
-                              ? header.column.getIsSorted() === 'desc'
-                                ? ' 🔽'
-                                : ' 🔼'
-                              : null}
-                          </div>
-                        )}
-                      </div>
+                  {headerGroup.headers.map((header: any) => {
+                    const customWidth =
+                      header.column.columnDef.meta?.width ?? 'auto';
+                    return (
+                      <th
+                        key={header.id}
+                        style={{
+                          width: customWidth,
+                          minWidth: customWidth,
+                        }}
+                        className="sticky top-0 z-10 p-2 bg-white dark:bg-gray-800"
+                      >
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                      </th>
+                    );
+                  })}
+                  {actions && actions.length > 0 && (
+                    <th
+                      className="sticky top-0 bg-white dark:bg-gray-800 z-10 p-2"
+                      style={{ minWidth: '100px' }}
+                    >
+                      Acciones
                     </th>
-                  ))}
-                  <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
-                    <div className="font-semibold text-left">ACCIONES</div>
-                  </th>
+                  )}
                 </tr>
+                {/* Filter Row */}
                 <tr>
-                  {headerGroup.headers.map((header) => (
-                    <th key={header.id} className="px-2 first:pl-5 last:pr-5 py-2 whitespace-nowrap">
-                      <input
-                        type="text"
-                        value={columnFilters.find((filter) => filter.id === header.column.id)?.value as string || ''}
-                        onChange={(e) => handleColumnFilterChange(header.column.id, e.target.value)}
-                        placeholder={`Filtrar ${header.column.columnDef.header}`}
-                        className="w-full px-2 py-1 text-sm border rounded"
-                      />
-                    </th>
-                  ))}
-                  <th></th>
+                  {headerGroup.headers.map((header: any) => {
+                    const customWidth =
+                      header.column.columnDef.meta?.width ?? 'auto';
+                    return (
+                      <th
+                        key={header.id}
+                        style={{
+                          width: customWidth,
+                          minWidth: customWidth,
+                        }}
+                        className="sticky top-[40px] bg-white dark:bg-gray-800 z-10 p-2"
+                      >
+                        {header.column.getCanFilter() &&
+                        header.column.columnDef.meta?.filterComponent
+                          ? header.column.columnDef.meta.filterComponent(
+                              header.column
+                            )
+                          : null}
+                      </th>
+                    );
+                  })}
+                  {actions && actions.length > 0 && (
+                    <th
+                      className="sticky top-[40px] bg-white dark:bg-gray-800 z-10 p-2"
+                      style={{ minWidth: '100px' }}
+                    />
+                  )}
                 </tr>
               </React.Fragment>
             ))}
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody>
             {table.getRowModel().rows.map((row) => (
               <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <td
-                    key={cell.id}
-                    className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap lowercase"
-                  >
-                    <div className="font-medium text-gray-800 dark:text-gray-100">
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                {row.getVisibleCells().map((cell: any) => {
+                  const customWidth =
+                    cell.column.columnDef.meta?.width ?? 'auto';
+                  return (
+                    <td
+                      key={cell.id}
+                      style={{
+                        width: customWidth,
+                        minWidth: customWidth,
+                      }}
+                      className="whitespace-nowrap overflow-hidden text-ellipsis p-2 bg-white border-b dark:bg-gray-800"
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </td>
+                  );
+                })}
+                {actions && actions.length > 0 && (
+                  <td style={{ minWidth: '100px' }} className='bg-white border-b dark:bg-gray-800'>
+                    <div className="flex justify-center gap-2">
+                      {actions.map((action, index) => (
+                        <button
+                          key={index}
+                          onClick={() => action.onClick(row.original)}
+                          className="p-2"
+                        >
+                          {action.icon}
+                          {action.label && (
+                            <span className="sr-only">{action.label}</span>
+                          )}
+                        </button>
+                      ))}
                     </div>
                   </td>
-                ))}
-                <td className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap w-px">
-                  <div className="space-x-1">
-                    {showEditButton && (
-                      <Button 
-                        className="text-gray-400 hover:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400 rounded-full"
-                        type="button" 
-                        variant="" 
-                        onClick={() => onEdit(row.original.id)}
-                      >
-                        <span className="sr-only">Editar</span>
-                        <svg className="w-8 h-8 fill-current" viewBox="0 0 32 32">
-                          <path d="M19.7 8.3c-.4-.4-1-.4-1.4 0l-10 10c-.2.2-.3.4-.3.7v4c0 .6.4 1 1 1h4c.3 0 .5-.1.7-.3l10-10c.4-.4.4-1 0-1.4l-4-4zM12.6 22H10v-2.6l6-6 2.6 2.6-6 6zm7.4-7.4L17.4 12l1.6-1.6 2.6 2.6-1.6 1.6z" />
-                        </svg>
-                      </Button>
-                    )}
-                    {showDeleteButton && (
-                      <Button 
-                        className="text-red-500 hover:text-red-600 rounded-full"
-                        type="button" 
-                        variant=""
-                        onClick={() => onDelete(row.original.id)}
-                      >
-                        <span className="sr-only">Eliminar</span>
-                        <svg className="w-8 h-8 fill-current" viewBox="0 0 32 32">
-                          <path d="M13 15h2v6h-2zM17 15h2v6h-2z" />
-                          <path d="M20 9c0-.6-.4-1-1-1h-6c-.6 0-1 .4-1 1v2H8v2h1v10c0 .6.4 1 1 1h12c.6 0 1-.4 1-1V13h1v-2h-4V9zm-6 1h4v1h-4v-1zm7 3v9H11v-9h10z" />
-                        </svg>
-                      </Button>
-                    )}
-                  </div>
-                </td>
+                )}
               </tr>
             ))}
           </tbody>
         </table>
+      </div>
+      {/* Pagination Controls */}
+      <div className="pagination-container flex items-center justify-between mt-4">
+        {/* Page Size Selector */}
+        <div className="flex items-center">
+          <span className="mr-2 text-sm">Ver por página:</span>
+          <select
+            value={pageSize}
+            onChange={(e) => {
+              setPageSize(Number(e.target.value));
+            }}
+            className="border rounded px-2 py-1 w-20"
+          >
+            {[5, 10, 20, 50, 100].map((size) => (
+              <option key={size} value={size}>
+                {size}
+              </option>
+            ))}
+          </select>
+        </div>
 
-        <div className="mt-8 pl-4 pr-4 pb-4">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-            <nav className="mb-4 sm:mb-0 sm:order-1" role="navigation" aria-label="Navigation">
-              <ul className="flex justify-center">
-                <li className="ml-3 first:ml-0">
-                  <Button
-                    type="button" 
-                    variant="" 
-                    className="btn bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700/60 text-gray-300 dark:text-gray-600"
-                    onClick={() => table.previousPage()}
-                    disabled={!table.getCanPreviousPage()}
-                  >
-                    &lt;- Anterior
-                  </Button>
-                </li>
-                <li className="ml-3 first:ml-0">
-                  <Button 
-                    type="button" 
-                    variant="" 
-                    className="btn bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700/60 text-gray-300 dark:text-gray-600"
-                    onClick={() => table.nextPage()}
-                    disabled={!table.getCanNextPage()}
-                  >
-                    Siguiente -&gt;
-                  </Button>
-                </li>
-              </ul>
-            </nav>
-            <div className="text-sm text-gray-500 text-center sm:text-left">
-              Mostrando <span className="font-medium text-gray-600 dark:text-gray-300">{table.getState().pagination.pageIndex + 1}</span> de <span className="font-medium text-gray-600 dark:text-gray-300">{table.getPageCount()}</span> páginas
-            </div>
-          </div>
+        {/* Page Navigation */}
+        <div className="flex items-center">
+          <button
+            onClick={() => setPageIndex(0)}
+            disabled={!getCanPreviousPage()}
+            className="border rounded p-1 mr-2 disabled:opacity-50"
+            aria-label="First Page"
+          >
+            <HiChevronDoubleLeft size={20} />
+          </button>
+          <button
+            onClick={() => previousPage()}
+            disabled={!getCanPreviousPage()}
+            className="border rounded p-1 mr-2 disabled:opacity-50"
+            aria-label="Previous Page"
+          >
+            <HiChevronLeft size={20} />
+          </button>
+          <span className="mr-2">
+            Página{' '}
+            <strong>
+              {pageIndex + 1} de {getPageCount()}
+            </strong>
+          </span>
+          <button
+            onClick={() => nextPage()}
+            disabled={!getCanNextPage()}
+            className="border rounded p-1 mr-2 disabled:opacity-50"
+            aria-label="Next Page"
+          >
+            <HiChevronRight size={20} />
+          </button>
+          <button
+            onClick={() => setPageIndex(getPageCount() - 1)}
+            disabled={!getCanNextPage()}
+            className="border rounded p-1 disabled:opacity-50"
+            aria-label="Last Page"
+          >
+            <HiChevronDoubleRight size={20} />
+          </button>
+        </div>
+
+        {/* Page Number Input */}
+        <div className="flex items-center">
+          <span className="mr-2">Ir a la página:</span>
+          <input
+            type="number"
+            defaultValue={pageIndex + 1}
+            onChange={(e) => {
+              const page = e.target.value ? Number(e.target.value) - 1 : 0;
+              setPageIndex(page);
+            }}
+            className="border rounded px-2 py-1 w-16"
+          />
         </div>
       </div>
-    </>
+    </div>
   );
-};
+}
 
 export default Table;

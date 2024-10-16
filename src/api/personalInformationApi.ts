@@ -1,6 +1,6 @@
 import axios from './api';
 
-interface PersonalInformation {
+export interface PersonalInformation {
   id: number;
   user_id: number;
   document_type: number | null;
@@ -60,7 +60,7 @@ export const fetchPersonalInformations = async (): Promise<User[]> => {
     });
 
  
-  return response.data;
+  return response.data || [];
 };
 
 export const createPersonalInformation = async (userData: Omit<PersonalInformation, 'id'>): Promise<PersonalInformation> => {
@@ -79,7 +79,7 @@ export const deletePersonalInformation = async (id: number): Promise<PersonalInf
 };
 
 export const fetchPersonalInformation = async (id): Promise<User> => {
-    console.log(id);
+
     const response = await axios.get<User>(`/personal-information/${id}`)
     .then(response => {
         return response;
@@ -88,6 +88,6 @@ export const fetchPersonalInformation = async (id): Promise<User> => {
         console.error('Error fetching personal-information:', error.response || error);
         throw error;
     });
-  return response.data;
+  return response.data
 };
 

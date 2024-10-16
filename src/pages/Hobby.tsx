@@ -8,8 +8,7 @@ import Alert from '../components/Alert';
 import Spinner from '../components/Spinner';
 import Breadcrumb from '../components/BreadCrumb';
 import { fetchHobbies } from '../api/hobbyApi';
-
-
+import { getActions } from '../utils/actions';
 
 const Hobby = () => {
   const navigate = useNavigate();
@@ -32,7 +31,7 @@ const Hobby = () => {
         setLoading(false);
       }
     };
-    
+
     load();
   }, []);
 
@@ -42,56 +41,50 @@ const Hobby = () => {
   };
 
   const confirmDelete = async () => {
-      if (idToDelete) {
-        setLoading(true);
-          try {
-              //await editPensionSystems(idToDelete);
-              setHobbies((prev) => prev.filter(dev => dev.id !== idToDelete));
-              setShowAlert(false);
-              navigate('/hobbie');
-          } catch (error) {
-              console.error('Error al eliminar:', error);
-          } finally {
-            setLoading(false);
-          }
+    if (idToDelete) {
+      setLoading(true);
+      try {
+        //await editPensionSystems(idToDelete);
+        setHobbies((prev) => prev.filter((dev) => dev.id !== idToDelete));
+        setShowAlert(false);
+        navigate('/hobbie');
+      } catch (error) {
+        console.error('Error al eliminar:', error);
+      } finally {
+        setLoading(false);
       }
+    }
   };
 
   const cancelDelete = () => {
-      setShowAlert(false);
-      setIdToDelete(null);
+    setShowAlert(false);
+    setIdToDelete(null);
   };
 
   const handleEdit = (id: number) => {
     navigate(`/edit-hobbie/${id}`);
   };
 
-  const breadcrumbItems = [
-    { label: 'Hobbies', path: '/hobbie' },
-  ];
+  const breadcrumbItems = [{ label: 'Hobbies', path: '/hobbie' }];
 
   return (
     <div className="flex h-[100dvh] overflow-hidden">
       {showAlert && (
-                <Alert
-                    message="¿Estás seguro de que deseas eliminar este registro?"
-                    onConfirm={confirmDelete}
-                    onCancel={cancelDelete}
-                />
-            )}
+        <Alert
+          message="¿Estás seguro de que deseas eliminar este registro?"
+          onConfirm={confirmDelete}
+          onCancel={cancelDelete}
+        />
+      )}
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       {/* Content area */}
       <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
         {/* Site header */}
-        <Header
-          sidebarOpen={sidebarOpen}
-          setSidebarOpen={setSidebarOpen}
-        />
+        <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
         <main className="grow">
-          <div className='px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto'>
-
-            <div className="sm:flex sm:justify-between sm:items-center mb-5">
+          <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
+            <div className="sm:flex sm:justify-between sm:items-center">
               {/* Add breadcrumb here */}
               <Breadcrumb items={breadcrumbItems} />
             </div>
@@ -99,47 +92,37 @@ const Hobby = () => {
             {loading ? (
               <Spinner loading={loading} size={50} color="#3498db" /> // Show spinner while loading
             ) : (
-              <>
-                <Table
-              columns={[
-                {
-                  header: 'Nombre',
-                  accessorKey: 'name',
-                  cell: (info) => info.getValue(),
-                },
-                {
-                  header: 'Código',
-                  cell: (info) => {
-                    const hobbies = info.row.original.hobbies_user || [];
-                    return hobbies.length > 0
-                      ? hobbies.map(hobby => hobby.code).join(' / ')
-                      : '';
+              <Table
+                columns={[
+                  {
+                    header: 'Nombre',
+                    accessorKey: 'name',
+                    cell: (info) => info.getValue(),
                   },
-                },
-                {
-                  header: 'Descripción',
-                  cell: (info) => {
-                    const hobbies = info.row.original.hobbies_user || [];
-                    return hobbies.length > 0
-                      ? hobbies.map(hobby => hobby.description).join(' / ')
-                      : '';
+                  {
+                    header: 'Código',
+                    cell: (info) => {
+                      const hobbies = info.row.original.hobbies_user || [];
+                      return hobbies.length > 0
+                        ? hobbies.map((hobby) => hobby.code).join(' / ')
+                        : '';
+                    },
                   },
-                },
-              ]}
-              data={hobbies}
-              fetchData={fetchHobbies}
-              pageCount={1}
-              addButton={null}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-              showDeleteButton={false}
-            />
-              </>
+                  {
+                    header: 'Descripción',
+                    cell: (info) => {
+                      const hobbies = info.row.original.hobbies_user || [];
+                      return hobbies.length > 0
+                        ? hobbies.map((hobby) => hobby.description).join(' / ')
+                        : '';
+                    },
+                  },
+                ]}
+                data={hobbies}
+                actions={getActions({ handleEdit, handleDelete })}
+              />
             )}
-            
-
           </div>
-
         </main>
       </div>
     </div>

@@ -7,10 +7,11 @@ import Header from '../../components/Header';
 import Table from '../../components/Table';
 import Spinner from '../../components/Spinner';
 import Breadcrumb from '../../components/BreadCrumb';
-import Button from '../../components/Button';
 import Alert from '../../components/Alert';
 import { fetchFormUsers } from '../../api/formUserApi';
 import { deleteProject } from '../../api/projectApi';
+import { getActions } from '../../utils/actions';
+import { sendEmailApi } from '../../api/userApi';
 
 const FormUsers = () => {
   const navigate = useNavigate();
@@ -28,8 +29,8 @@ const FormUsers = () => {
         const data = await fetchFormUsers();
         setDataValues(data);
       } catch (error) {
-        console.error('Error fetching projects:', error);
-        toast.error('Error al cargar los proyectos');
+        console.error('Error fetching Formulario:', error);
+        toast.error('Error al cargar los Formulario');
       } finally {
         setLoading(false);
       }
@@ -38,17 +39,31 @@ const FormUsers = () => {
     load();
   }, []);
 
-  const handleEdit = (id: number) => {
-    navigate(`/edit-form/${id}`);
+  const handleEdit = (data) => {
+    navigate(`/edit-form/${data.id}`);
   };
 
-  const handleDelete = async (id: number) => {
+  const sendEmail = async (data) => {
+    try {
+      const response = await sendEmailApi(data.id);
+      toast.success('Correo enviado correctamente');
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+      toast.error('Error al enviar el correo');
+    }
+  }
+
+
+  const handleDelete = async (data) => {
+    console.log(data.id);
     setShowAlert(true);
-    setIdToDelete(id);
+    setIdToDelete(data.id);
   };
 
   const confirmDelete = async () => {
     if (idToDelete) {
+      console.log(idToDelete);
       setLoading(true);
         try {
             await deleteProject(idToDelete);
@@ -78,32 +93,12 @@ const FormUsers = () => {
     navigate('/create-form');
   };
 
-  const addButton = (
-    <>
-        <Button 
-          type='button' 
-          className="w-80 btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white"
-          onClick={handleAdd}
-        >
-          <svg
-            className="fill-current shrink-0 xs:hidden"
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-          >
-            <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1z" />
-          </svg>
-          <span className="max-xs:sr-only">Crear Formulario</span>
-        </Button>
-    </>
-  );
-
   return (
     <div className="flex h-[100dvh] overflow-hidden">
       <ToastContainer />
       {showAlert && (
                 <Alert
-                    message="¿Estás seguro de que deseas eliminar este usuario?"
+                    message="¿Estás seguro de que deseas eliminar este formulario?"
                     onConfirm={confirmDelete}
                     onCancel={cancelDelete}
                 />
@@ -122,53 +117,108 @@ const FormUsers = () => {
 
             <div className="sm:flex sm:justify-between sm:items-center mb-5">
               {/* Add breadcrumb here */}
-              <Breadcrumb items={breadcrumbItems} />
+              <Breadcrumb 
+                items={breadcrumbItems}
+                buttons={[
+                  {
+                    text: 'Agregar Formulario',
+                    action: handleAdd,
+                  },
+                ]}
+              />
             </div>
 
             {loading ? (
               <Spinner loading={loading} size={50} color="#3498db" /> // Show spinner while loading
             ) : (
               <>
-                <Table
-              columns={[
-                {
-                  header: 'Descripción',
-                  accessorKey: 'description',
-                  cell: (info) => info.getValue(),
-                },
-                {
-                  header: 'Usuario',
-                  accessorKey: 'user.name',
-                  cell: (info) => info.getValue(),
-                  filterFn: (row, id, value) => {
-                    const data = row.getValue(id) as string;
-                    return data?.toLowerCase().includes(value.toLowerCase());
+
+              <Table
+                columns={[
+                  {
+                    header: 'Descripción',
+                    accessorKey: 'description',
+                    cell: (info) => info.getValue(),
+                    meta: {
+                      filterComponent: (column) => (
+                        <input
+                          type="text"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          placeholder="Filtrar Descripción"
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
                   },
-                },
-                {
-                  header: 'Email',
-                  accessorKey: 'user.email',
-                  cell: (info) => info.getValue(),
-                },
-                {
-                  header: 'Estado',
-                  accessorKey: 'form_status.description',
-                  cell: (info) => info.getValue(),
-                },
-                {
-                  header: 'Tipo',
-                  accessorKey: 'form_type.description',
-                  cell: (info) => info.getValue(),
-                },
-              ]}
-              data={dataValues}
-              //fetchData={fetchFormUsers}
-              //pageCount={1}
-              addButton={addButton}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-              showDeleteButton={false}
-            />
+                  {
+                    header: 'Usuario',
+                    accessorKey: 'user.name',
+                    cell: (info) => info.getValue(),
+                    meta: {
+                      filterComponent: (column) => (
+                        <input
+                          type="text"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          placeholder="Filtrar Usuario"
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
+                  },
+                  {
+                    header: 'Email',
+                    accessorKey: 'user.email',
+                    cell: (info) => info.getValue(),
+                    meta: {
+                      filterComponent: (column) => (
+                        <input
+                          type="text"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          placeholder="Filtrar Email"
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
+                  },
+                  {
+                    header: 'Estado',
+                    accessorKey: 'form_status.description',
+                    cell: (info) => info.getValue(),
+                    meta: {
+                      filterComponent: (column) => (
+                        <input
+                          type="text"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          placeholder="Filtrar Estado"
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
+                  },
+                  {
+                    header: 'Tipo',
+                    accessorKey: 'form_type.description',
+                    cell: (info) => info.getValue(),
+                    meta: {
+                      filterComponent: (column) => (
+                        <input
+                          type="text"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          placeholder="Filtrar Tipo"
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
+                  },
+                ]}
+                data={dataValues}
+                actions={getActions({ handleEdit, handleDelete, sendEmail })}
+              />
               </>
             )}
             

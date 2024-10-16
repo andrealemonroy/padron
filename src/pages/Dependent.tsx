@@ -6,8 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import Spinner from '../components/Spinner';
 import Breadcrumb from '../components/BreadCrumb';
 import { fetchDependents } from '../api/dependentApi';
-
-
+import { getActions } from '../utils/actions';
 
 const Dependent = () => {
   const navigate = useNavigate();
@@ -28,7 +27,7 @@ const Dependent = () => {
         setLoading(false);
       }
     };
-    
+
     load();
   }, []);
 
@@ -40,9 +39,7 @@ const Dependent = () => {
     console.log(id);
   };
 
-  const breadcrumbItems = [
-    { label: 'Derecho habientes', path: '/dependent' },
-  ];
+  const breadcrumbItems = [{ label: 'Derecho habientes', path: '/dependent' }];
 
   return (
     <div className="flex h-[100dvh] overflow-hidden">
@@ -50,15 +47,11 @@ const Dependent = () => {
       {/* Content area */}
       <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
         {/* Site header */}
-        <Header
-          sidebarOpen={sidebarOpen}
-          setSidebarOpen={setSidebarOpen}
-        />
+        <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
         <main className="grow">
-          <div className='px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto'>
-
-            <div className="sm:flex sm:justify-between sm:items-center mb-5">
+          <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
+            <div className="sm:flex sm:justify-between sm:items-center">
               {/* Add breadcrumb here */}
               <Breadcrumb items={breadcrumbItems} />
             </div>
@@ -66,74 +59,64 @@ const Dependent = () => {
             {loading ? (
               <Spinner loading={loading} size={50} color="#3498db" /> // Show spinner while loading
             ) : (
-              <>
-                <Table
-              columns={[
-                {
-                  header: 'Nombre',
-                  accessorKey: 'name',
-                  cell: (info) => info.getValue(),
-                },
-                {
-                  header: 'Tipo de doc',
-                  accessorKey: 'dependent.document_type',
-                  cell: (info) => info.getValue(),
-                },
-                {
-                  header: 'Número',
-                  accessorKey: 'dependent.document_number',
-                  cell: (info) => info.getValue(),
-                },
-                {
-                  header: 'País',
-                  accessorKey: 'dependent.document_country',
-                  cell: (info) => info.getValue(),
-                },
-                {
-                  header: 'nacimiento',
-                  accessorKey: 'dependent.birth_date',
-                  cell: (info) => info.getValue(),
-                },
-                {
-                  header: 'Apellido paterno',
-                  accessorKey: 'dependent.last_name_father',
-                  cell: (info) => info.getValue(),
-                },
-                {
-                  header: 'Apellido materno',
-                  accessorKey: 'dependent.last_name_mother',
-                  cell: (info) => info.getValue(),
-                },
-                {
-                  header: 'Nombres',
-                  accessorKey: 'dependent.first_name',
-                  cell: (info) => info.getValue(),
-                },
-                {
-                  header: 'Sexo',
-                  accessorKey: 'dependent.gender',
-                  cell: (info) => info.getValue(),
-                },
-                {
-                  header: 'Vínculo',
-                  accessorKey: 'dependent.family_relationship',
-                  cell: (info) => info.getValue(),
-                },
-              ]}
-              data={dependents}
-              fetchData={fetchDependents}
-              pageCount={1}
-              addButton={null}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-              showDeleteButton={false}
-            />
-              </>
+              <Table
+                columns={[
+                  {
+                    header: 'Nombre',
+                    accessorKey: 'name',
+                    cell: (info) => info.getValue(),
+                  },
+                  {
+                    header: 'Tipo de doc',
+                    accessorKey: 'dependent.document_type',
+                    cell: (info) => info.getValue(),
+                  },
+                  {
+                    header: 'Número',
+                    accessorKey: 'dependent.document_number',
+                    cell: (info) => info.getValue(),
+                  },
+                  {
+                    header: 'País',
+                    accessorKey: 'dependent.document_country',
+                    cell: (info) => info.getValue(),
+                  },
+                  {
+                    header: 'nacimiento',
+                    accessorKey: 'dependent.birth_date',
+                    cell: (info) => info.getValue(),
+                  },
+                  {
+                    header: 'Apellido paterno',
+                    accessorKey: 'dependent.last_name_father',
+                    cell: (info) => info.getValue(),
+                  },
+                  {
+                    header: 'Apellido materno',
+                    accessorKey: 'dependent.last_name_mother',
+                    cell: (info) => info.getValue(),
+                  },
+                  {
+                    header: 'Nombres',
+                    accessorKey: 'dependent.first_name',
+                    cell: (info) => info.getValue(),
+                  },
+                  {
+                    header: 'Sexo',
+                    accessorKey: 'dependent.gender',
+                    cell: (info) => info.getValue(),
+                  },
+                  {
+                    header: 'Vínculo',
+                    accessorKey: 'dependent.family_relationship',
+                    cell: (info) => info.getValue(),
+                  },
+                ]}
+                data={dependents}
+                actions={getActions({ handleEdit, handleDelete })}
+              />
             )}
-            
-
           </div>
-
         </main>
       </div>
     </div>

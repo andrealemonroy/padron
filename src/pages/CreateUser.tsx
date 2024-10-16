@@ -48,14 +48,26 @@ const CreateUser = () => {
 
   const onSubmit = async (data) => {
     try {
+      let response
       if (id) {
-        await editUser(data, Number(id));
+         response = await editUser(data, Number(id));
       } else {
-        await createUser(data);
+        response = await createUser(data);
       }
+      console.log(response);
       navigate('/usuarios'); // Navigate to usuarios after success
     } catch (error) {
-      setError(id ? 'Error al actualizar el usuario.' : `Error al crear el usuario. ${error}`);
+      console.log(error.response.data.errors);
+      const validationErrors = error.response?.data?.errors;
+      if (validationErrors) {
+        // Obtener el primer mensaje de error de validación
+        const firstErrorKey = Object.keys(validationErrors)[0];
+        const errorMessage = validationErrors[firstErrorKey].message || 'Error desconocido';
+        setError(`Error: ${errorMessage}`);
+      } else {
+        // Si no hay errores de validación, mostrar un mensaje genérico
+        setError(id ? 'Error al actualizar el usuario.' : `Error al crear el usuario: ${error.message}`);
+      }
     }
   };
 
@@ -95,7 +107,7 @@ const CreateUser = () => {
 
         <main className="grow">
           <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
-            <div className="sm:flex sm:justify-between sm:items-center mb-5">
+            <div className="sm:flex sm:justify-between sm:items-center">
               {/* Add breadcrumb here */}
               <Breadcrumb items={breadcrumbItems} />
             </div>

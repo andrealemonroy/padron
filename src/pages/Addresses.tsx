@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import Alert from '../components/Alert';
 import Spinner from '../components/Spinner';
 import Breadcrumb from '../components/BreadCrumb';
+import { getActions } from '../utils/actions';
 
 const Addresses = () => {
   const navigate = useNavigate();
@@ -24,12 +25,12 @@ const Addresses = () => {
         const data = await fetchAddressess();
         setAddresses(data);
       } catch (error) {
-        console.error('Error fetching :', error);
+        console.error('Error fetching addresses:', error);
       } finally {
         setLoading(false);
       }
     };
-    
+
     load();
   }, []);
 
@@ -39,116 +40,177 @@ const Addresses = () => {
   };
 
   const confirmDelete = async () => {
-      if (idToDelete) {
-        setLoading(true);
-          try {
-              await deleteAddresses(idToDelete);
-              setAddresses((prev) => prev.filter(dev => dev.id !== idToDelete));
-              setShowAlert(false);
-              navigate('/addresses');
-          } catch (error) {
-              console.error('Error al eliminar:', error);
-          } finally {
-            setLoading(false);
-          }
+    if (idToDelete) {
+      setLoading(true);
+      try {
+        await deleteAddresses(idToDelete);
+        setAddresses((prev) => prev.filter((dev) => dev.id !== idToDelete));
+        setShowAlert(false);
+        navigate('/addresses');
+      } catch (error) {
+        console.error('Error al eliminar:', error);
+      } finally {
+        setLoading(false);
       }
+    }
   };
 
   const cancelDelete = () => {
-      setShowAlert(false);
-      setIdToDelete(null);
+    setShowAlert(false);
+    setIdToDelete(null);
   };
 
   const handleEdit = (id: number) => {
     navigate(`/edit-addresses/${id}`);
   };
 
-  const breadcrumbItems = [
-    { label: 'Dirección', path: '/addresses' },
-  ];
+  const breadcrumbItems = [{ label: 'Dirección', path: '/addresses' }];
 
   return (
     <div className="flex h-[100dvh] overflow-hidden">
       {showAlert && (
-                <Alert
-                    message="¿Estás seguro de que deseas eliminar este registro?"
-                    onConfirm={confirmDelete}
-                    onCancel={cancelDelete}
-                />
-            )}
+        <Alert
+          message="¿Estás seguro de que deseas eliminar este registro?"
+          onConfirm={confirmDelete}
+          onCancel={cancelDelete}
+        />
+      )}
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       {/* Content area */}
       <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
         {/* Site header */}
-        <Header
-          sidebarOpen={sidebarOpen}
-          setSidebarOpen={setSidebarOpen}
-        />
+        <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
         <main className="grow">
-          <div className='px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto'>
-
-            <div className="sm:flex sm:justify-between sm:items-center mb-5">
-              {/* Add breadcrumb here */}
+          <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
+            <div className="sm:flex sm:justify-between sm:items-center">
               <Breadcrumb items={breadcrumbItems} />
             </div>
 
             {loading ? (
               <Spinner loading={loading} size={50} color="#3498db" /> // Show spinner while loading
             ) : (
-              <>
-                <Table
-              columns={[
-                {
-                  header: 'Nombre',
-                  accessorKey: 'name',
-                  cell: (info) => info.getValue(),
-                },
-                {
-                  header: 'Tipo de via',
-                  accessorKey: 'address.address_type',
-                  cell: (info) => info.getValue(),
-                },
-                {
-                  header: 'Nombre de Vía',
-                  accessorKey: 'address.address_name',
-                  cell: (info) => info.getValue(),
-                },
-                {
-                  header: 'Número',
-                  accessorKey: 'address.address_number',
-                  cell: (info) => info.getValue(),
-                },
-                {
-                  header: 'Departamento',
-                  accessorKey: 'address.department',
-                  cell: (info) => info.getValue(),
-                },
-                {
-                  header: 'Provincia',
-                  accessorKey: 'address.province',
-                  cell: (info) => info.getValue(),
-                },
-                {
-                  header: 'Distrito',
-                  accessorKey: 'address.district',
-                  cell: (info) => info.getValue(),
-                },
-              ]}
-              data={addresses}
-              fetchData={fetchAddressess}
-              pageCount={1}
-              addButton={null}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-              showDeleteButton={false}
-            />
-              </>
+              <Table
+                columns={[
+                  {
+                    header: 'Nombre',
+                    accessorKey: 'name',
+                    cell: (info) => info.getValue(),
+                    meta: {
+                      width: '400px',
+                      filterComponent: (column) => (
+                        <input
+                          type="text"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          placeholder="Filtrar Nombre"
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
+                  },
+                  {
+                    header: 'Tipo de vía',
+                    accessorKey: 'address.address_type',
+                    cell: (info) => info.getValue(),
+                    meta: {
+                      filterComponent: (column) => (
+                        <input
+                          type="text"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          placeholder="Filtrar Tipo de Vía"
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
+                  },
+                  {
+                    header: 'Nombre de Vía',
+                    accessorKey: 'address.address_name',
+                    cell: (info) => info.getValue(),
+                    meta: {
+                      filterComponent: (column) => (
+                        <input
+                          type="text"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          placeholder="Filtrar Nombre de Vía"
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
+                  },
+                  {
+                    header: 'Número',
+                    accessorKey: 'address.address_number',
+                    cell: (info) => info.getValue(),
+                    meta: {
+                      filterComponent: (column) => (
+                        <input
+                          type="text"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          placeholder="Filtrar Número"
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
+                  },
+                  {
+                    header: 'Departamento',
+                    accessorKey: 'address.department',
+                    cell: (info) => info.getValue(),
+                    meta: {
+                      filterComponent: (column) => (
+                        <input
+                          type="text"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          placeholder="Filtrar Departamento"
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
+                  },
+                  {
+                    header: 'Provincia',
+                    accessorKey: 'address.province',
+                    cell: (info) => info.getValue(),
+                    meta: {
+                      filterComponent: (column) => (
+                        <input
+                          type="text"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          placeholder="Filtrar Provincia"
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
+                  },
+                  {
+                    header: 'Distrito',
+                    accessorKey: 'address.district',
+                    cell: (info) => info.getValue(),
+                    meta: {
+                      filterComponent: (column) => (
+                        <input
+                          type="text"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          placeholder="Filtrar Distrito"
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
+                  },
+                ]}
+                data={addresses}
+                actions={getActions({ handleEdit, handleDelete })}
+              />
             )}
-            
-
           </div>
-
         </main>
       </div>
     </div>

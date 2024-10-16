@@ -63,8 +63,15 @@ export const fetchUsers = async (): Promise<User[]> => {
 };
 
 export const createUser = async (userData: Omit<User, 'id'>): Promise<User> => {
-    console.log(userData);
-  const response = await axios.post<User>(`${import.meta.env.VITE_API_URL}/users`, {...userData, status_id: 1, password: '12345678' });
+  const response = await axios.post<User>(`${import.meta.env.VITE_API_URL}/users`, {...userData, status_id: 1, password: '12345678' })
+    .then(response => {
+        return response;
+    })
+    .catch(error => {
+        console.error('Error fetching users:', error.response || error);
+        throw error;
+    });
+    console.log(response);
   return response.data;
 };
 
@@ -79,7 +86,6 @@ export const deleteUser = async (id: number): Promise<User> => {
 };
 
 export const fetchUser = async (id): Promise<User> => {
-    console.log(id);
     const response = await axios.get<User>(`/users/${id}`)
     .then(response => {
         return response;
@@ -91,4 +97,16 @@ export const fetchUser = async (id): Promise<User> => {
   return response.data;
 };
 
-// Puedes agregar más funciones para editar, eliminar, etc.
+export const sendEmailApi = async (id): Promise<User> => {
+    const response = await axios.get<User>(`/send-api/${id}`)
+    .then(response => {
+        return response;
+    })
+    .catch(error => {
+        console.error('Error fetching users:', error.response || error);
+        throw error;
+    });
+  return response.data;
+};
+
+// send-api

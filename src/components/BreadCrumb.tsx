@@ -1,19 +1,36 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Button from './Button';
+import { HiPlusCircle } from 'react-icons/hi';
 
 interface BreadcrumbItem {
   label: string;
   path: string;
 }
 
-interface BreadcrumbProps {
-  items: BreadcrumbItem[];
+interface IButtonItem {
+  text: string;
+  action: () => void;
+  icon?: React.ReactNode;
 }
 
-const Breadcrumb: React.FC<BreadcrumbProps> = ({ items }) => {
+interface BreadcrumbProps {
+  items: BreadcrumbItem[];
+  children?: React.ReactNode;
+  buttons?: IButtonItem[];
+}
+
+const Breadcrumb: React.FC<BreadcrumbProps> = ({
+  items,
+  children,
+  buttons,
+}) => {
   return (
-    <nav className="flex bg-white w-full p-4 rounded-md" aria-label="Breadcrumb">
-      <ol className="inline-flex items-center space-x-1 md:space-x-3 ">
+    <nav
+      className="flex justify-between w-full px-4 py-2 rounded-md h-14 mb-4 bg-white dark:bg-gray-800 shadow-sm dark:shadow-none"
+      aria-label="Breadcrumb"
+    >
+      <ol className="inline-flex items-center space-x-1 md:space-x-3">
         {items.map((item, index) => (
           <li key={index}>
             <div className="flex items-center">
@@ -45,6 +62,22 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ items }) => {
           </li>
         ))}
       </ol>
+      {children}
+      {buttons && (
+        <div className="flex space-x-4">
+          {buttons.map((button) => (
+            <Button
+              key={button.text}
+              type="button"
+              className="w-fit h-10 btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white rounded-md flex gap-1 items-center"
+              onClick={button.action}
+            >
+              {button.icon ?? <HiPlusCircle size={20} />}
+              <span className="max-xs:sr-only">{button.text}</span>
+            </Button>
+          ))}
+        </div>
+      )}
     </nav>
   );
 };
