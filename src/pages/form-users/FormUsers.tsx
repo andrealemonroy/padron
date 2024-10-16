@@ -54,6 +54,10 @@ const FormUsers = () => {
     }
   }
 
+  const sendUrl = async (data) => {
+    console.log(data.url)
+    window.open(data.url, '_blank');
+  }
 
   const handleDelete = async (data) => {
     console.log(data.id);
@@ -217,7 +221,7 @@ const FormUsers = () => {
                   },
                 ]}
                 data={dataValues}
-                actions={getActions({ handleEdit, handleDelete, sendEmail })}
+                actions={getActions({ handleEdit, handleDelete, sendEmail, sendUrl })}
               />
               </>
             )}

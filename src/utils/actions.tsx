@@ -1,4 +1,4 @@
-import { HiMail, HiPencil, HiTrash } from 'react-icons/hi';
+import { HiEye, HiMail, HiPencil, HiTrash } from 'react-icons/hi';
 
 interface Action {
   icon: JSX.Element;
@@ -19,7 +19,7 @@ const actions: Action[] = [
   },
 ];
 
-const getActions = ({ handleEdit, handleDelete, sendEmail }: any) => {
+const getActions = ({ handleEdit, handleDelete, sendEmail, sendUrl }: any) => {
   const dynamicActions = [...actions]; // Copiar las acciones base
 
   // Asignar las funciones a las acciones
@@ -34,6 +34,16 @@ const getActions = ({ handleEdit, handleDelete, sendEmail }: any) => {
       onClick: sendEmail,
     });
   }
+
+  if (sendUrl) {
+    dynamicActions.splice(1, 0, { // Insertar la acción de enviar correo en la posición deseada
+      icon: <HiEye size={20} />,
+      label: 'Respuestas',
+      onClick: sendUrl,
+    });
+  }
+
+  
 
   return dynamicActions;
 }
