@@ -31,8 +31,8 @@ const Dependent = () => {
     load();
   }, []);
 
-  const handleEdit = (id: number) => {
-    navigate(`/edit-dependent/${id}`);
+  const handleEdit = (data) => {
+    navigate(`/edit-dependent/${data.id}`);
   };
 
   const handleDelete = async (id: number) => {

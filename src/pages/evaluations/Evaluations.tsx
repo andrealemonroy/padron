@@ -7,10 +7,9 @@ import Header from '../../components/Header';
 import Table from '../../components/Table';
 import Spinner from '../../components/Spinner';
 import Breadcrumb from '../../components/BreadCrumb';
-import Button from '../../components/Button';
 import Alert from '../../components/Alert';
 import { getActions } from '../../utils/actions';
-import { deleteEvaluation, fetchEvaluations } from '../../api/evaluationsApi';
+import { deleteEvaluation, fetchEvaluations } from '../../api/EvaluationsApi';
 
 const Evaluations = () => {
   const navigate = useNavigate();

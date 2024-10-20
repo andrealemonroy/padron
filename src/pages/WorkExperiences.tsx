@@ -63,8 +63,8 @@ const WorkExperiences = () => {
     setIdToDelete(null);
   };
 
-  const handleEdit = (id: number) => {
-    navigate(`/edit-work-experiences/${id}`);
+  const handleEdit = (data) => {
+    navigate(`/edit-work-experiences/${data.id}`);
   };
 
   const breadcrumbItems = [

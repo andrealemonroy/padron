@@ -5,14 +5,14 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthProvider'; // Import your AuthProvider
 import PrivateRoute from './components/PrivateRoute'; // PrivateRoute component
 import LoginPage from './pages/Login'; // Example login page
-import User from './pages/User'; // Example private usuarios page
-import CreateUser from './pages/CreateUser';
+import User from './pages/users/User'; // Example private usuarios page
+import CreateUser from './pages/users/CreateUser';
 import Roles from './pages/Roles';
 import CreateRol from './pages/CreateRol';
 import Option from './pages/Option';
 import CreatePermission from './pages/CreatePermission';
-import PersonalInformation from './pages/PersonalInformation';
-import CreatePersonalInformation from './pages/CreatePersonalInformation';
+import PersonalInformation from './pages/persona-information/PersonalInformation';
+import CreatePersonalInformation from './pages/persona-information/CreatePersonalInformation';
 import Addresses from './pages/Addresses';
 import CreateAddresses from './pages/CreateAddresses';
 import PensionSystem from './pages/PensionSystem';

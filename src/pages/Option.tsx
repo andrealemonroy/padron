@@ -61,12 +61,8 @@ const Option = () => {
     setIdToDelete(null);
   };
 
-  const handleAdd = () => {
-    navigate('/create-option');
-  };
-
-  const handleEdit = (id: number) => {
-    navigate(`/edit-option/${id}`);
+  const handleEdit = (data) => {
+    navigate(`/edit-option/${data.id}`);
   };
 
   const breadcrumbItems = [{ label: 'Opción', path: '/option' }];

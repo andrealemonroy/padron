@@ -39,8 +39,8 @@ const MasterData = () => {
     load();
   }, []);
 
-  const handleEdit = (id: number) => {
-    navigate(`/edit-master-data/${id}`);
+  const handleEdit = (data) => {
+    navigate(`/edit-master-data/${data.id}`);
   };
 
   const handleDelete = async (id: number) => {

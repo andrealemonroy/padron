@@ -1,15 +1,14 @@
 import { useEffect, useState } from 'react';
-import Sidebar from '../components/Sidebar';
-import Header from '../components/Header';
-import Table from '../components/Table';
-import { fetchPersonalInformations, deletePersonalInformation } from '../api/personalInformationApi';
+import Sidebar from '../../components/Sidebar';
+import Header from '../../components/Header';
+import Table from '../../components/Table';
+import { fetchPersonalInformations, deletePersonalInformation } from '../../api/personalInformationApi';
 import { useNavigate } from 'react-router-dom';
-import Alert from '../components/Alert';
-import Spinner from '../components/Spinner';
-import Breadcrumb from '../components/BreadCrumb';
+import Alert from '../../components/Alert';
+import Spinner from '../../components/Spinner';
+import Breadcrumb from '../../components/BreadCrumb';
 import { ColumnDef } from '@tanstack/react-table';
-import { HiPencil, HiTrash } from 'react-icons/hi';
-import { getActions } from '../utils/actions';
+import { getActions } from '../../utils/actions';
 
 interface PersonalInformationData {
   id: number;
@@ -28,6 +27,7 @@ const PersonalInformation = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [idToDelete, setIdToDelete] = useState<number | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [personalInformation, setPersonalInformation] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -80,6 +80,7 @@ const PersonalInformation = () => {
   const breadcrumbItems = [{ label: 'Datos Básicos', path: '/basic' }];
 
   // Define the columns
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const columns: ColumnDef<PersonalInformationData, any>[] = [
     {
       header: 'Nombre',

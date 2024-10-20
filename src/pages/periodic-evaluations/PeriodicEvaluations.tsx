@@ -40,8 +40,8 @@ const PeriodicEvaluations = () => {
     load();
   }, []);
 
-  const handleEdit = (id: number) => {
-    navigate(`/edit-periodic-evaluations/${id}`);
+  const handleEdit = (data) => {
+    navigate(`/edit-periodic-evaluations/${data.id}`);
   };
 
   const handleDelete = async (id: number) => {

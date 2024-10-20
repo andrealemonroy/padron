@@ -1,18 +1,18 @@
 import { useEffect, useState } from 'react';
-import Sidebar from '../components/Sidebar';
-import Header from '../components/Header';
-import Table from '../components/Table';
-import { fetchUsers, deleteUser } from '../api/userApi';
-import Button from '../components/Button';
+import Sidebar from '../../components/Sidebar';
+import Header from '../../components/Header';
+import Table from '../../components/Table';
+import { fetchUsers, deleteUser } from '../../api/userApi';
+import Button from '../../components/Button';
 import { useNavigate } from 'react-router-dom';
-import Alert from '../components/Alert';
-import Spinner from '../components/Spinner';
-import Breadcrumb from '../components/BreadCrumb';
-import { fetchImportUsersData } from '../api/ImportsApi';
+import Alert from '../../components/Alert';
+import Spinner from '../../components/Spinner';
+import Breadcrumb from '../../components/BreadCrumb';
+import { fetchImportUsersData } from '../../api/ImportsApi';
 import { toast, ToastContainer } from 'react-toastify';
 import { ColumnDef } from '@tanstack/react-table';
-import { HiCloudUpload, HiPencil, HiTrash, HiUpload, HiUserAdd } from 'react-icons/hi';
-import { getActions } from '../utils/actions';
+import { HiCloudUpload, HiUserAdd } from 'react-icons/hi';
+import { getActions } from '../../utils/actions';
 
 interface UserData {
   id: number;
@@ -100,7 +100,20 @@ const User = () => {
       const result = await fetchImportUsersData(formData);
       console.log('Usuarios importados exitosamente:', result);
       toast.success('Usuarios importados exitosamente');
-      // Reload users after importing
+
+      // Aquí asumimos que el resultado es un CSV
+      const csvBlob = new Blob([result], { type: 'text/csv' });
+      const url = URL.createObjectURL(csvBlob);
+      
+      // Crear un enlace para descargar el archivo CSV
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'usuarios_importados.csv'; // Nombre del archivo a descargar
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      
+      // Recargar usuarios después de importar
       const data = await fetchUsers();
       setUsers(data);
     } catch (error) {
@@ -111,8 +124,8 @@ const User = () => {
     }
   };
 
-  const handleEdit = (id: number) => {
-    navigate(`/edit-user/${id}`);
+  const handleEdit = (data) => {
+    navigate(`/edit-user/${data.id}`);
   };
 
   const breadcrumbItems = [{ label: 'Usuarios', path: '/usuarios' }];

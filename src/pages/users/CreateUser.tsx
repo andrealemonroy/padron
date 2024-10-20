@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import Sidebar from '../components/Sidebar';
-import Header from '../components/Header';
-import DynamicForm from '../components/DynamicForm';
-import Spinner from '../components/Spinner';
-import { fetchRoles } from '../api/rolApi';
-import { createUser, fetchUser, editUser } from '../api/userApi';
-import Breadcrumb from '../components/BreadCrumb';
+import Sidebar from '../../components/Sidebar';
+import Header from '../../components/Header';
+import DynamicForm from '../../components/DynamicForm';
+import Spinner from '../../components/Spinner';
+import { fetchRoles } from '../../api/rolApi';
+import { createUser, fetchUser, editUser } from '../../api/userApi';
+import Breadcrumb from '../../components/BreadCrumb';
 
 const CreateUser = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);

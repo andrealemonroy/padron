@@ -60,8 +60,8 @@ const Addresses = () => {
     setIdToDelete(null);
   };
 
-  const handleEdit = (id: number) => {
-    navigate(`/edit-addresses/${id}`);
+  const handleEdit = (data) => {
+    navigate(`/edit-addresses/${data.id}`);
   };
 
   const breadcrumbItems = [{ label: 'Dirección', path: '/addresses' }];

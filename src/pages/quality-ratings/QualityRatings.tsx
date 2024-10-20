@@ -40,8 +40,8 @@ const QualityRatings = () => {
     load();
   }, []);
 
-  const handleEdit = (id: number) => {
-    navigate(`/edit-quality-ratings/${id}`);
+  const handleEdit = (data) => {
+    navigate(`/edit-quality-ratings/${data.id}`);
   };
 
   const handleDelete = async (id: number) => {

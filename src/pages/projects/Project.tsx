@@ -37,8 +37,8 @@ const Project = () => {
     load();
   }, []);
 
-  const handleEdit = (id: number) => {
-    navigate(`/edit-projects/${id}`);
+  const handleEdit = (data) => {
+    navigate(`/edit-projects/${data.id}`);
   };
 
   const handleDelete = async (id: number) => {

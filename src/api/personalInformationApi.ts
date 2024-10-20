@@ -20,6 +20,7 @@ export interface PersonalInformation {
   emergency_phone_number: string | null;
   has_children_under_18: boolean;
   number_of_children_under_18: number | null;
+  photo_url: string | null;
   status: string;
   created_by: number;
   updated_by: number | null;
