@@ -13,7 +13,7 @@ interface Evaluations {
 
 export const fetchEvaluations = async (): Promise<Evaluations[]> => {
     
-  const response = await axios.get<Evaluations[]>(`/evaluations`)
+  const response = await axios.get<Evaluations[]>(`${import.meta.env.VITE_API_URL}/evaluations`)
   .then(response => {
       return response;
   })
@@ -43,7 +43,7 @@ export const deleteEvaluation = async (id: number): Promise<Evaluations> => {
 
 export const fetchEvaluation = async (id): Promise<Evaluations> => {
   console.log(id);
-  const response = await axios.get<Evaluations>(`/evaluations/${id}`)
+  const response = await axios.get<Evaluations>(`${import.meta.env.VITE_API_URL}/evaluations/${id}`)
   .then(response => {
       return response;
   })

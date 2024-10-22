@@ -35,7 +35,7 @@ interface User {
 
 export const fetchPensionSystemses = async (): Promise<User[]> => {
     
-    const response = await axios.get<User[]>(`/pension-systems`)
+    const response = await axios.get<User[]>(`${import.meta.env.VITE_API_URL}/pension-systems`)
     .then(response => {
         return response;
     })
@@ -56,7 +56,7 @@ export const editPensionSystems = async (userData: Omit<User, 'id'>, id: number)
 
 export const fetchPensionSystems = async (id): Promise<User> => {
     console.log(id);
-    const response = await axios.get<User>(`/pension-systems/${id}`)
+    const response = await axios.get<User>(`${import.meta.env.VITE_API_URL}/pension-systems/${id}`)
     .then(response => {
         return response;
     })

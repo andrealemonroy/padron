@@ -42,7 +42,7 @@ export const deleteProject = async (id: number): Promise<Project> => {
 
 export const fetchProject = async (id): Promise<Project> => {
   console.log(id);
-  const response = await axios.get<Project>(`/projects/${id}`)
+  const response = await axios.get<Project>(`${import.meta.env.VITE_API_URL}/projects/${id}`)
   .then(response => {
       return response;
   })

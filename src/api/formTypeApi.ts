@@ -9,7 +9,7 @@ interface FormType {
 
 export const fetchFormType = async (): Promise<FormType[]> => {
     
-    const response = await axios.get<FormType[]>(`/form-type`)
+    const response = await axios.get<FormType[]>(`${import.meta.env.VITE_API_URL}/form-type`)
     .then(response => {
         //console.log(response.data);
         return response;

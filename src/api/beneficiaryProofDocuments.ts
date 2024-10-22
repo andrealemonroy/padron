@@ -9,7 +9,7 @@ interface BeneficiaryProofDocuments {
 
 export const fetchBeneficiaryProofDocuments = async (): Promise<BeneficiaryProofDocuments[]> => {
     
-  const response = await axios.get<BeneficiaryProofDocuments[]>(`/beneficiary-proof-documents`)
+  const response = await axios.get<BeneficiaryProofDocuments[]>(`${import.meta.env.VITE_API_URL}/beneficiary-proof-documents`)
   .then(response => {
       return response;
   })
@@ -39,7 +39,7 @@ export const deleteBeneficiaryProofDocument = async (id: number): Promise<Benefi
 
 export const fetchBeneficiaryProofDocument = async (id): Promise<BeneficiaryProofDocuments> => {
   console.log(id);
-  const response = await axios.get<BeneficiaryProofDocuments>(`/beneficiary-proof-documents/${id}`)
+  const response = await axios.get<BeneficiaryProofDocuments>(`${import.meta.env.VITE_API_URL}/beneficiary-proof-documents/${id}`)
   .then(response => {
       return response;
   })

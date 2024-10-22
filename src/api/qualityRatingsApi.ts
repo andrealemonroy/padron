@@ -9,7 +9,7 @@ interface QualityRatings {
 
 export const fetchQualityRatings = async (): Promise<QualityRatings[]> => {
     
-  const response = await axios.get<QualityRatings[]>(`/quality-ratings`)
+  const response = await axios.get<QualityRatings[]>(`${import.meta.env.VITE_API_URL}/quality-ratings`)
   .then(response => {
       return response;
   })
@@ -38,7 +38,7 @@ export const deleteQualityRating = async (id: number): Promise<QualityRatings> =
 };
 
 export const fetchQualityRating = async (id): Promise<QualityRatings> => {
-  const response = await axios.get<QualityRatings>(`/quality-ratings/${id}`)
+  const response = await axios.get<QualityRatings>(`${import.meta.env.VITE_API_URL}/quality-ratings/${id}`)
   .then(response => {
       return response;
   })

@@ -17,7 +17,7 @@ interface PeriodicEvaluations {
 
 export const fetchPeriodicEvaluations = async (): Promise<PeriodicEvaluations[]> => {
     
-  const response = await axios.get<PeriodicEvaluations[]>(`/periodic-evaluations`)
+  const response = await axios.get<PeriodicEvaluations[]>(`${import.meta.env.VITE_API_URL}/periodic-evaluations`)
   .then(response => {
       return response;
   })
@@ -47,7 +47,7 @@ export const deletePeriodicEvaluation = async (id: number): Promise<PeriodicEval
 
 export const fetchPeriodicEvaluation = async (id): Promise<PeriodicEvaluations> => {
   console.log(id);
-  const response = await axios.get<PeriodicEvaluations>(`/periodic-evaluations/${id}`)
+  const response = await axios.get<PeriodicEvaluations>(`${import.meta.env.VITE_API_URL}/periodic-evaluations/${id}`)
   .then(response => {
       return response;
   })

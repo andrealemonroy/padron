@@ -33,7 +33,7 @@ interface User {
 
 export const fetchWorkExperiences = async (): Promise<User[]> => {
     
-  const response = await axios.get<User[]>(`/work-experiences`)
+  const response = await axios.get<User[]>(`${import.meta.env.VITE_API_URL}/work-experiences`)
   .then(response => {
       return response;
   })
@@ -54,7 +54,7 @@ export const editWorkExperiences = async (userData: Omit<User, 'id'>, id: number
 
 export const fetchWorkExperience = async (id): Promise<User> => {
   console.log(id);
-  const response = await axios.get<User>(`/work-experiences/${id}`)
+  const response = await axios.get<User>(`${import.meta.env.VITE_API_URL}/work-experiences/${id}`)
   .then(response => {
       return response;
   })

@@ -33,7 +33,7 @@ interface PermissionPivot {
 
 export const fetchRoles = async (): Promise<Role[]> => {
     
-    const response = await axios.get<Role[]>(`/roles`)
+    const response = await axios.get<Role[]>(`${import.meta.env.VITE_API_URL}/roles`)
     .then(response => {
         return response;
     })
@@ -47,7 +47,7 @@ export const fetchRoles = async (): Promise<Role[]> => {
 };
 
 export const fetchRol = async (id): Promise<Role> => {
-    const response = await axios.get<Role>(`/roles/${id}`)
+    const response = await axios.get<Role>(`${import.meta.env.VITE_API_URL}/roles/${id}`)
     .then(response => {
         return response;
     })

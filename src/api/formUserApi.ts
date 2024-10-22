@@ -44,7 +44,7 @@ interface FormData {
 
 export const fetchFormUsers = async (): Promise<FormData[]> => {
     
-  const response = await axios.get<FormData[]>(`/user-form-api`)
+  const response = await axios.get<FormData[]>(`${import.meta.env.VITE_API_URL}/user-form-api`)
   .then(response => {
       return response;
   })
@@ -74,7 +74,7 @@ export const deleteFormUser = async (id: number): Promise<FormData> => {
 
 export const fetchFormUser = async (id): Promise<FormData> => {
   console.log(id);
-  const response = await axios.get<FormData>(`/user-form-api/${id}`)
+  const response = await axios.get<FormData>(`${import.meta.env.VITE_API_URL}/user-form-api/${id}`)
   .then(response => {
       return response;
   })

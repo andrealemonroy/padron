@@ -40,7 +40,7 @@ interface MenuStructure {
 
 export const fetchMenu = async (): Promise<MenuStructure[]> => {
     
-    const response = await axios.get<MenuStructure[]>(`/menu`)
+    const response = await axios.get<MenuStructure[]>(`${import.meta.env.VITE_API_URL}/menu`)
     .then(response => {
         //console.log(response.data);
         return response;

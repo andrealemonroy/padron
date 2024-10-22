@@ -10,7 +10,7 @@ interface Document {
 
 export const fetchDocument = async (): Promise<Document[]> => {
     
-    const response = await axios.get<Document[]>(`/document`)
+    const response = await axios.get<Document[]>(`${import.meta.env.VITE_API_URL}/document`)
     .then(response => {
         //console.log(response.data);
         return response;

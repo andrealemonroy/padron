@@ -36,7 +36,7 @@ interface User {
 
 export const fetchIncidences = async (): Promise<Incidence[]> => {
     
-  const response = await axios.get<Incidence[]>(`/incidences`)
+  const response = await axios.get<Incidence[]>(`${import.meta.env.VITE_API_URL}/incidences`)
   .then(response => {
       return response;
   })
@@ -66,7 +66,7 @@ export const deleteIncidence= async (id: number): Promise<Incidence> => {
 
 export const fetchIncidence = async (id): Promise<Incidence> => {
   console.log(id);
-  const response = await axios.get<Incidence>(`/incidences/${id}`)
+  const response = await axios.get<Incidence>(`${import.meta.env.VITE_API_URL}/incidences/${id}`)
   .then(response => {
       return response;
   })

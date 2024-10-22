@@ -86,7 +86,7 @@ export const deleteUser = async (id: number): Promise<User> => {
 };
 
 export const fetchUser = async (id): Promise<User> => {
-    const response = await axios.get<User>(`/users/${id}`)
+    const response = await axios.get<User>(`${import.meta.env.VITE_API_URL}/users/${id}`)
     .then(response => {
         return response;
     })
@@ -98,7 +98,7 @@ export const fetchUser = async (id): Promise<User> => {
 };
 
 export const sendEmailApi = async (id): Promise<User> => {
-    const response = await axios.get<User>(`/send-api/${id}`)
+    const response = await axios.get<User>(`${import.meta.env.VITE_API_URL}/send-api/${id}`)
     .then(response => {
         return response;
     })

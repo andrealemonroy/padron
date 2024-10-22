@@ -9,7 +9,7 @@ interface FormStatus {
 
 export const fetchFormStatus = async (): Promise<FormStatus[]> => {
     
-    const response = await axios.get<FormStatus[]>(`/form-status`)
+    const response = await axios.get<FormStatus[]>(`${import.meta.env.VITE_API_URL}/form-status`)
     .then(response => {
         //console.log(response.data);
         return response;
