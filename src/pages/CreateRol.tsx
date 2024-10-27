@@ -104,9 +104,7 @@ const CreateRol = () => {
             {loading ? (
               <Spinner loading={loading} size={50} color="#3498db" />
             ) : (
-              permissions.length > 0 && (
-                <DynamicForm fields={formFields} onSubmit={onSubmit} defaultValues={defaultValues} />
-              )
+              <DynamicForm fields={formFields} onSubmit={onSubmit} defaultValues={defaultValues} />
             )}
           </div>
         </main>

@@ -13,6 +13,7 @@ import { deleteMasterData, fetchMasterDatas } from '../../api/masterDataApi';
 import { fetchImportMasterData } from '../../api/ImportsApi';
 import { getActions } from '../../utils/actions';
 import { HiCloudUpload, HiUserAdd } from 'react-icons/hi';
+import { ColumnDef } from '@tanstack/react-table';
 
 const MasterData = () => {
   const navigate = useNavigate();
@@ -127,6 +128,98 @@ const MasterData = () => {
       </label>
     </div>
   );
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const columns: ColumnDef<any, any>[] = [
+    {
+      accessorKey: 'document',
+      header: 'Tipo de Documento',
+      cell: ({ row }) => {
+        const document = row.getValue('document') as { description: string };
+        return document?.description || 'Sin Documento';
+      },
+      filterFn: (row, columnId, filterValue) => {
+        const document = row.getValue(columnId) as { description: string };
+        if (!filterValue) return true; // Si no hay filtro, mostrar todos los documentos
+        return document?.description === filterValue;
+      },
+      meta: {
+        width: '200px',
+        filterComponent: (column) => (
+          <select
+            value={(column.getFilterValue() ?? '') as string}
+            onChange={(e) => column.setFilterValue(e.target.value)}
+            className="w-full px-2 py-1 text-sm border rounded"
+          >
+            <option value="">Todos los Documentos</option>
+            {Array.from(
+              new Set(dataValues.flatMap((data) => data.document.description))
+            ).map((document) => (
+              <option key={document} value={document}>
+                {document}
+              </option>
+            ))}
+          </select>
+        ),
+      },
+    },
+    
+    {
+      accessorKey: 'DNINumber',
+      header: 'Nº Documento',
+      cell: (info) => info.getValue(),
+      filterFn: 'includesString',
+      meta: {
+        width: '200px',
+        filterComponent: (column) => (
+          <input
+            type="text"
+            value={(column.getFilterValue() ?? '') as string}
+            onChange={(e) => column.setFilterValue(e.target.value)}
+            placeholder="Filtrar Nombre"
+            className="w-full px-2 py-1 text-sm border rounded"
+          />
+        ),
+      },
+    },
+    {
+      accessorKey: 'surname1',
+      header: 'Apellidos',
+      cell: (info) => info.getValue(),
+      filterFn: 'includesString',
+      meta: {
+        width: '200px',
+        filterComponent: (column) => (
+          <input
+            type="text"
+            value={(column.getFilterValue() ?? '') as string}
+            onChange={(e) => column.setFilterValue(e.target.value)}
+            placeholder="Filtrar Nombre"
+            className="w-full px-2 py-1 text-sm border rounded"
+          />
+        ),
+      },
+    },
+    {
+      accessorKey: 'name',
+      header: 'Nombres',
+      cell: (info) => info.getValue(),
+      filterFn: 'includesString',
+      meta: {
+        width: '300px',
+        filterComponent: (column) => (
+          <input
+            type="text"
+            value={(column.getFilterValue() ?? '') as string}
+            onChange={(e) => column.setFilterValue(e.target.value)}
+            placeholder="Filtrar Nombre"
+            className="w-full px-2 py-1 text-sm border rounded"
+          />
+        ),
+      },
+    },
+  ];
+
   return (
     <div className="flex h-[100dvh] overflow-hidden">
       <ToastContainer />
@@ -154,28 +247,7 @@ const MasterData = () => {
               <Spinner loading={loading} size={50} color="#3498db" /> // Show spinner while loading
             ) : (
               <Table
-                columns={[
-                  {
-                    header: 'Nombres',
-                    accessorKey: 'name',
-                    cell: (info) => info.getValue(),
-                  },
-                  {
-                    header: 'Tipo de Documento',
-                    accessorKey: 'document.description',
-                    cell: (info) => info.getValue(),
-                  },
-                  {
-                    header: 'Documento',
-                    accessorKey: 'DNINumber',
-                    cell: (info) => info.getValue(),
-                  },
-                  {
-                    header: 'Apellidos',
-                    accessorKey: 'surname1',
-                    cell: (info) => info.getValue(),
-                  },
-                ]}
+                columns={columns}
                 data={dataValues}
                 actions={getActions({ handleEdit, handleDelete })}
               />

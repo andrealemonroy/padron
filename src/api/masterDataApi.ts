@@ -17,6 +17,13 @@ interface MasterData {
   apellidosy3Nombres: string;
   apellidos: string;
   name: string;
+  document: Document;
+}
+
+interface Document {
+  id: number;
+  code: string;
+  description: string;
 }
 
 
