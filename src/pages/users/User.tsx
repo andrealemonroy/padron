@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import Sidebar from '../../components/Sidebar';
 import Header from '../../components/Header';
 import Table from '../../components/Table';
-import { fetchUsers, deleteUser } from '../../api/userApi';
+import { fetchUsers, deleteUser, envoForm } from '../../api/userApi';
 import Button from '../../components/Button';
 import { useNavigate } from 'react-router-dom';
 import Alert from '../../components/Alert';
@@ -26,7 +26,9 @@ const User = () => {
   const navigate = useNavigate();
 
   const [showAlert, setShowAlert] = useState(false);
+  const [showAlertUsers, setShowAlertUsers] = useState(false);
   const [userIdToDelete, setUserIdToDelete] = useState<number | null>(null);
+  const [userIdToUsers, setUserIdToUsers] = useState<number | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [users, setUsers] = useState<UserData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -74,48 +76,61 @@ const User = () => {
     }
   };
 
+  const confirmUsers = async () => {
+    console.log(userIdToUsers)
+    if (userIdToUsers) {
+      setLoading(true);
+      try {
+        await envoForm(userIdToUsers);
+        setShowAlertUsers(false);
+        toast.success('Formulario enviado exitosamente');
+        const data = await fetchUsers();
+        setUsers(data);
+      } catch (error) {
+        console.error('Error al Formulario enviado:', error);
+        toast.error(
+          'Error al Formulario enviado. Por favor, intente de nuevo.'
+        );
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
   const cancelDelete = () => {
     setShowAlert(false);
     setUserIdToDelete(null);
+  };
+
+  const cancelUsers = async () => {
+    setShowAlertUsers(false);
+    setUserIdToUsers(null);
+    const data = await fetchUsers();
+    setUsers(data);
   };
 
   const handleAddUser = () => {
     navigate('/create-user');
   };
 
-  const handleAddMassiveUsers = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleAddMassiveUsers = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files || event.target.files.length === 0) {
       toast.error('No se seleccionó ningún archivo');
       return;
     }
-
+  
     const file = event.target.files[0];
     const formData = new FormData();
     formData.append('file', file);
-
     setLoading(true);
     try {
       const result = await fetchImportUsersData(formData);
       console.log('Usuarios importados exitosamente:', result);
       toast.success('Usuarios importados exitosamente');
-
-      // Aquí asumimos que el resultado es un CSV
-      const csvBlob = new Blob([result], { type: 'text/csv' });
-      const url = URL.createObjectURL(csvBlob);
       
-      // Crear un enlace para descargar el archivo CSV
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'usuarios_importados.csv'; // Nombre del archivo a descargar
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+      setShowAlertUsers(true);
+      setUserIdToUsers(result);
       
-      // Recargar usuarios después de importar
-      const data = await fetchUsers();
-      setUsers(data);
     } catch (error) {
       console.error('Error al importar usuarios:', error);
       toast.error('Error al importar usuarios. Por favor, intente de nuevo.');
@@ -123,6 +138,7 @@ const User = () => {
       setLoading(false);
     }
   };
+  
 
 
   const handleAddMassiveJobs = async (
@@ -296,6 +312,15 @@ const User = () => {
           onCancel={cancelDelete}
         />
       )}
+
+    {showAlertUsers && (
+        <Alert
+          message="¿Estás seguro de que deseas enviar formularios?"
+          onConfirm={confirmUsers}
+          onCancel={cancelUsers}
+        />
+      )}
+
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       {/* Content area */}
       <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">

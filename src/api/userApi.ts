@@ -75,6 +75,21 @@ export const createUser = async (userData: Omit<User, 'id'>): Promise<User> => {
   return response.data;
 };
 
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const envoForm = async (userData): Promise<any> => {
+    const response = await axios.post<User>(`${import.meta.env.VITE_API_URL}/create-forms`, userData)
+      .then(response => {
+          return response;
+      })
+      .catch(error => {
+          console.error('Error fetching users:', error.response || error);
+          throw error;
+      });
+      console.log(response);
+    return response.data;
+  };
+
 export const editUser = async (userData: Omit<User, 'id'>, id: number): Promise<User> => {
     const response = await axios.put<User>(`${import.meta.env.VITE_API_URL}/users/${id}`, {...userData, status_id: 1, password: '12345678' });
     return response.data;
