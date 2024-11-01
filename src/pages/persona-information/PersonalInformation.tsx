@@ -169,7 +169,7 @@ const PersonalInformation = () => {
           />
         ),
       },
-      filterFn: 'equals', // Assuming you want to filter by exact date
+      filterFn: 'equals',
     },
   ];
 

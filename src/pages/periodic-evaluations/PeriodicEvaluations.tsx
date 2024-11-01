@@ -7,7 +7,6 @@ import Header from '../../components/Header';
 import Table from '../../components/Table';
 import Spinner from '../../components/Spinner';
 import Breadcrumb from '../../components/BreadCrumb';
-import Button from '../../components/Button';
 import Alert from '../../components/Alert';
 import {
   deletePeriodicEvaluation,
@@ -73,32 +72,12 @@ const PeriodicEvaluations = () => {
   };
 
   const breadcrumbItems = [
-    { label: 'Evaluación', path: '/periodic-evaluations' },
+    { label: 'Evaluación Periodico', path: '/periodic-evaluations' },
   ];
 
   const handleAdd = () => {
     navigate('/create-periodic-evaluations');
   };
-
-  const addButton = (
-    <>
-      <Button
-        type="button"
-        className="w-80 btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white"
-        onClick={handleAdd}
-      >
-        <svg
-          className="fill-current shrink-0 xs:hidden"
-          width="16"
-          height="16"
-          viewBox="0 0 16 16"
-        >
-          <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1z" />
-        </svg>
-        <span className="max-xs:sr-only">Crear Evaluación</span>
-      </Button>
-    </>
-  );
 
   return (
     <div className="flex h-[100dvh] overflow-hidden">
@@ -120,7 +99,15 @@ const PeriodicEvaluations = () => {
           <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
             <div className="sm:flex sm:justify-between sm:items-center">
               {/* Add breadcrumb here */}
-              <Breadcrumb items={breadcrumbItems} />
+              <Breadcrumb 
+              items={breadcrumbItems}
+              buttons={[
+                {
+                  text: 'Agregar evaluación',
+                  action: handleAdd,
+                },
+              ]}
+              />
             </div>
 
             {loading ? (
@@ -132,27 +119,90 @@ const PeriodicEvaluations = () => {
                     header: 'Periodo',
                     accessorKey: 'period',
                     cell: (info) => info.getValue(),
+                    meta: {
+                      width: '200px',
+                      filterComponent: (column) => (
+                        <input
+                          type="text"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          placeholder="Filtrar Periodo"
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
                   },
                   {
                     header: 'Fecha',
                     accessorKey: 'date',
                     cell: (info) => info.getValue(),
+                    meta: {
+                      width: '150px',
+                      filterComponent: (column) => (
+                        <input
+                          type="date"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
+                    filterFn: 'equals',
                   },
                   {
                     header: 'Rating',
                     accessorKey: 'rating',
                     cell: (info) => info.getValue(),
+                    meta: {
+                      width: '200px',
+                      filterComponent: (column) => (
+                        <input
+                          type="text"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          placeholder="Filtrar Rating"
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
                   },
                   {
                     header: 'Estado',
                     accessorKey: 'status',
-                    cell: (info) =>
-                      info.getValue() == 1 ? 'Activo' : 'Inactivo',
+                    cell: (info) => (info.getValue() === 1 ? 'Activo' : 'Inactivo'),
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    filterFn: 'statusFilter' as any,
+                    meta: {
+                      width: '200px',
+                      filterComponent: (column) => (
+                        <select
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        >
+                          <option value="">Todos los Estados</option>
+                          <option value="Activo">Activo</option>
+                          <option value="Inactivo">Inactivo</option>
+                        </select>
+                      ),
+                    },
                   },
                   {
                     header: 'Calidad del desarrollo',
                     accessorKey: 'development_quality',
                     cell: (info) => info.getValue(),
+                    meta: {
+                      width: '350px',
+                      filterComponent: (column) => (
+                        <input
+                          type="text"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          placeholder="Filtrar Calidad del desarrollo"
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
                   },
                 ]}
                 data={dataValues}
