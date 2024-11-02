@@ -51,6 +51,8 @@ import Dashboard from './pages/dashboard/Dashboard';
 import FormUsers from './pages/form-users/FormUsers';
 import CreateFormUsers from './pages/form-users/CreateFormUsers';
 import { ThemeProvider } from './utils/ThemeContext';
+import Contract from './pages/contract/Contract';
+import CreateContract from './pages/contract/CreateContract';
 
 function App() {
   return (
@@ -177,6 +179,19 @@ function App() {
             <Route
               path="/create-quality-ratings"
               element={<CreateQualityRatings />}
+            />
+            <Route
+              path="/create-beneficiary-proof-documents"
+              element={<CreateBeneficiaryProofDocuments />}
+            />
+            <Route path="/contract" element={<Contract />} />
+            <Route
+              path="/edit-contract/:id"
+              element={<CreateContract />}
+            />
+            <Route
+              path="/create-contract"
+              element={<CreateContract />}
             />
           </Routes>
         </Router>

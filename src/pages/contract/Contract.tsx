@@ -7,11 +7,11 @@ import Header from '../../components/Header';
 import Table from '../../components/Table';
 import Spinner from '../../components/Spinner';
 import Breadcrumb from '../../components/BreadCrumb';
-import { deleteProject, fetchProjects } from '../../api/projectApi';
 import Alert from '../../components/Alert';
 import { getActions } from '../../utils/actions';
+import { deleteContract, fetchContracts } from '../../api/contractApi';
 
-const Project = () => {
+const Contract = () => {
   const navigate = useNavigate();
   const [showAlert, setShowAlert] = useState(false);
   const [idToDelete, setIdToDelete] = useState<number | null>(null);
@@ -23,7 +23,7 @@ const Project = () => {
     const load = async () => {
       try {
         setLoading(true);
-        const data = await fetchProjects();
+        const data = await fetchContracts();
         setDataValues(data);
       } catch (error) {
         console.error('Error fetching projects:', error);
@@ -37,7 +37,7 @@ const Project = () => {
   }, []);
 
   const handleEdit = (data) => {
-    navigate(`/edit-projects/${data.id}`);
+    navigate(`/edit-contract/${data.id}`);
   };
 
   const handleDelete = async (data) => {
@@ -49,11 +49,11 @@ const Project = () => {
     if (idToDelete) {
       setLoading(true);
         try {
-            await deleteProject(idToDelete);
-            setDataValues((prev) => prev.filter(dev => dev.id !== idToDelete));
+            await deleteContract(idToDelete);
+            //setDataValues((prev) => prev.filter(dev => dev.id !== idToDelete));
             setShowAlert(false);
             toast.success('Proyecto eliminado exitosamente');
-            navigate('/projects');
+            navigate('/contract');
         } catch (error) {
             console.error('Error al eliminar el proyecto:', error);
             toast.error('Error al eliminar el proyecto');
@@ -69,11 +69,11 @@ const Project = () => {
   };
 
   const breadcrumbItems = [
-    { label: 'Proyectos', path: '/projects' },
+    { label: 'Contrato', path: '/contract' },
   ];
 
   const handleAdd = () => {
-    navigate('/create-projects');
+    navigate('/create-contract');
   };
 
   return (
@@ -109,25 +109,8 @@ const Project = () => {
                 <Table
               columns={[
                 {
-                  header: 'Código',
-                  accessorKey: 'code',
-                  cell: (info) => info.getValue(),
-                  meta: {
-                    width: '120px',
-                    filterComponent: (column) => (
-                      <input
-                        type="text"
-                        value={(column.getFilterValue() ?? '') as string}
-                        onChange={(e) => column.setFilterValue(e.target.value)}
-                        placeholder="Filtrar Código"
-                        className="w-full px-2 py-1 text-sm border rounded"
-                      />
-                    ),
-                  },
-                },
-                {
                   header: 'Nombre',
-                  accessorKey: 'name',
+                  accessorKey: 'user.name',
                   cell: (info) => info.getValue(),
                   meta: {
                     width: '350px',
@@ -137,22 +120,6 @@ const Project = () => {
                         value={(column.getFilterValue() ?? '') as string}
                         onChange={(e) => column.setFilterValue(e.target.value)}
                         placeholder="Filtrar Nombre"
-                        className="w-full px-2 py-1 text-sm border rounded"
-                      />
-                    ),
-                  },
-                },
-                {
-                  header: 'Cliente',
-                  accessorKey: 'client',
-                  cell: (info) => info.getValue(),
-                  meta: {
-                    filterComponent: (column) => (
-                      <input
-                        type="text"
-                        value={(column.getFilterValue() ?? '') as string}
-                        onChange={(e) => column.setFilterValue(e.target.value)}
-                        placeholder="Filtrar Cliente"
                         className="w-full px-2 py-1 text-sm border rounded"
                       />
                     ),
@@ -188,6 +155,7 @@ const Project = () => {
                     ),
                   },
                 },
+                
               ]}
               data={dataValues}
               actions={getActions({ handleEdit, handleDelete })}
@@ -203,4 +171,4 @@ const Project = () => {
   );
 };
 
-export default Project;
+export default Contract;
