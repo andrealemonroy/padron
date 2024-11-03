@@ -51,6 +51,7 @@ import Dashboard from './pages/dashboard/Dashboard';
 import FormUsers from './pages/form-users/FormUsers';
 import CreateFormUsers from './pages/form-users/CreateFormUsers';
 import { ThemeProvider } from './utils/ThemeContext';
+import { ReportsPage } from './pages/reports';
 
 function App() {
   return (
@@ -177,6 +178,14 @@ function App() {
             <Route
               path="/create-quality-ratings"
               element={<CreateQualityRatings />}
+            />
+            <Route
+              path="/reports"
+              element={
+                <PrivateRoute>
+                  <ReportsPage />
+                </PrivateRoute>
+              }
             />
           </Routes>
         </Router>

@@ -1,6 +1,4 @@
 import { useEffect, useState } from 'react';
-import Sidebar from '../components/Sidebar';
-import Header from '../components/Header';
 import Table from '../components/Table';
 import { fetchUsers, deleteUser } from '../api/userApi';
 import Button from '../components/Button';
@@ -9,10 +7,11 @@ import Alert from '../components/Alert';
 import Spinner from '../components/Spinner';
 import Breadcrumb from '../components/BreadCrumb';
 import { fetchImportUsersData } from '../api/ImportsApi';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { ColumnDef } from '@tanstack/react-table';
-import { HiCloudUpload, HiPencil, HiTrash, HiUpload, HiUserAdd } from 'react-icons/hi';
+import { HiCloudUpload, HiUserAdd } from 'react-icons/hi';
 import { getActions } from '../utils/actions';
+import { Layout } from '../components/Layout';
 
 interface UserData {
   id: number;
@@ -27,7 +26,6 @@ const User = () => {
 
   const [showAlert, setShowAlert] = useState(false);
   const [userIdToDelete, setUserIdToDelete] = useState<number | null>(null);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [users, setUsers] = useState<UserData[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -232,8 +230,7 @@ const User = () => {
   ];
 
   return (
-    <div className="flex h-screen overflow-hidden">
-      <ToastContainer />
+    <Layout>
       {showAlert && (
         <Alert
           message="¿Estás seguro de que deseas eliminar este usuario?"
@@ -241,30 +238,19 @@ const User = () => {
           onCancel={cancelDelete}
         />
       )}
-      <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-      {/* Content area */}
-      <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-        {/* Site header */}
-        <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-
-        <main className="grow">
-          <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
-            <div className="sm:flex sm:justify-between sm:items-center mb-4">
-              <Breadcrumb items={breadcrumbItems}>{addButton}</Breadcrumb>
-            </div>
-            {loading ? (
-              <Spinner loading={loading} size={50} color="#3498db" />
-            ) : (
-              <Table
-                columns={columns}
-                data={users}
-                actions={getActions({ handleEdit, handleDelete })}
-              />
-            )}
-          </div>
-        </main>
+      <div className="sm:flex sm:justify-between sm:items-center mb-4">
+        <Breadcrumb items={breadcrumbItems}>{addButton}</Breadcrumb>
       </div>
-    </div>
+      {loading ? (
+        <Spinner loading={loading} size={50} color="#3498db" />
+      ) : (
+        <Table
+          columns={columns}
+          data={users}
+          actions={getActions({ handleEdit, handleDelete })}
+        />
+      )}
+    </Layout>
   );
 };
 
