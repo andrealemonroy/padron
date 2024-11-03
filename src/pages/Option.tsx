@@ -3,7 +3,6 @@ import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
 import Table from '../components/Table';
 import { fetchPermissions, deletePermissions } from '../api/permissionApi';
-import Button from '../components/Button';
 import { useNavigate } from 'react-router-dom';
 import Alert from '../components/Alert';
 import Spinner from '../components/Spinner';
@@ -61,14 +60,13 @@ const Option = () => {
     setIdToDelete(null);
   };
 
+  const handleEdit = (data) => {
+    navigate(`/edit-option/${data.id}`);
+  };
+
   const handleAdd = () => {
     navigate('/create-option');
   };
-
-  const handleEdit = (id: number) => {
-    navigate(`/edit-option/${id}`);
-  };
-
   const breadcrumbItems = [{ label: 'Opción', path: '/option' }];
 
 
@@ -91,7 +89,7 @@ const Option = () => {
           <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
             <div className="sm:flex sm:justify-between sm:items-center">
               {/* Add breadcrumb here */}
-              <Breadcrumb items={breadcrumbItems} />
+              <Breadcrumb items={breadcrumbItems} buttons={[{ text: 'Crear Opocion', action: handleAdd }]} />
             </div>
 
             {loading ? (

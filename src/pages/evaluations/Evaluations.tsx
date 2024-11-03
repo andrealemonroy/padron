@@ -7,10 +7,9 @@ import Header from '../../components/Header';
 import Table from '../../components/Table';
 import Spinner from '../../components/Spinner';
 import Breadcrumb from '../../components/BreadCrumb';
-import Button from '../../components/Button';
 import Alert from '../../components/Alert';
 import { getActions } from '../../utils/actions';
-import { deleteEvaluation, fetchEvaluations } from '../../api/evaluationsApi';
+import { deleteEvaluation, fetchEvaluations } from '../../api/EvaluationsApi';
 
 const Evaluations = () => {
   const navigate = useNavigate();
@@ -37,8 +36,8 @@ const Evaluations = () => {
     load();
   }, []);
 
-  const handleEdit = (id: number) => {
-    navigate(`/edit-evaluations/${id}`);
+  const handleEdit = (data) => {
+    navigate(`/edit-evaluations/${data.id}`);
   };
 
   const handleDelete = async (id: number) => {
@@ -69,7 +68,7 @@ const Evaluations = () => {
     setIdToDelete(null);
   };
 
-  const breadcrumbItems = [{ label: 'Evaluación', path: '/evaluations' }];
+  const breadcrumbItems = [{ label: 'Evaluación de Campo', path: '/evaluations' }];
 
   const handleAdd = () => {
     navigate('/create-evaluations');
@@ -95,7 +94,15 @@ const Evaluations = () => {
           <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
             <div className="sm:flex sm:justify-between sm:items-center">
               {/* Add breadcrumb here */}
-              <Breadcrumb items={breadcrumbItems} />
+              <Breadcrumb
+                items={breadcrumbItems}
+                buttons={[
+                  {
+                    text: 'Agregar evaluación',
+                    action: handleAdd,
+                  },
+                ]}
+              />
             </div>
 
             {loading ? (
@@ -107,22 +114,78 @@ const Evaluations = () => {
                     header: 'Periodo',
                     accessorKey: 'evaluation_date',
                     cell: (info) => info.getValue(),
+                    meta: {
+                      width: '150px',
+                      filterComponent: (column) => (
+                        <input
+                          type="date"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
+                    filterFn: 'equals',
                   },
                   {
                     header: 'Opciones',
                     accessorKey: 'predefined_options',
                     cell: (info) => info.getValue(),
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    filterFn: 'statusFilter' as any,
+                    meta: {
+                      width: '200px',
+                      filterComponent: (column) => (
+                        <select
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        >
+                          <option value="">Todos los Estados</option>
+                          <option value="Opcion A">Opcion A</option>
+                          <option value="Opcion B">Opcion B</option>
+                          <option value="Opcion C">Opcion C</option>
+                        </select>
+                      ),
+                    },
                   },
                   {
                     header: 'Detalles',
                     accessorKey: 'details',
                     cell: (info) => info.getValue(),
+                    meta: {
+                      width: '500px',
+                      filterComponent: (column) => (
+                        <input
+                          type="text"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          placeholder="Filtrar Detalles"
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
                   },
                   {
                     header: 'Estado',
                     accessorKey: 'status',
-                    cell: (info) =>
-                      info.getValue() == 1 ? 'Activo' : 'Inactivo',
+                    cell: (info) => (info.getValue() === 1 ? 'Activo' : 'Inactivo'),
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    filterFn: 'statusFilter' as any,
+                    meta: {
+                      width: '200px',
+                      filterComponent: (column) => (
+                        <select
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        >
+                          <option value="">Todos los Estados</option>
+                          <option value="Activo">Activo</option>
+                          <option value="Inactivo">Inactivo</option>
+                        </select>
+                      ),
+                    },
                   },
                 ]}
                 data={dataValues}

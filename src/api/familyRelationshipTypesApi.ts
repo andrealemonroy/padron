@@ -9,7 +9,7 @@ interface FamilyRelationshipType {
 
 export const fetchFamilyRelationshipTypes = async (): Promise<FamilyRelationshipType[]> => {
     
-  const response = await axios.get<FamilyRelationshipType[]>(`/family-relationship-types`)
+  const response = await axios.get<FamilyRelationshipType[]>(`${import.meta.env.VITE_API_URL}/family-relationship-types`)
   .then(response => {
       return response;
   })
@@ -39,7 +39,7 @@ export const deleteFamilyRelationshipType = async (id: number): Promise<FamilyRe
 
 export const fetchFamilyRelationshipType = async (id): Promise<FamilyRelationshipType> => {
   console.log(id);
-  const response = await axios.get<FamilyRelationshipType>(`/family-relationship-types/${id}`)
+  const response = await axios.get<FamilyRelationshipType>(`${import.meta.env.VITE_API_URL}/family-relationship-types/${id}`)
   .then(response => {
       return response;
   })

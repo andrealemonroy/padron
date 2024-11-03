@@ -53,7 +53,7 @@ interface User {
 
 export const fetchComplementaries = async (): Promise<User[]> => {
     
-  const response = await axios.get<User[]>(`/complementaries`)
+  const response = await axios.get<User[]>(`${import.meta.env.VITE_API_URL}/complementaries`)
   .then(response => {
       return response;
   })
@@ -73,7 +73,7 @@ export const editComplementary = async (userData: Omit<User, 'id'>, id: number):
 
 export const fetchComplementary = async (id): Promise<User> => {
   console.log(id);
-  const response = await axios.get<User>(`/complementaries/${id}`)
+  const response = await axios.get<User>(`${import.meta.env.VITE_API_URL}/complementaries/${id}`)
   .then(response => {
       return response;
   })

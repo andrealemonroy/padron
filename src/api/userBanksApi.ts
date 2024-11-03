@@ -35,7 +35,7 @@ interface User {
 
 export const fetchUserBanks = async (): Promise<User[]> => {
     
-    const response = await axios.get<User[]>(`/user-banks`)
+    const response = await axios.get<User[]>(`${import.meta.env.VITE_API_URL}/user-banks`)
     .then(response => {
         return response;
     })
@@ -56,7 +56,7 @@ export const editUserBank = async (userData: Omit<User, 'id'>, id: number): Prom
 
 export const fetchUserBank = async (id): Promise<User> => {
     console.log(id);
-    const response = await axios.get<User>(`/user-banks/${id}`)
+    const response = await axios.get<User>(`${import.meta.env.VITE_API_URL}/user-banks/${id}`)
     .then(response => {
         return response;
     })

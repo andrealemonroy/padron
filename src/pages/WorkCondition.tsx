@@ -63,8 +63,8 @@ const WorkCondition = () => {
     setIdToDelete(null);
   };
 
-  const handleEdit = (id: number) => {
-    navigate(`/edit-work-condition/${id}`);
+  const handleEdit = (data) => {
+    navigate(`/edit-work-condition/${data.id}`);
   };
 
   const breadcrumbItems = [

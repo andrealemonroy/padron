@@ -17,7 +17,7 @@ interface PermissionPivot {
 
 export const fetchPermissions = async (): Promise<Permission[]> => {
     
-    const response = await axios.get<Permission[]>(`/permissions`)
+    const response = await axios.get<Permission[]>(`${import.meta.env.VITE_API_URL}/permissions`)
     .then(response => {
         //console.log(response.data);
         return response;
@@ -48,7 +48,7 @@ export const deletePermissions = async (id: number): Promise<Permission> => {
 
 export const fetchPermission = async (id): Promise<Permission> => {
     console.log(id);
-    const response = await axios.get<Permission>(`/permissions/${id}`)
+    const response = await axios.get<Permission>(`${import.meta.env.VITE_API_URL}/permissions/${id}`)
     .then(response => {
         return response;
     })

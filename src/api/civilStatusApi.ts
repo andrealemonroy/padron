@@ -10,7 +10,7 @@ interface ICivilStatus {
 
 export const fetchCivilStatus = async (): Promise<ICivilStatus[]> => {
     
-    const response = await axios.get<ICivilStatus[]>(`/civilstatus`)
+    const response = await axios.get<ICivilStatus[]>(`${import.meta.env.VITE_API_URL}/civilstatus`)
     .then(response => {
         //console.log(response.data);
         return response;

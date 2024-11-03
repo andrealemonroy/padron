@@ -10,7 +10,7 @@ interface Sex {
 
 export const fetchSex = async (): Promise<Sex[]> => {
     
-    const response = await axios.get<Sex[]>(`/sex`)
+    const response = await axios.get<Sex[]>(`${import.meta.env.VITE_API_URL}/sex`)
     .then(response => {
         //console.log(response.data);
         return response;

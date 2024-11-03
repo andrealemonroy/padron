@@ -1,17 +1,19 @@
 import { useEffect, useState } from 'react';
-import Table from '../components/Table';
-import { fetchUsers, deleteUser } from '../api/userApi';
-import Button from '../components/Button';
+import Table from '../../components/Table';
+import { fetchUsers, deleteUser } from '../../api/userApi';
+import Button from '../../components/Button';
 import { useNavigate } from 'react-router-dom';
-import Alert from '../components/Alert';
-import Spinner from '../components/Spinner';
-import Breadcrumb from '../components/BreadCrumb';
-import { fetchImportUsersData } from '../api/ImportsApi';
+import Alert from '../../components/Alert';
+import Spinner from '../../components/Spinner';
+import Breadcrumb from '../../components/BreadCrumb';
+import { fetchImportUsersData } from '../../api/ImportsApi';
 import { toast } from 'react-toastify';
 import { ColumnDef } from '@tanstack/react-table';
 import { HiCloudUpload, HiUserAdd } from 'react-icons/hi';
-import { getActions } from '../utils/actions';
-import { Layout } from '../components/Layout';
+import { getActions } from '../../utils/actions';
+import { Layout } from '../../components/Layout';
+import { fetchImportWorkData } from '../../api/ImportsApi';
+import { envoForm } from '../../api/userApi';
 
 interface UserData {
   id: number;
@@ -25,7 +27,10 @@ const User = () => {
   const navigate = useNavigate();
 
   const [showAlert, setShowAlert] = useState(false);
+  const [showAlertUsers, setShowAlertUsers] = useState(false);
   const [userIdToDelete, setUserIdToDelete] = useState<number | null>(null);
+  const [userIdToUsers, setUserIdToUsers] = useState<number | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [users, setUsers] = useState<UserData[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -72,9 +77,37 @@ const User = () => {
     }
   };
 
+  const confirmUsers = async () => {
+    console.log(userIdToUsers);
+    if (userIdToUsers) {
+      setLoading(true);
+      try {
+        await envoForm(userIdToUsers);
+        setShowAlertUsers(false);
+        toast.success('Formulario enviado exitosamente');
+        const data = await fetchUsers();
+        setUsers(data);
+      } catch (error) {
+        console.error('Error al Formulario enviado:', error);
+        toast.error(
+          'Error al Formulario enviado. Por favor, intente de nuevo.'
+        );
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
   const cancelDelete = () => {
     setShowAlert(false);
     setUserIdToDelete(null);
+  };
+
+  const cancelUsers = async () => {
+    setShowAlertUsers(false);
+    setUserIdToUsers(null);
+    const data = await fetchUsers();
+    setUsers(data);
   };
 
   const handleAddUser = () => {
@@ -92,15 +125,14 @@ const User = () => {
     const file = event.target.files[0];
     const formData = new FormData();
     formData.append('file', file);
-
     setLoading(true);
     try {
       const result = await fetchImportUsersData(formData);
       console.log('Usuarios importados exitosamente:', result);
       toast.success('Usuarios importados exitosamente');
-      // Reload users after importing
-      const data = await fetchUsers();
-      setUsers(data);
+
+      setShowAlertUsers(true);
+      setUserIdToUsers(result);
     } catch (error) {
       console.error('Error al importar usuarios:', error);
       toast.error('Error al importar usuarios. Por favor, intente de nuevo.');
@@ -109,8 +141,33 @@ const User = () => {
     }
   };
 
-  const handleEdit = (id: number) => {
-    navigate(`/edit-user/${id}`);
+  const handleAddMassiveJobs = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (!event.target.files || event.target.files.length === 0) {
+      toast.error('No se seleccionó ningún archivo');
+      return;
+    }
+
+    const file = event.target.files[0];
+    const formData = new FormData();
+    formData.append('file', file);
+    console.log(formData);
+    setLoading(true);
+    try {
+      const result = await fetchImportWorkData(formData);
+      console.log('Trabajadores importados exitosamente:', result);
+      toast.success('Trabajadores importados exitosamente');
+    } catch (error) {
+      console.error('Error al importar usuarios:', error);
+      toast.error('Error al importar usuarios. Por favor, intente de nuevo.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleEdit = (data) => {
+    navigate(`/edit-user/${data.id}`);
   };
 
   const breadcrumbItems = [{ label: 'Usuarios', path: '/usuarios' }];
@@ -135,10 +192,21 @@ const User = () => {
         <HiCloudUpload size={20} />
         <span className="max-xs:sr-only">Importar Usuarios</span>
       </label>
+      <label className="w-44 h-10 btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white cursor-pointer flex gap-1 items-center">
+        <input
+          type="file"
+          className="hidden"
+          onChange={handleAddMassiveJobs}
+          accept=".xlsx,.xls,.csv"
+        />
+        <HiCloudUpload size={20} />
+        <span className="max-xs:sr-only">Importar Trabajadores</span>
+      </label>
     </div>
   );
 
   // Define the columns with filter components
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const columns: ColumnDef<UserData, any>[] = [
     {
       accessorKey: 'name',
@@ -183,6 +251,7 @@ const User = () => {
         const roles = row.getValue('roles') as { name: string }[];
         return roles[0]?.name || 'Sin rol';
       },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       filterFn: 'rolesFilter' as any,
       meta: {
         width: '200px',
@@ -196,7 +265,9 @@ const User = () => {
             {
               // Get all unique roles
               Array.from(
-                new Set(users.flatMap((user) => user.roles.map((role) => role.name)))
+                new Set(
+                  users.flatMap((user) => user.roles.map((role) => role.name))
+                )
               ).map((role) => (
                 <option key={role} value={role}>
                   {role}
@@ -211,6 +282,7 @@ const User = () => {
       accessorKey: 'status_id',
       header: 'Estado',
       cell: (info) => (info.getValue() === 1 ? 'Activo' : 'Inactivo'),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       filterFn: 'statusFilter' as any,
       meta: {
         width: '200px',
@@ -236,6 +308,13 @@ const User = () => {
           message="¿Estás seguro de que deseas eliminar este usuario?"
           onConfirm={confirmDelete}
           onCancel={cancelDelete}
+        />
+      )}
+      {showAlertUsers && (
+        <Alert
+          message="¿Estás seguro de que deseas enviar formularios?"
+          onConfirm={confirmUsers}
+          onCancel={cancelUsers}
         />
       )}
       <div className="sm:flex sm:justify-between sm:items-center mb-4">

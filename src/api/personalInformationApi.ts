@@ -20,6 +20,7 @@ export interface PersonalInformation {
   emergency_phone_number: string | null;
   has_children_under_18: boolean;
   number_of_children_under_18: number | null;
+  photo_url: string | null;
   status: string;
   created_by: number;
   updated_by: number | null;
@@ -50,7 +51,7 @@ interface User {
 
 export const fetchPersonalInformations = async (): Promise<User[]> => {
     
-    const response = await axios.get<User[]>(`/personal-information`)
+    const response = await axios.get<User[]>(`${import.meta.env.VITE_API_URL}/personal-information`)
     .then(response => {
         return response;
     })
@@ -80,7 +81,7 @@ export const deletePersonalInformation = async (id: number): Promise<PersonalInf
 
 export const fetchPersonalInformation = async (id): Promise<User> => {
 
-    const response = await axios.get<User>(`/personal-information/${id}`)
+    const response = await axios.get<User>(`${import.meta.env.VITE_API_URL}/personal-information/${id}`)
     .then(response => {
         return response;
     })

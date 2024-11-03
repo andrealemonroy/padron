@@ -31,7 +31,7 @@ interface User {
 
 export const fetchEducations = async (): Promise<User[]> => {
     
-  const response = await axios.get<User[]>(`/educations`)
+  const response = await axios.get<User[]>(`${import.meta.env.VITE_API_URL}/educations`)
   .then(response => {
       return response;
   })
@@ -52,7 +52,7 @@ export const editEducation = async (userData: Omit<User, 'id'>, id: number): Pro
 
 export const fetchEducation = async (id): Promise<User> => {
   console.log(id);
-  const response = await axios.get<User>(`/educations/${id}`)
+  const response = await axios.get<User>(`${import.meta.env.VITE_API_URL}/educations/${id}`)
   .then(response => {
       return response;
   })

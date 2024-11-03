@@ -27,7 +27,7 @@ interface User {
 
 export const fetchHobbies = async (): Promise<User[]> => {
     
-  const response = await axios.get<User[]>(`/hobby-users`)
+  const response = await axios.get<User[]>(`${import.meta.env.VITE_API_URL}/hobby-users`)
   .then(response => {
       return response;
   })
@@ -48,7 +48,7 @@ export const editHobbie = async (userData: Omit<User, 'id'>, id: number): Promis
 
 export const fetchHobbie = async (id): Promise<User> => {
   console.log(id);
-  const response = await axios.get<User>(`/hobby-users/${id}`)
+  const response = await axios.get<User>(`${import.meta.env.VITE_API_URL}/hobby-users/${id}`)
   .then(response => {
       return response;
   })
@@ -61,7 +61,7 @@ return response.data;
 
 export const fetchHobbiesList = async (): Promise<Hobbie[]> => {
     
-  const response = await axios.get<Hobbie[]>(`/hobby`)
+  const response = await axios.get<Hobbie[]>(`${import.meta.env.VITE_API_URL}/hobby`)
   .then(response => {
       return response;
   })

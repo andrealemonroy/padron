@@ -68,8 +68,8 @@ const Roles = () => {
     navigate('/create-rol');
   };
 
-  const handleEdit = (id: number) => {
-    navigate(`/edit-rol/${id}`);
+  const handleEdit = (data) => {
+    navigate(`/edit-rol/${data.id}`);
   };
 
   const breadcrumbItems = [{ label: 'Roles', path: '/roles' }];

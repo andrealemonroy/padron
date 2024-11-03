@@ -61,8 +61,8 @@ const Hobby = () => {
     setIdToDelete(null);
   };
 
-  const handleEdit = (id: number) => {
-    navigate(`/edit-hobbie/${id}`);
+  const handleEdit = (data) => {
+    navigate(`/edit-hobbie/${data.id}`);
   };
 
   const breadcrumbItems = [{ label: 'Hobbies', path: '/hobbie' }];

@@ -17,12 +17,19 @@ interface MasterData {
   apellidosy3Nombres: string;
   apellidos: string;
   name: string;
+  document: Document;
+}
+
+interface Document {
+  id: number;
+  code: string;
+  description: string;
 }
 
 
 export const fetchMasterDatas = async (): Promise<MasterData[]> => {
     
-  const response = await axios.get<MasterData[]>(`/masterdata`)
+  const response = await axios.get<MasterData[]>(`${import.meta.env.VITE_API_URL}/masterdata`)
   .then(response => {
       return response;
   })
@@ -52,7 +59,7 @@ export const deleteMasterData= async (id: number): Promise<MasterData> => {
 
 export const fetchMasterData = async (id): Promise<MasterData> => {
   console.log(id);
-  const response = await axios.get<MasterData>(`/masterdata/${id}`)
+  const response = await axios.get<MasterData>(`${import.meta.env.VITE_API_URL}/masterdata/${id}`)
   .then(response => {
       return response;
   })

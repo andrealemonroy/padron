@@ -31,8 +31,8 @@ const Complementaries = () => {
     load();
   }, []);
 
-  const handleEdit = (id: number) => {
-    navigate(`/edit-complementaries/${id}`);
+  const handleEdit = (data) => {
+    navigate(`/edit-complementaries/${data.id}`);
   };
 
   const handleDelete = async (id: number) => {

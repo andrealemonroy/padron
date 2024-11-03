@@ -34,8 +34,8 @@ const Incidences = () => {
     load();
   }, []);
 
-  const handleEdit = (id: number) => {
-    navigate(`/edit-incidences/${id}`);
+  const handleEdit = (data) => {
+    navigate(`/edit-incidences/${data.id}`);
   };
 
   const handleDelete = async (id: number) => {

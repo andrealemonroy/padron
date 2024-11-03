@@ -33,7 +33,7 @@ interface User {
 
 export const fetchWorkConditions = async (): Promise<User[]> => {
     
-  const response = await axios.get<User[]>(`/work-conditions`)
+  const response = await axios.get<User[]>(`${import.meta.env.VITE_API_URL}/work-conditions`)
   .then(response => {
       return response;
   })
@@ -54,7 +54,7 @@ export const editWorkCondition = async (userData: Omit<User, 'id'>, id: number):
 
 export const fetchWorkCondition = async (id): Promise<User> => {
   console.log(id);
-  const response = await axios.get<User>(`/work-conditions/${id}`)
+  const response = await axios.get<User>(`${import.meta.env.VITE_API_URL}/work-conditions/${id}`)
   .then(response => {
       return response;
   })

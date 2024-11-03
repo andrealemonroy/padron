@@ -8,7 +8,7 @@ interface Bank {
 
 export const fetchBanks = async (): Promise<Bank[]> => {
     
-    const response = await axios.get<Bank[]>(`/banks`)
+    const response = await axios.get<Bank[]>(`${import.meta.env.VITE_API_URL}/banks`)
     .then(response => {
         return response;
     })

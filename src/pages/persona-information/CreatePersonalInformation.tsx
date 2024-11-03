@@ -1,21 +1,21 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import Sidebar from '../components/Sidebar';
-import Header from '../components/Header';
+import Sidebar from '../../components/Sidebar';
+import Header from '../../components/Header';
 import {
   fetchPersonalInformation,
   editPersonalInformation,
   PersonalInformation,
-} from '../api/personalInformationApi';
-import { fetchDocument } from '../api/documentApi';
-import { fetchSex } from '../api/sexApi';
-import { fetchNationality } from '../api/nationalityApi';
-import Spinner from '../components/Spinner';
-import Breadcrumb from '../components/BreadCrumb';
-import DynamicForm from '../components/DynamicForm';
-import { fetchCountries } from '../api/countriesApi';
-import { fetchBloodGroup } from '../api/bloodGroupApi';
-import { fetchCivilStatus } from '../api/civilStatusApi';
+} from '../../api/personalInformationApi';
+import { fetchDocument } from '../../api/documentApi';
+import { fetchSex } from '../../api/sexApi';
+import { fetchNationality } from '../../api/nationalityApi';
+import Spinner from '../../components/Spinner';
+import Breadcrumb from '../../components/BreadCrumb';
+import DynamicForm from '../../components/DynamicForm';
+import { fetchCountries } from '../../api/countriesApi';
+import { fetchBloodGroup } from '../../api/bloodGroupApi';
+import { fetchCivilStatus } from '../../api/civilStatusApi';
 
 interface Option {
   value: number | string;
@@ -92,6 +92,7 @@ const CreatePersonalInformation = () => {
         ]);
 
         // Helper function to format options
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const formatOptions = (data: any[]): Option[] =>
           data.map((value) => ({
             value: value.id,
@@ -148,19 +149,50 @@ const CreatePersonalInformation = () => {
 
   const onSubmit = async (data: PersonalInformation) => {
     try {
-      if (id) {
-        await editPersonalInformation(data, Number(id));
+      const fileInput = document.getElementById('file') as HTMLInputElement; // Asegúrate de que el input tenga este ID
+      if (fileInput.files && fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+
+        const reader = new FileReader();
+        reader.onloadend = async () => {
+          const base64String = reader.result as string; // Obtener la cadena Base64
+          const base64Data = base64String.split(',')[1]; // Extraer solo la parte Base64
+
+          // Agregar la imagen en formato Base64 a los datos
+          const personalInfoData = {
+            ...data, // Mantener otros campos
+            photo: base64Data, // Agregar la imagen en formato Base64
+          };
+
+          try {
+            if (id) {
+              await editPersonalInformation(personalInfoData, Number(id));
+            } else {
+              // Si se está creando un nuevo registro, puedes tener una función de creación
+              // await createPersonalInformation(personalInfoData);
+            }
+            setError(null);
+            navigate('/basic');
+          } catch (error) {
+            console.error('Error al enviar los datos:', error);
+            setError(id ? 'Error al actualizar los datos.' : 'Error al crear los datos.');
+          }
+        };
+
+        reader.readAsDataURL(file); // Leer el archivo como Data URL (Base64)
       } else {
-        // If creating new data, you might have a create function
-        // await createPersonalInformation(data);
+        // Si no hay archivo, simplemente envía los datos sin la imagen
+        if (id) {
+          await editPersonalInformation(data, Number(id));
+        } else {
+          // await createPersonalInformation(data);
+        }
+        setError(null);
+        navigate('/basic');
       }
-      setError(null);
-      navigate('/basic');
     } catch (error) {
       console.error('Error submitting form:', error);
-      setError(
-        id ? 'Error al actualizar los datos.' : 'Error al crear los datos.'
-      );
+      setError(id ? 'Error al actualizar los datos.' : 'Error al crear los datos.');
     }
   };
 
@@ -277,16 +309,23 @@ const CreatePersonalInformation = () => {
       colSpan: 1,
     },
     {
-      name: 'has_children_under_18',
-      label: 'Tiene hijos menores de 18 años',
-      type: 'checkbox',
-      validation: {},
-      colSpan: 2,
+      name: 'file',
+      label: 'Archivo',
+      type: 'file',
+      validation: { required: 'Archivo es requerido' },
+      colSpan: 1,
     },
     {
       name: 'number_of_children_under_18',
       label: 'Número de hijos menores de 18 años',
       type: 'number',
+      validation: {},
+      colSpan: 1,
+    },
+    {
+      name: 'has_children_under_18',
+      label: 'Tiene hijos menores de 18 años',
+      type: 'checkbox',
       validation: {},
       colSpan: 1,
     },

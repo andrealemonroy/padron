@@ -75,7 +75,7 @@ const CreatePeriodicEvaluation = () => {
     {
       name: 'period',
       label: 'Período',
-      type: 'text',
+      type: 'number',
       validation: { required: 'El período es requerido' }
     },
     {
@@ -117,8 +117,8 @@ const CreatePeriodicEvaluation = () => {
   ];
   
   const breadcrumbItems = [
-    { label: 'Evaluaciones', path: '/periodic-evaluations' },
-    { label: id ? 'Editar Evaluación' : 'Crear Evaluación', path: id ? `/edit-periodic-evaluations/${id}` : '/create-periodic-evaluations' },
+    { label: 'Evaluación Periodico', path: '/periodic-evaluations' },
+    { label: id ? 'Editar Evaluación Periodico' : 'Crear Evaluación Periodico', path: id ? `/edit-periodic-evaluations/${id}` : '/create-periodic-evaluations' },
   ];
 
   return (

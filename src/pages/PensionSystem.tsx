@@ -60,8 +60,8 @@ const PensionSystem = () => {
       setIdToDelete(null);
   };
 
-  const handleEdit = (id: number) => {
-    navigate(`/edit-pension-systems/${id}`);
+  const handleEdit = (data) => {
+    navigate(`/edit-pension-systems/${data.id}`);
   };
 
   const breadcrumbItems = [

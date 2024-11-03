@@ -58,8 +58,8 @@ const Educations = () => {
     setIdToDelete(null);
   };
 
-  const handleEdit = (id: number) => {
-    navigate(`/edit-educations/${id}`);
+  const handleEdit = (data) => {
+    navigate(`/edit-educations/${data.id}`);
   };
 
   const breadcrumbItems = [

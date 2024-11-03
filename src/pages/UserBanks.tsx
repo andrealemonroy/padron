@@ -60,8 +60,8 @@ const UserBanks = () => {
     setIdToDelete(null);
   };
 
-  const handleEdit = (id: number) => {
-    navigate(`/edit-user-banks/${id}`);
+  const handleEdit = (data) => {
+    navigate(`/edit-user-banks/${data.id}`);
   };
 
   const breadcrumbItems = [{ label: 'Datos Bancarios', path: '/user-banks' }];

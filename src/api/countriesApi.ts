@@ -10,7 +10,7 @@ interface Countries {
 
 export const fetchCountries = async (): Promise<Countries[]> => {
     
-    const response = await axios.get<Countries[]>(`/country`)
+    const response = await axios.get<Countries[]>(`${import.meta.env.VITE_API_URL}/country`)
     .then(response => {
         //console.log(response.data);
         return response;

@@ -40,7 +40,7 @@ interface User {
 
 export const fetchDependents = async (): Promise<User[]> => {
     
-  const response = await axios.get<User[]>(`/dependent`)
+  const response = await axios.get<User[]>(`${import.meta.env.VITE_API_URL}/dependent`)
   .then(response => {
       return response;
   })
@@ -60,7 +60,7 @@ export const editDependent = async (userData: Omit<User, 'id'>, id: number): Pro
 
 export const fetchDependent= async (id): Promise<User> => {
   console.log(id);
-  const response = await axios.get<User>(`/dependent/${id}`)
+  const response = await axios.get<User>(`${import.meta.env.VITE_API_URL}/dependent/${id}`)
   .then(response => {
       return response;
   })

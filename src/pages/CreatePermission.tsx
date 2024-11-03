@@ -46,7 +46,7 @@ const CreatePermission = () => {
         await createPermissions(data);
       }
       setError(null);
-      navigate('/option');
+      navigate('/options');
     } catch (error) {
       setError(id ? 'Error al actualizar el permission.' : `Error al crear el permission. ${error}`);
     }
@@ -62,7 +62,7 @@ const CreatePermission = () => {
   ];
 
   const breadcrumbItems = [
-    { label: 'Opciones', path: '/option' },
+    { label: 'Opciones', path: '/options' },
     { label: id ? 'Editar Opción' : 'Crear Opción', path: id ? `/edit-option/${id}` : '/create-option' },
   ];
 
