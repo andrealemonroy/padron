@@ -54,6 +54,7 @@ import { ThemeProvider } from './utils/ThemeContext';
 import { ReportsPage } from './pages/reports';
 import Contract from './pages/contract/Contract';
 import CreateContract from './pages/contract/CreateContract';
+import Management from './pages/management/Management';
 
 function App() {
   return (
@@ -186,6 +187,14 @@ function App() {
               element={
                 <PrivateRoute>
                   <ReportsPage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/gestion"
+              element={
+                <PrivateRoute>
+                  <Management />
                 </PrivateRoute>
               }
             />

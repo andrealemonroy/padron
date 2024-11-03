@@ -1,3 +1,5 @@
+// Table.tsx
+
 import React from 'react';
 import {
   useReactTable,
@@ -27,7 +29,7 @@ interface ActionConfig<TData> {
 interface TableProps<TData extends object> {
   columns: ColumnDef<TData, any>[];
   data: TData[];
-  actions?: ActionConfig<TData>[]; // Updated: Use actions prop instead of renderActions
+  actions?: ActionConfig<TData>[];
 }
 
 function Table<TData extends object>({
@@ -114,9 +116,9 @@ function Table<TData extends object>({
       {/* Scrollable container with fixed height and overflow */}
       <div
         style={{
-          maxHeight: '480px', // Set the desired max height
+          maxHeight: '480px',
           overflowY: 'auto',
-          overflowX: 'auto', // Enable horizontal scrolling
+          overflowX: 'auto',
         }}
         className="rounded-lg"
       >
@@ -157,7 +159,7 @@ function Table<TData extends object>({
                   {actions && actions.length > 0 && (
                     <th
                       className="sticky top-0 bg-white dark:bg-gray-800 z-10 p-2"
-                      style={{ minWidth: '100px' }}
+                      style={{ minWidth: '150px' }}
                     >
                       Acciones
                     </th>
@@ -189,7 +191,7 @@ function Table<TData extends object>({
                   {actions && actions.length > 0 && (
                     <th
                       className="sticky top-[40px] bg-white dark:bg-gray-800 z-10 p-2"
-                      style={{ minWidth: '100px' }}
+                      style={{ minWidth: '150px' }}
                     />
                   )}
                 </tr>
@@ -219,17 +221,20 @@ function Table<TData extends object>({
                   );
                 })}
                 {actions && actions.length > 0 && (
-                  <td style={{ minWidth: '100px' }} className='bg-white border-b dark:bg-gray-800'>
+                  <td
+                    style={{ minWidth: '150px' }}
+                    className="bg-white border-b dark:bg-gray-800"
+                  >
                     <div className="flex justify-center gap-2">
                       {actions.map((action, index) => (
                         <button
                           key={index}
                           onClick={() => action.onClick(row.original)}
-                          className="p-2"
+                          className="p-2 bg-gray-200 rounded hover:bg-gray-300"
                         >
                           {action.icon}
                           {action.label && (
-                            <span className="sr-only">{action.label}</span>
+                            <span className="ml-1">{action.label}</span>
                           )}
                         </button>
                       ))}
