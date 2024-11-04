@@ -51,8 +51,10 @@ import Dashboard from './pages/dashboard/Dashboard';
 import FormUsers from './pages/form-users/FormUsers';
 import CreateFormUsers from './pages/form-users/CreateFormUsers';
 import { ThemeProvider } from './utils/ThemeContext';
+import { ReportsPage } from './pages/reports';
 import Contract from './pages/contract/Contract';
 import CreateContract from './pages/contract/CreateContract';
+import Management from './pages/management/Management';
 
 function App() {
   return (
@@ -181,8 +183,20 @@ function App() {
               element={<CreateQualityRatings />}
             />
             <Route
-              path="/create-beneficiary-proof-documents"
-              element={<CreateBeneficiaryProofDocuments />}
+              path="/reports"
+              element={
+                <PrivateRoute>
+                  <ReportsPage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/gestion"
+              element={
+                <PrivateRoute>
+                  <Management />
+                </PrivateRoute>
+              }
             />
             <Route path="/contract" element={<Contract />} />
             <Route

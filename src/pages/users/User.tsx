@@ -1,18 +1,19 @@
 import { useEffect, useState } from 'react';
-import Sidebar from '../../components/Sidebar';
-import Header from '../../components/Header';
 import Table from '../../components/Table';
-import { fetchUsers, deleteUser, envoForm } from '../../api/userApi';
+import { fetchUsers, deleteUser } from '../../api/userApi';
 import Button from '../../components/Button';
 import { useNavigate } from 'react-router-dom';
 import Alert from '../../components/Alert';
 import Spinner from '../../components/Spinner';
 import Breadcrumb from '../../components/BreadCrumb';
-import { fetchImportUsersData, fetchImportWorkData } from '../../api/ImportsApi';
-import { toast, ToastContainer } from 'react-toastify';
+import { fetchImportUsersData } from '../../api/ImportsApi';
+import { toast } from 'react-toastify';
 import { ColumnDef } from '@tanstack/react-table';
 import { HiCloudUpload, HiUserAdd } from 'react-icons/hi';
 import { getActions } from '../../utils/actions';
+import { Layout } from '../../components/Layout';
+import { fetchImportWorkData } from '../../api/ImportsApi';
+import { envoForm } from '../../api/userApi';
 
 interface UserData {
   id: number;
@@ -77,7 +78,7 @@ const User = () => {
   };
 
   const confirmUsers = async () => {
-    console.log(userIdToUsers)
+    console.log(userIdToUsers);
     if (userIdToUsers) {
       setLoading(true);
       try {
@@ -113,12 +114,14 @@ const User = () => {
     navigate('/create-user');
   };
 
-  const handleAddMassiveUsers = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAddMassiveUsers = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     if (!event.target.files || event.target.files.length === 0) {
       toast.error('No se seleccionó ningún archivo');
       return;
     }
-  
+
     const file = event.target.files[0];
     const formData = new FormData();
     formData.append('file', file);
@@ -127,10 +130,9 @@ const User = () => {
       const result = await fetchImportUsersData(formData);
       console.log('Usuarios importados exitosamente:', result);
       toast.success('Usuarios importados exitosamente');
-      
+
       setShowAlertUsers(true);
       setUserIdToUsers(result);
-      
     } catch (error) {
       console.error('Error al importar usuarios:', error);
       toast.error('Error al importar usuarios. Por favor, intente de nuevo.');
@@ -138,14 +140,10 @@ const User = () => {
       setLoading(false);
     }
   };
-  
-
 
   const handleAddMassiveJobs = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-
-    
     if (!event.target.files || event.target.files.length === 0) {
       toast.error('No se seleccionó ningún archivo');
       return;
@@ -160,7 +158,6 @@ const User = () => {
       const result = await fetchImportWorkData(formData);
       console.log('Trabajadores importados exitosamente:', result);
       toast.success('Trabajadores importados exitosamente');
-
     } catch (error) {
       console.error('Error al importar usuarios:', error);
       toast.error('Error al importar usuarios. Por favor, intente de nuevo.');
@@ -268,7 +265,9 @@ const User = () => {
             {
               // Get all unique roles
               Array.from(
-                new Set(users.flatMap((user) => user.roles.map((role) => role.name)))
+                new Set(
+                  users.flatMap((user) => user.roles.map((role) => role.name))
+                )
               ).map((role) => (
                 <option key={role} value={role}>
                   {role}
@@ -303,8 +302,7 @@ const User = () => {
   ];
 
   return (
-    <div className="flex h-screen overflow-hidden">
-      <ToastContainer />
+    <Layout>
       {showAlert && (
         <Alert
           message="¿Estás seguro de que deseas eliminar este usuario?"
@@ -312,39 +310,26 @@ const User = () => {
           onCancel={cancelDelete}
         />
       )}
-
-    {showAlertUsers && (
+      {showAlertUsers && (
         <Alert
           message="¿Estás seguro de que deseas enviar formularios?"
           onConfirm={confirmUsers}
           onCancel={cancelUsers}
         />
       )}
-
-      <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-      {/* Content area */}
-      <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-        {/* Site header */}
-        <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-
-        <main className="grow">
-          <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
-            <div className="sm:flex sm:justify-between sm:items-center mb-4">
-              <Breadcrumb items={breadcrumbItems}>{addButton}</Breadcrumb>
-            </div>
-            {loading ? (
-              <Spinner loading={loading} size={50} color="#3498db" />
-            ) : (
-              <Table
-                columns={columns}
-                data={users}
-                actions={getActions({ handleEdit, handleDelete })}
-              />
-            )}
-          </div>
-        </main>
+      <div className="sm:flex sm:justify-between sm:items-center mb-4">
+        <Breadcrumb items={breadcrumbItems}>{addButton}</Breadcrumb>
       </div>
-    </div>
+      {loading ? (
+        <Spinner loading={loading} size={50} color="#3498db" />
+      ) : (
+        <Table
+          columns={columns}
+          data={users}
+          actions={getActions({ handleEdit, handleDelete })}
+        />
+      )}
+    </Layout>
   );
 };
 
