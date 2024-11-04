@@ -6,7 +6,11 @@ import Header from '../components/Header';
 import Spinner from '../components/Spinner';
 import Breadcrumb from '../components/BreadCrumb';
 import DynamicForm from '../components/DynamicForm';
-import { editComplementary, fetchComplementary } from '../api/complementariesApi';
+import {
+  editComplementary,
+  fetchComplementary,
+} from '../api/complementariesApi';
+import { fetchOccupations } from '../api/occupationsApi';
 
 const CreateComplementaries = () => {
   const navigate = useNavigate();
@@ -15,18 +19,24 @@ const CreateComplementaries = () => {
   const [loading, setLoading] = useState(true);
   const [defaultValues, setDefaultValues] = useState(null);
   const [error, setError] = useState<string | null>(null);
-
+  const [occupations, setOccupations] = useState([]);
   useEffect(() => {
     const load = async () => {
       try {
         setLoading(true);
-        
+
         if (id) {
           const response = await fetchComplementary(id);
-            //const { name, complementary } = response;
-            //const selected = complementary.map((perm) => (perm.id));
-            console.log(response)
-            setDefaultValues(response);
+          const dataOccupations = await fetchOccupations();
+          const formattedOccupations = dataOccupations.map((value) => ({
+            value: value.id,
+            label: value.description,
+          }));
+          setOccupations(formattedOccupations);
+          //const { name, complementary } = response;
+          //const selected = complementary.map((perm) => (perm.id));
+          console.log(response);
+          setDefaultValues(response);
         }
       } catch (error) {
         setError(`Error al cargar los datos del permission. ${error}`);
@@ -47,7 +57,11 @@ const CreateComplementaries = () => {
       setError(null);
       navigate('/complementaries');
     } catch (error) {
-      setError(id ? 'Error al actualizar el permission.' : `Error al crear el permission. ${error}`);
+      setError(
+        id
+          ? 'Error al actualizar el permission.'
+          : `Error al crear el permission. ${error}`
+      );
     }
   };
 
@@ -61,8 +75,9 @@ const CreateComplementaries = () => {
     {
       name: 'occupation',
       label: 'Ocupación',
-      type: 'text',
+      type: 'select',
       validation: { required: 'Ocupación es requerida' },
+      options: occupations,
     },
     {
       name: 'disability',
@@ -185,12 +200,15 @@ const CreateComplementaries = () => {
       validation: { required: 'Posición en la Nómina es requerida' },
     },
   ];
-  
-  
 
   const breadcrumbItems = [
     { label: 'Datos complementarios', path: '/complementaries' },
-    { label: id ? 'Editar Datos complementarios' : 'Crear Datos complementarios', path: id ? `/edit-complementaries/${id}` : '/create-complementaries' },
+    {
+      label: id
+        ? 'Editar Datos complementarios'
+        : 'Crear Datos complementarios',
+      path: id ? `/edit-complementaries/${id}` : '/create-complementaries',
+    },
   ];
 
   return (
@@ -207,7 +225,11 @@ const CreateComplementaries = () => {
             {loading ? (
               <Spinner loading={loading} size={50} color="#3498db" />
             ) : (
-              <DynamicForm fields={formFields} onSubmit={onSubmit} defaultValues={defaultValues} />
+              <DynamicForm
+                fields={formFields}
+                onSubmit={onSubmit}
+                defaultValues={defaultValues}
+              />
             )}
           </div>
         </main>

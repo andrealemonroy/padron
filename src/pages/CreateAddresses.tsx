@@ -80,10 +80,10 @@ const CreateAddresses = () => {
   const formFields = [
     {
       name: 'address_type',
-      label: 'Tipo de Dirección',
+      label: 'Tipo de Vía',
       type: 'select',
       options: options.viaType,
-      validation: { required: 'Tipo de Dirección es requerido' },
+      validation: { required: 'Tipo de Vía es requerido' },
     },
     {
       name: 'address_name',
