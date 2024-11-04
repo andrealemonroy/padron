@@ -312,7 +312,7 @@ const CreatePersonalInformation = () => {
       name: 'file',
       label: 'Archivo',
       type: 'file',
-      validation: { required: 'Archivo es requerido' },
+      //validation: { required: 'Archivo es requerido' },
       colSpan: 1,
     },
     {

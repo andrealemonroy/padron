@@ -102,22 +102,66 @@ const WorkExperiences = () => {
                     header: 'Nombre',
                     accessorKey: 'name',
                     cell: (info) => info.getValue(),
+                    meta: {
+                      filterComponent: (column) => (
+                        <input
+                          type="text"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          placeholder="Filtrar Nombre"
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
                   },
                   {
                     header: 'Fecha Inicio',
                     accessorKey: 'work_experience.last_experience_start_date',
                     cell: (info) => info.getValue(),
+                    meta: {
+                      filterComponent: (column) => (
+                        <input
+                          type="text"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          placeholder="Filtrar Fecha Inicio"
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
                   },
                   {
                     header: 'Fecha Fin',
                     accessorKey: 'work_experience.last_experience_end_date',
                     cell: (info) => info.getValue(),
+                    meta: {
+                      filterComponent: (column) => (
+                        <input
+                          type="text"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          placeholder="Filtrar Fecha Fin"
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
                   },
                   {
                     header: 'Descripcion',
                     accessorKey:
                       'work_experience.last_experience_dismissal_reason',
                     cell: (info) => info.getValue(),
+                    meta: {
+                      filterComponent: (column) => (
+                        <input
+                          type="text"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          placeholder="Filtrar Descripcion"
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
                   },
                 ]}
                 data={workExperiences}

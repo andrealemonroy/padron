@@ -126,7 +126,7 @@ const Educations = () => {
                   },
                   {
                     header: 'Profesión',
-                    accessorKey: 'education.profession_name',
+                    accessorKey: 'education.careers.description',
                     cell: (info) => info.getValue(),
                     meta: {
                       filterComponent: (column) => (
@@ -141,8 +141,8 @@ const Educations = () => {
                     },
                   },
                   {
-                    header: 'Especialización',
-                    accessorKey: 'education.educational_level',
+                    header: 'Nivel Educativo',
+                    accessorKey: 'education.education_level.description',
                     cell: (info) => info.getValue(),
                     meta: {
                       filterComponent: (column) => (
@@ -158,7 +158,7 @@ const Educations = () => {
                   },
                   {
                     header: 'Institución',
-                    accessorKey: 'education.study_center',
+                    accessorKey: 'education.ins.description',
                     cell: (info) => info.getValue(),
                     meta: {
                       filterComponent: (column) => (

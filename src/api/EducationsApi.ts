@@ -63,3 +63,53 @@ export const fetchEducation = async (id): Promise<User> => {
 return response.data;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const fetchEducationsLevel = async (): Promise<any[]> => {
+    
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const response = await axios.get<any[]>(`${import.meta.env.VITE_API_URL}/education-level`)
+  .then(response => {
+      return response;
+  })
+  .catch(error => {
+      console.error('Error fetching educations:', error.response || error);
+      throw error;
+  });
+
+
+return response.data;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const fetchCareers= async (): Promise<any[]> => {
+    
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const response = await axios.get<any[]>(`${import.meta.env.VITE_API_URL}/careers`)
+  .then(response => {
+      return response;
+  })
+  .catch(error => {
+      console.error('Error fetching educations:', error.response || error);
+      throw error;
+  });
+
+
+return response.data;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const fetchInss= async (): Promise<any[]> => {
+    
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const response = await axios.get<any[]>(`${import.meta.env.VITE_API_URL}/ins`)
+  .then(response => {
+      return response;
+  })
+  .catch(error => {
+      console.error('Error fetching educations:', error.response || error);
+      throw error;
+  });
+
+
+return response.data;
+};

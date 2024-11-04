@@ -2,10 +2,15 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
-import { fetchEducation, editEducation } from '../api/EducationsApi';
+import { fetchEducation, editEducation, fetchEducationsLevel, fetchCareers, fetchInss } from '../api/EducationsApi';
 import Spinner from '../components/Spinner';
 import Breadcrumb from '../components/BreadCrumb';
 import DynamicForm from '../components/DynamicForm';
+
+interface Option {
+  value: number | string;
+  label: string;
+}
 
 const CreateEducations = () => {
   const navigate = useNavigate();
@@ -15,15 +20,47 @@ const CreateEducations = () => {
   const [defaultValues, setDefaultValues] = useState(null);
   const [error, setError] = useState<string | null>(null);
 
+  const [options, setOptions] = useState<{
+    educationsLevel: Option[];
+    careers: Option[];
+    inss: Option[];
+  }>({
+    educationsLevel: [],
+    careers: [],
+    inss: [],
+  });
+
   useEffect(() => {
     const load = async () => {
       try {
         setLoading(true);
+        const [
+          educationsLevelData,
+          careersData,
+          inssData,
+          edutacionResponse,
+        ] = await Promise.all([
+          fetchEducationsLevel(),
+          fetchCareers(),
+          fetchInss(),
+          id ? fetchEducation(id) : Promise.resolve(null),
+        ]);
 
-        if (id) {
-          const response = await fetchEducation(id);
-            setDefaultValues(response);
-        }
+        // Helper function to format options
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const formatOptions = (data: any[]): Option[] =>
+          data.map((value) => ({
+            value: value.id,
+            label: value.description,
+          }));
+
+          setOptions({
+            educationsLevel: formatOptions(educationsLevelData),
+            careers: formatOptions(careersData),
+            inss: formatOptions(inssData),
+          });
+
+          setDefaultValues(edutacionResponse);
       } catch (error) {
         setError(`Error al cargar los datos del permission. ${error}`);
       } finally {
@@ -57,19 +94,22 @@ const CreateEducations = () => {
     {
       name: 'educational_level',
       label: 'Nivel Educativo',
-      type: 'text',
+      type: 'select',
+      options: options.educationsLevel,
       validation: { required: 'El nivel educativo es requerido' },
     },
     {
       name: 'study_center',
       label: 'Centro de Estudios',
-      type: 'text',
+      type: 'select',
+      options: options.inss,
       validation: { required: 'El centro de estudios es requerido' },
     },
     {
       name: 'profession_name',
       label: 'Nombre de la Profesión',
-      type: 'text',
+      type: 'select',
+      options: options.careers,
       validation: { required: 'El nombre de la profesión es requerido' },
     },
   ];
