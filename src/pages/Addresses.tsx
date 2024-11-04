@@ -111,7 +111,7 @@ const Addresses = () => {
                   },
                   {
                     header: 'Tipo de vía',
-                    accessorKey: 'address.address_type',
+                    accessorKey: 'address.type_via.description',
                     cell: (info) => info.getValue(),
                     meta: {
                       filterComponent: (column) => (

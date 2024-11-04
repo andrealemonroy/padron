@@ -9,12 +9,12 @@ interface Action {
 const actions: Action[] = [
   {
     icon: <HiPencil size={20} />,
-    label: 'Editar',
+    label: '',
     onClick: () => {},
   },
   {
     icon: <HiTrash size={20} />,
-    label: 'Eliminar',
+    label: '',
     onClick: () => {},
   },
 ];
@@ -30,7 +30,7 @@ const getActions = ({ handleEdit, handleDelete, sendEmail, sendUrl }: any) => {
   if (sendEmail) {
     dynamicActions.splice(1, 0, { // Insertar la acción de enviar correo en la posición deseada
       icon: <HiMail size={20} />,
-      label: 'Enviar correo',
+      label: '',
       onClick: sendEmail,
     });
   }
@@ -38,7 +38,7 @@ const getActions = ({ handleEdit, handleDelete, sendEmail, sendUrl }: any) => {
   if (sendUrl) {
     dynamicActions.splice(1, 0, { // Insertar la acción de enviar correo en la posición deseada
       icon: <HiEye size={20} />,
-      label: 'Respuestas',
+      label: '',
       onClick: sendUrl,
     });
   }

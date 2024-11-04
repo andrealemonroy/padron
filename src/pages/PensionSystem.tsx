@@ -103,21 +103,65 @@ const PensionSystem = () => {
                   header: 'Nombre',
                   accessorKey: 'name',
                   cell: (info) => info.getValue(),
+                  meta: {
+                    filterComponent: (column) => (
+                      <input
+                        type="text"
+                        value={(column.getFilterValue() ?? '') as string}
+                        onChange={(e) => column.setFilterValue(e.target.value)}
+                        placeholder="Filtrar Nombre"
+                        className="w-full px-2 py-1 text-sm border rounded"
+                      />
+                    ),
+                  },
                 },
                 {
                   header: 'Fondo de Pensión',
                   accessorKey: 'pension_system.pension_system',
                   cell: (info) => info.getValue(),
+                  meta: {
+                    filterComponent: (column) => (
+                      <input
+                        type="text"
+                        value={(column.getFilterValue() ?? '') as string}
+                        onChange={(e) => column.setFilterValue(e.target.value)}
+                        placeholder="Filtrar Fondo de Pensión"
+                        className="w-full px-2 py-1 text-sm border rounded"
+                      />
+                    ),
+                  },
                 },
                 {
                   header: 'Código AFP',
                   accessorKey: 'pension_system.cuspp',
                   cell: (info) => info.getValue(),
+                  meta: {
+                    filterComponent: (column) => (
+                      <input
+                        type="text"
+                        value={(column.getFilterValue() ?? '') as string}
+                        onChange={(e) => column.setFilterValue(e.target.value)}
+                        placeholder="Filtrar Código AFP"
+                        className="w-full px-2 py-1 text-sm border rounded"
+                      />
+                    ),
+                  },
                 },
                 {
                   header: 'Tipo de Comisión',
                   accessorKey: 'pension_system.commission_type',
                   cell: (info) => info.getValue(),
+                  meta: {
+                    filterComponent: (column) => (
+                      <input
+                        type="text"
+                        value={(column.getFilterValue() ?? '') as string}
+                        onChange={(e) => column.setFilterValue(e.target.value)}
+                        placeholder="Filtrar Tipo de Comisión"
+                        className="w-full px-2 py-1 text-sm border rounded"
+                      />
+                    ),
+                  },
                 },
               ]}
               data={pensionSystemses}

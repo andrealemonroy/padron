@@ -2,10 +2,15 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
-import { fetchAddresses, editAddresses } from '../api/addressesApi';
+import { fetchAddresses, editAddresses, fetchViaType, fetchZoneType } from '../api/addressesApi';
 import Spinner from '../components/Spinner';
 import Breadcrumb from '../components/BreadCrumb';
 import DynamicForm from '../components/DynamicForm';
+
+interface Option {
+  value: number | string;
+  label: string;
+}
 
 const CreateAddresses = () => {
   const navigate = useNavigate();
@@ -15,16 +20,41 @@ const CreateAddresses = () => {
   const [defaultValues, setDefaultValues] = useState(null);
   const [error, setError] = useState<string | null>(null);
 
+  const [options, setOptions] = useState<{
+    viaType: Option[];
+    zoneType: Option[];
+  }>({
+    viaType: [],
+    zoneType: [],
+  });
+
   useEffect(() => {
     const load = async () => {
       try {
         setLoading(true);
-    
-        if (id) {
-          const response = await fetchAddresses(id);
-            console.log(response);
-            setDefaultValues(response);
-        }
+        const [
+          viaTypeData,
+          zoneTypeData,
+          addressResponse,
+        ] = await Promise.all([
+          fetchViaType(),
+          fetchZoneType(),
+          id ? fetchAddresses(id) : Promise.resolve(null),
+        ]);
+
+        // Helper function to format options
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const formatOptions = (data: any[]): Option[] =>
+          data.map((value) => ({
+            value: value.id,
+            label: value.description,
+          }));
+
+          setOptions({
+            viaType: formatOptions(viaTypeData),
+            zoneType: formatOptions(zoneTypeData),
+          });
+          setDefaultValues(addressResponse);
       } catch (error) {
         setError(`Error al cargar los datos del permission. ${error}`);
       } finally {
@@ -51,7 +81,8 @@ const CreateAddresses = () => {
     {
       name: 'address_type',
       label: 'Tipo de Dirección',
-      type: 'text',
+      type: 'select',
+      options: options.viaType,
       validation: { required: 'Tipo de Dirección es requerido' },
     },
     {
@@ -105,7 +136,8 @@ const CreateAddresses = () => {
     {
       name: 'zone_type',
       label: 'Tipo de Zona',
-      type: 'text',
+      type: 'select',
+      options: options.zoneType,
       validation: {},
     },
     {

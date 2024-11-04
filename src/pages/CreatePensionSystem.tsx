@@ -25,7 +25,7 @@ const CreatePensionSystem = () => {
           setDefaultValues(response);
         }
       } catch (error) {
-        setError(`Error al cargar los datos del permission. ${error}`);
+        setError(`Error al cargar los datos del fetchPensionSystems. ${error}`);
       } finally {
         setLoading(false);
       }
@@ -42,7 +42,7 @@ const CreatePensionSystem = () => {
       setError(null);
       navigate('/pension-systems');
     } catch (error) {
-      setError(id ? 'Error al actualizar el addresses.' : `Error al crear el addresses. ${error}`);
+      setError(id ? 'Error al actualizar el sistema pensionario.' : `Error al crear el sistema pensionario. ${error}`);
     }
   };
 
@@ -70,8 +70,8 @@ const CreatePensionSystem = () => {
   
 
   const breadcrumbItems = [
-    { label: 'Dirección', path: '/addresses' },
-    { label: id ? 'Editar Dirección' : 'Crear Dirección', path: id ? `/edit-addresses/${id}` : '/create-addresses' },
+    { label: 'Sistema pensionario', path: '/pension-systems' },
+    { label: id ? 'Editar sistema pensionario' : 'Crear sistema pensionario', path: id ? `/edit-pension-systems/${id}` : '/create-pension-systems' },
   ];
 
   return (

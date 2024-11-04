@@ -191,7 +191,7 @@ function App() {
               }
             />
             <Route
-              path="/gestion"
+              path="/rrhh"
               element={
                 <PrivateRoute>
                   <Management />

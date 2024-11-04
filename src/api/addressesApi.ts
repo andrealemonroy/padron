@@ -87,3 +87,34 @@ export const fetchAddresses = async (id): Promise<User> => {
   return response.data;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const fetchViaType = async (): Promise<any[]> => {
+    
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const response = await axios.get<any[]>(`/via-type`)
+  .then(response => {
+      return response;
+  })
+  .catch(error => {
+      console.error('Error fetching zone-type:', error.response || error);
+      throw error;
+  });
+
+
+return response.data;
+};
+
+export const fetchZoneType = async (): Promise<User[]> => {
+    
+  const response = await axios.get<User[]>(`/zone-type`)
+  .then(response => {
+      return response;
+  })
+  .catch(error => {
+      console.error('Error fetching zone-type:', error.response || error);
+      throw error;
+  });
+
+
+return response.data;
+};

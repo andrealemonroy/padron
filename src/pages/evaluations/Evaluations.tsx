@@ -111,6 +111,23 @@ const Evaluations = () => {
               <Table
                 columns={[
                   {
+                    header: 'Nombre',
+                    accessorKey: 'user.name',
+                    cell: (info) => info.getValue(),
+                    meta: {
+                      width: '500px',
+                      filterComponent: (column) => (
+                        <input
+                          type="text"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          placeholder="Filtrar Nombre"
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
+                  },
+                  {
                     header: 'Periodo',
                     accessorKey: 'evaluation_date',
                     cell: (info) => info.getValue(),

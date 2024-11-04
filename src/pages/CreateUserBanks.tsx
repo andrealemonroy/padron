@@ -49,7 +49,7 @@ const CreateUserBanks = () => {
       setError(null);
       navigate('/user-banks');
     } catch (error) {
-      setError(id ? 'Error al actualizar el addresses.' : `Error al crear el addresses. ${error}`);
+      setError(id ? 'Error al actualizar el UserBank.' : `Error al crear el UserBank. ${error}`);
     }
   };
 
