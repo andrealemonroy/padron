@@ -3,13 +3,11 @@ import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
 import Table from '../components/Table';
 import { fetchRoles, deleteRol } from '../api/rolApi';
-import Button from '../components/Button';
 import { useNavigate } from 'react-router-dom';
 import Alert from '../components/Alert';
 import Spinner from '../components/Spinner';
 import Breadcrumb from '../components/BreadCrumb';
 import { getActions } from '../utils/actions';
-import { HiPlusCircle } from 'react-icons/hi';
 
 const Roles = () => {
   const navigate = useNavigate();

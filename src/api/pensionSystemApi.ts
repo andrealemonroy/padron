@@ -67,3 +67,20 @@ export const fetchPensionSystems = async (id): Promise<User> => {
   return response.data;
 };
 
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const fetchPensionLine = async (): Promise<any[]> => {
+    
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const response = await axios.get<any[]>(`${import.meta.env.VITE_API_URL}/pension-line`)
+  .then(response => {
+      return response;
+  })
+  .catch(error => {
+      console.error('Error fetching pension-line:', error.response || error);
+      throw error;
+  });
+
+
+return response.data;
+};

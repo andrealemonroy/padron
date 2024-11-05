@@ -2,10 +2,15 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
-import { fetchPensionSystems, editPensionSystems } from '../api/pensionSystemApi';
+import { fetchPensionSystems, editPensionSystems, fetchPensionLine } from '../api/pensionSystemApi';
 import Spinner from '../components/Spinner';
 import Breadcrumb from '../components/BreadCrumb';
 import DynamicForm from '../components/DynamicForm';
+
+interface Option {
+  value: number | string;
+  label: string;
+}
 
 const CreatePensionSystem = () => {
   const navigate = useNavigate();
@@ -15,15 +20,37 @@ const CreatePensionSystem = () => {
   const [defaultValues, setDefaultValues] = useState(null);
   const [error, setError] = useState<string | null>(null);
 
+  const [options, setOptions] = useState<{
+    pensionLine: Option[];
+  }>({
+    pensionLine: [],
+  });
+
   useEffect(() => {
     const load = async () => {
       try {
         setLoading(true);
-    
-        if (id) {
-          const response = await fetchPensionSystems(id);
-          setDefaultValues(response);
-        }
+        // fetchPensionLine
+        const [
+          pensionLineData,
+          pensionSystemResponse,
+        ] = await Promise.all([
+          fetchPensionLine(),
+          id ? fetchPensionSystems(id) : Promise.resolve(null),
+        ]);
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const formatOptions = (data: any[]): Option[] =>
+          data.map((value) => ({
+            value: value.id,
+            label: value.description,
+          }));
+
+          setOptions({
+            pensionLine: formatOptions(pensionLineData),
+          });
+
+        setDefaultValues(pensionSystemResponse);
       } catch (error) {
         setError(`Error al cargar los datos del fetchPensionSystems. ${error}`);
       } finally {
@@ -50,7 +77,8 @@ const CreatePensionSystem = () => {
     {
       name: 'pension_system',
       label: 'Fondo de Pensión',
-      type: 'text',
+      type: 'select',
+      options: options.pensionLine,
       validation: { required: 'Fondo de Pensión es requerido' },
     },
     {

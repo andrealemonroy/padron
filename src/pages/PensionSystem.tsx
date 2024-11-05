@@ -117,7 +117,7 @@ const PensionSystem = () => {
                 },
                 {
                   header: 'Fondo de Pensión',
-                  accessorKey: 'pension_system.pension_system',
+                  accessorKey: 'pension_system.pension_line.description',
                   cell: (info) => info.getValue(),
                   meta: {
                     filterComponent: (column) => (
