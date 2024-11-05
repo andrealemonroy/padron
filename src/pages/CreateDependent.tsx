@@ -8,6 +8,7 @@ import Spinner from '../components/Spinner';
 import Breadcrumb from '../components/BreadCrumb';
 import DynamicForm from '../components/DynamicForm';
 import { editDependent, fetchDependent } from '../api/dependentApi';
+import { fetchCountries } from '../api/countriesApi';
 
 const CreateDependent = () => {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ const CreateDependent = () => {
   const [error, setError] = useState<string | null>(null);
   const [documents, setDocument] = useState([]);
   const [sexs, setSex] = useState([]);
+  const [countries, setCountries] = useState([]);
 
   useEffect(() => {
     const load = async () => {
@@ -25,6 +27,12 @@ const CreateDependent = () => {
         setLoading(true);
         setLoading(true);
         const data = await fetchDocument();
+        const countriesData = await fetchCountries();
+        const formattedCountries = countriesData.map((value) => ({
+          value: value.id,
+          label: value.description,
+        }));
+        setCountries(formattedCountries);
         const formatted = data.map((value) => ({
           value: value.id,
           label: value.description,
@@ -82,7 +90,8 @@ const CreateDependent = () => {
     {
       name: 'document_country',
       label: 'País del Documento',
-      type: 'text',
+      type: 'select',
+      options: countries,
       validation: { required: 'País del Documento es requerido' }
     },
     {
