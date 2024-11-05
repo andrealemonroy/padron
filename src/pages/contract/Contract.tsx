@@ -9,7 +9,9 @@ import Spinner from '../../components/Spinner';
 import Breadcrumb from '../../components/BreadCrumb';
 import Alert from '../../components/Alert';
 import { getActions } from '../../utils/actions';
-import { deleteContract, fetchContracts } from '../../api/contractApi';
+import { deleteContract, fetchContracts, fetchImportData } from '../../api/contractApi';
+import { HiCloudUpload, HiUserAdd } from 'react-icons/hi';
+import Button from '../../components/Button';
 
 const Contract = () => {
   const navigate = useNavigate();
@@ -68,13 +70,64 @@ const Contract = () => {
     setIdToDelete(null);
   };
 
-  const breadcrumbItems = [
-    { label: 'Contrato', path: '/contract' },
-  ];
-
   const handleAdd = () => {
     navigate('/create-contract');
   };
+
+  const breadcrumbItems = [
+    { label: 'Contratos', path: '/contract' },
+  ];
+
+  const handleAddMassive = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (!event.target.files || event.target.files.length === 0) {
+      toast.error('No se seleccionó ningún archivo');
+      return;
+    }
+
+    const file = event.target.files[0];
+    const formData = new FormData();
+    formData.append('file', file);
+    setLoading(true);
+    try {
+      
+      const result = await fetchImportData(formData);
+      toast.success('Usuarios importados exitosamente');
+      console.log(result);
+      const data = await fetchContracts();
+      setDataValues(data);
+    } catch (error) {
+      console.error('Error al importar usuarios:', error);
+      toast.error('Error al importar usuarios. Por favor, intente de nuevo.');
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  const addButton = (
+    <div className="flex space-x-4">
+      <Button
+        type="button"
+        className="w-44 h-10 btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white rounded-md flex gap-1 items-center"
+        onClick={handleAdd}
+      >
+        <HiUserAdd size={20} />
+        <span className="max-xs:sr-only">Crear Contrato</span>
+      </Button>
+      <label className="w-44 h-10 btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white cursor-pointer flex gap-1 items-center">
+        <input
+          type="file"
+          className="hidden"
+          onChange={handleAddMassive}
+          accept=".xlsx,.xls,.csv"
+        />
+        <HiCloudUpload size={20} />
+        <span className="max-xs:sr-only">Importar Contratos</span>
+      </label>
+    </div>
+  );
+ 
 
   return (
     <div className="flex h-[100dvh] overflow-hidden">
@@ -100,7 +153,9 @@ const Contract = () => {
 
             <div className="sm:flex sm:justify-between sm:items-center">
               {/* Add breadcrumb here */}
-              <Breadcrumb items={breadcrumbItems} buttons={[{ text: 'Crear Proyecto', action: handleAdd }]} />
+              <Breadcrumb items={breadcrumbItems} >
+              {addButton}
+              </Breadcrumb>
             </div>
 
             {loading ? (

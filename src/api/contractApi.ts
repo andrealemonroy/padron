@@ -121,3 +121,21 @@ export const fetchcessationReasons = async (): Promise<any[]> => {
 
 return response.data;
 };
+
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const fetchImportData = async (data): Promise<any> => {
+    
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const response = await axios.post<any>(`${import.meta.env.VITE_API_URL}/import-contract-data`, data)
+  .then(response => {
+      return response;
+  })
+  .catch(error => {
+      console.error('Error fetching import-contract-data:', error.response || error);
+      throw error;
+  });
+
+
+return response.data;
+};

@@ -76,7 +76,7 @@ const CreateContract = () => {
 
         setDefaultValues(defaultValuesData);
       } catch (error) {
-        setError(`Error al cargar los datos del projects. ${error}`);
+        setError(`Error al cargar los datos del Contract. ${error}`);
       } finally {
         setLoading(false);
       }
@@ -176,8 +176,8 @@ const CreateContract = () => {
   
 
   const breadcrumbItems = [
-    { label: 'Proyectos', path: '/projects' },
-    { label: id ? 'Editar Proyecto' : 'Crear Proyecto', path: id ? `/edit-project/${id}` : '/create-project' },
+    { label: 'Contratos', path: '/Contract' },
+    { label: id ? 'Editar Contrato' : 'Crear Contrato', path: id ? `/edit-project/${id}` : '/create-project' },
   ];
 
   return (

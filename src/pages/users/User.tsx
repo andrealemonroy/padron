@@ -30,7 +30,6 @@ const User = () => {
   const [showAlertUsers, setShowAlertUsers] = useState(false);
   const [userIdToDelete, setUserIdToDelete] = useState<number | null>(null);
   const [userIdToUsers, setUserIdToUsers] = useState<number | null>(null);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [users, setUsers] = useState<UserData[]>([]);
   const [loading, setLoading] = useState(true);
 
