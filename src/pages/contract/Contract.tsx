@@ -9,7 +9,7 @@ import Spinner from '../../components/Spinner';
 import Breadcrumb from '../../components/BreadCrumb';
 import Alert from '../../components/Alert';
 import { getActions } from '../../utils/actions';
-import { deleteContract, fetchContracts, fetchImportData } from '../../api/contractApi';
+import { deleteContract, fetchContracts, fetchDownload, fetchImportData } from '../../api/contractApi';
 import { HiCloudUpload, HiUserAdd } from 'react-icons/hi';
 import Button from '../../components/Button';
 
@@ -46,6 +46,105 @@ const Contract = () => {
     setShowAlert(true);
     setIdToDelete(data.id);
   };
+
+  const btnContract = async (contract) => {
+    try {
+      console.log(contract);
+        setLoading(true);
+
+        // Realiza la solicitud para obtener el archivo
+        const blob = await fetchDownload(contract.user_id, 1); // Obtiene el Blob del archivo
+
+        // Crea un enlace temporal para descargar el archivo
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+
+        // Asigna un nombre al archivo que se descargará
+        link.download = `${contract.user.name || 'contrato'}.pdf`; // Cambia `.pdf` según el tipo de archivo
+
+        // Simula un clic para iniciar la descarga
+        document.body.appendChild(link);
+        link.click();
+
+        // Limpia el URL creado y elimina el enlace
+        link.remove();
+        window.URL.revokeObjectURL(url);
+
+    } catch (error) {
+        console.error('Error fetching contract:', error);
+        toast.error('Error al descargar el archivo');
+    } finally {
+        setLoading(false);
+    }
+};
+
+
+const btnContract2 = async (contract) => {
+  try {
+    console.log(contract);
+      setLoading(true);
+
+      // Realiza la solicitud para obtener el archivo
+      const blob = await fetchDownload(contract.user_id, 2); // Obtiene el Blob del archivo
+
+      // Crea un enlace temporal para descargar el archivo
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+
+      // Asigna un nombre al archivo que se descargará
+      link.download = `${contract.user.name || 'contrato'}.pdf`; // Cambia `.pdf` según el tipo de archivo
+
+      // Simula un clic para iniciar la descarga
+      document.body.appendChild(link);
+      link.click();
+
+      // Limpia el URL creado y elimina el enlace
+      link.remove();
+      window.URL.revokeObjectURL(url);
+
+  } catch (error) {
+      console.error('Error fetching contract:', error);
+      toast.error('Error al descargar el archivo');
+  } finally {
+      setLoading(false);
+  }
+};
+
+const btnContract3 = async (contract) => {
+  try {
+    console.log(contract);
+      setLoading(true);
+
+      // Realiza la solicitud para obtener el archivo
+      const blob = await fetchDownload(contract.user_id, 3); // Obtiene el Blob del archivo
+
+      // Crea un enlace temporal para descargar el archivo
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+
+      // Asigna un nombre al archivo que se descargará
+      link.download = `${contract.user.name || 'contrato'}.pdf`; // Cambia `.pdf` según el tipo de archivo
+
+      // Simula un clic para iniciar la descarga
+      document.body.appendChild(link);
+      link.click();
+
+      // Limpia el URL creado y elimina el enlace
+      link.remove();
+      window.URL.revokeObjectURL(url);
+
+  } catch (error) {
+      console.error('Error fetching contract:', error);
+      toast.error('Error al descargar el archivo');
+  } finally {
+      setLoading(false);
+  }
+};
+
+  
 
   const confirmDelete = async () => {
     if (idToDelete) {
@@ -213,7 +312,7 @@ const Contract = () => {
                 
               ]}
               data={dataValues}
-              actions={getActions({ handleEdit, handleDelete })}
+              actions={getActions({ handleEdit, btnContract3, btnContract2, btnContract, handleDelete })}
             />
             )}
             

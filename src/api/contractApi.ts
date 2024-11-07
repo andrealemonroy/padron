@@ -139,3 +139,27 @@ export const fetchImportData = async (data): Promise<any> => {
 
 return response.data;
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const fetchDownload = async (id, type: number): Promise<any> => {
+  console.log(id);
+  
+  try {
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/contract-${type}/${id}`, {
+      responseType: 'blob', // Asegúrate de que la respuesta se maneje como Blob
+    });
+
+    // Verifica que la respuesta sea un PDF
+    if (response.headers['content-type'] !== 'application/pdf') {
+      throw new Error('El archivo descargado no es un PDF.');
+    }
+
+    return response.data; // Devuelve el Blob
+  } catch (error) {
+    console.error('No se pudo descargar el archivo:', error.response || error);
+    throw error; // Lanza el error para manejarlo en la función que llama
+  }
+};
+
+
+
