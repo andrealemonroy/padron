@@ -55,6 +55,7 @@ import { ReportsPage } from './pages/reports';
 import Contract from './pages/contract/Contract';
 import CreateContract from './pages/contract/CreateContract';
 import Management from './pages/management/Management';
+import Password from './pages/password/Password';
 
 function App() {
   return (
@@ -206,6 +207,10 @@ function App() {
             <Route
               path="/create-contract"
               element={<CreateContract />}
+            />
+            <Route
+              path="/password"
+              element={<Password />}
             />
           </Routes>
         </Router>

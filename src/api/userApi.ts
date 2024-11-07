@@ -124,4 +124,18 @@ export const sendEmailApi = async (id): Promise<User> => {
   return response.data;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const createPassword = async (userData): Promise<any> => {
+    const response = await axios.post<User>(`${import.meta.env.VITE_API_URL}/password`, userData)
+      .then(response => {
+          return response;
+      })
+      .catch(error => {
+          console.error('Error fetching users:', error.response || error);
+          throw error;
+      });
+      console.log(response);
+    return response.data;
+  };
+
 // send-api
