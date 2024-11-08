@@ -1,0 +1,23 @@
+"Tipo Vía Direccion 2",
+        "Nombre Vía Direccion 2",
+        "N° Vía Direccion 2",
+        "Departamento Nro Direccion 2",
+        "Interior Direccion 2",
+        "Manzana Direccion 2",
+        "Lote Direccion 2",
+        "Km Direccion 2",
+        "Block Direccion 2",
+        "Etapa Direccion 2",
+        "Tipo Zona Direccion 2",
+        "Nombre Zona Direccion 2",
+        "Referencia Direccion 2",
+        "Departamento Direccion 2",
+        "Provincia Direccion 2",
+        "Distrito Direccion 2"
+
+
+
+        "Nombre de Post Grado 2",
+        "Institución educativa Post Grado 2",
+        "Fecha inicio estudio Post Grado 2",
+        "Fecha final estudio Post Grado 2"

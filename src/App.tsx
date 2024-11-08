@@ -56,6 +56,7 @@ import Contract from './pages/contract/Contract';
 import CreateContract from './pages/contract/CreateContract';
 import Management from './pages/management/Management';
 import Password from './pages/password/Password';
+import Nomina from './pages/management/Nomina';
 
 function App() {
   return (
@@ -196,6 +197,14 @@ function App() {
               element={
                 <PrivateRoute>
                   <Management />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/nominas"
+              element={
+                <PrivateRoute>
+                  <Nomina />
                 </PrivateRoute>
               }
             />

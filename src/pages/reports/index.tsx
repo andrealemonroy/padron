@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { Layout } from '../../components/Layout';
 import { FormProvider, useForm } from 'react-hook-form';
 import Select from 'react-select';
+import regimenLaboral from '../../data/regimenLaboral.json';
+import { toast, ToastContainer } from 'react-toastify';
+import { fetchRporte } from '../../api/contractApi';
 
 export const ReportsPage = () => {
   const [reports, setReports] = useState([]);
@@ -10,31 +13,28 @@ export const ReportsPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [format, setFormat] = useState({ value: 'pdf', label: 'PDF' });
   const form = useForm();
-
+  const [fieldOptions, setFieldOptions] = useState([]);
+  
   const fetchReports = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:3001/reports?search=${searchQuery}`
+      const response = regimenLaboral.filter(f => 
+        f.seccion.toLowerCase().includes(searchQuery.toLowerCase())
       );
-      const data = await response.json();
-      setReports(data);
+      setReports(response);
+      setFieldOptions(response[0]?.campos)
     } catch (error) {
       console.error('Error fetching reports:', error);
     }
   };
 
+  
+
   const onChangeSearch = (e) => {
     setSearchQuery(e.target.value);
     // Optionally debounce fetchReports for performance
+  
     fetchReports();
   };
-
-  const fieldOptions = [
-    { value: 'name', label: 'Nombre' },
-    { value: 'email', label: 'Email' },
-    { value: 'phone', label: 'Teléfono' },
-    // Add more options as needed
-  ];
 
   const formatOptions = [
     { value: 'pdf', label: 'PDF' },
@@ -65,17 +65,60 @@ export const ReportsPage = () => {
     setFilters(filters.filter((_, i) => i !== index));
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     // Handle form submission to generate the report
     console.log('Generating report with data:', {
       selectedFields,
       format,
-      filters,
+      filters
     });
-  };
+
+    console.log(data);
+
+    try {
+      const response = {
+        selectedFields,
+        format,
+        filters
+      };
+
+      // Realiza la solicitud para obtener el archivo
+      const blob = await fetchRporte(response); // Obtiene el Blob del archivo
+
+      // Determinar la extensión del archivo basada en el formato seleccionado
+      let fileExtension = 'pdf'; // Por defecto PDF
+      if (format.value === 'csv') {
+        fileExtension = 'csv';
+      } else if (format.value === 'excel') {
+        fileExtension = 'xlsx';
+      }
+
+      // Crea un enlace temporal para descargar el archivo
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+
+      // Asigna un nombre al archivo que se descargará
+      link.download = `reporte.${fileExtension}`; // Usa la extensión determinada
+
+      // Simula un clic para iniciar la descarga
+      document.body.appendChild(link);
+      link.click();
+
+      // Limpia el URL creado y elimina el enlace
+      link.remove();
+      window.URL.revokeObjectURL(url);
+      toast.success('Se descargó el archivo');
+    } catch (error) {
+      console.error('Error fetching report:', error);
+      toast.error('Error al descargar el archivo');
+    }
+};
+
 
   return (
     <Layout>
+       <ToastContainer />
       <div className="p-6">
         <h1 className="text-2xl font-bold mb-4">Generar Reporte</h1>
 
@@ -95,7 +138,7 @@ export const ReportsPage = () => {
               <p className="font-semibold mb-2">Resultados</p>
               <ul className="list-disc list-inside">
                 {reports.map((report) => (
-                  <li key={report.id}>{report.name}</li>
+                  <li key={report.id}>{report.seccion}</li>
                 ))}
               </ul>
             </div>
@@ -203,12 +246,12 @@ export const ReportsPage = () => {
 
             {/* Action Buttons */}
             <div className="flex space-x-4">
-              <button
+              {/* <button
                 type="button"
                 className="bg-gray-500 text-white px-4 py-2 rounded"
               >
                 Guardar como plantilla
-              </button>
+              </button> */}
               <button
                 type="submit"
                 className="bg-green-500 text-white px-4 py-2 rounded"

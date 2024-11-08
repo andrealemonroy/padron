@@ -14,7 +14,7 @@ interface RowData {
   // Add other fields as needed
 }
 
-const Management = () => {
+const Nomina = () => {
 
   const [selectedRows, setSelectedRows] = useState<Record<number, boolean>>({});
   const [loading, setLoading] = useState(true);
@@ -43,7 +43,7 @@ const Management = () => {
     const load = async () => {
       try {
         setLoading(true);
-        const data = await fetchManagement(1);
+        const data = await fetchManagement(2);
         setDataValues(data);
       } catch (error) {
         console.error('Error fetching projects:', error);
@@ -58,7 +58,7 @@ const Management = () => {
 
   const actions = [
     {
-      label: 'Nominas',
+      label: 'Pendiente',
       // icon: <FiEdit />,
       onClick: async (row: RowData)  => {
         // Handle Complementarios action
@@ -68,9 +68,9 @@ const Management = () => {
           const users = {
             users: [row.id]
           }
-          await editManagement(users, 2);
+          await editManagement(users, 3);
           toast.success('Proyecto actualizado exitosamente');
-          const data = await fetchManagement(1);
+          const data = await fetchManagement(2);
           setDataValues(data);
         } catch (error) {
           console.error('Error fetching projects:', error);
@@ -108,7 +108,7 @@ const Management = () => {
       <ToastContainer />
       {/* Main Button */}
       <div className="mb-4 flex justify-between">
-        <h1 className="text-2xl font-bold">Gestión de RRHH</h1>
+        <h1 className="text-2xl font-bold">Gestión de Nomina</h1>
         <button
           onClick={ async () => {
             // Handle Enviar a Nóminas action
@@ -118,9 +118,9 @@ const Management = () => {
               const users = {
                 users: selectedRowData.map(e => e.id),
               }
-              await editManagement(users, 2);
+              await editManagement(users, 3);
               toast.success('Proyecto actualizado exitosamente');
-              const data = await fetchManagement(1);
+              const data = await fetchManagement(2);
               setDataValues(data);
             } catch (error) {
               console.error('Error fetching projects:', error);
@@ -132,7 +132,7 @@ const Management = () => {
           disabled={selectedRowData.length === 0}
           className="bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50"
         >
-          Enviar a Nóminas
+          Enviar a Pendiente
         </button>
       </div>
 
@@ -181,4 +181,4 @@ const Management = () => {
   );
 };
 
-export default Management;
+export default Nomina;
