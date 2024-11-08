@@ -23,3 +23,105 @@ export const fetchOccupations = async (): Promise<IOccupations[]> => {
  
   return response.data;
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const fetchContractType = async (): Promise<any[]> => {
+    
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const response = await axios.get<any[]>(`/contract-type`)
+    .then(response => {
+        return response;
+    })
+    .catch(error => {
+        console.error('Error fetching fetchTypeWorker:', error.response || error);
+        throw error;
+    });
+  
+  
+  return response.data;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const fetchPaymentPeriod = async (): Promise<any[]> => {
+    
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const response = await axios.get<any[]>(`/payment-period`)
+    .then(response => {
+        return response;
+    })
+    .catch(error => {
+        console.error('Error fetching fetchTypeWorker:', error.response || error);
+        throw error;
+    });
+  
+  
+  return response.data;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const fetchPaymentType = async (): Promise<any[]> => {
+    
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const response = await axios.get<any[]>(`/payment-type`)
+    .then(response => {
+        return response;
+    })
+    .catch(error => {
+        console.error('Error fetching fetchTypeWorker:', error.response || error);
+        throw error;
+    });
+  
+  
+  return response.data;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const fetchOccupationalCategory = async (): Promise<any[]> => {
+    
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const response = await axios.get<any[]>(`/occupational-category`)
+    .then(response => {
+        return response;
+    })
+    .catch(error => {
+        console.error('Error fetching fetchTypeWorker:', error.response || error);
+        throw error;
+    });
+  
+  
+  return response.data;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const fetchCen = async (): Promise<any[]> => {
+    
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const response = await axios.get<any[]>(`/cen`)
+    .then(response => {
+        return response;
+    })
+    .catch(error => {
+        console.error('Error fetching fetchTypeWorker:', error.response || error);
+        throw error;
+    });
+  
+  
+  return response.data;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const fetchSit = async (): Promise<any[]> => {
+    
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const response = await axios.get<any[]>(`/sit`)
+    .then(response => {
+        return response;
+    })
+    .catch(error => {
+        console.error('Error fetching fetchTypeWorker:', error.response || error);
+        throw error;
+    });
+  
+  
+  return response.data;
+};

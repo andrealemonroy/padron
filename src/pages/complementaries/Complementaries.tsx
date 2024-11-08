@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import Sidebar from '../components/Sidebar';
-import Header from '../components/Header';
-import Table from '../components/Table';
+import Sidebar from '../../components/Sidebar';
+import Header from '../../components/Header';
+import Table from '../../components/Table';
 import { useNavigate } from 'react-router-dom';
-import Spinner from '../components/Spinner';
-import Breadcrumb from '../components/BreadCrumb';
-import { fetchComplementaries } from '../api/complementariesApi';
-import { getActions } from '../utils/actions';
+import Spinner from '../../components/Spinner';
+import Breadcrumb from '../../components/BreadCrumb';
+import { fetchComplementaries } from '../../api/complementariesApi';
+import { getActions } from '../../utils/actions';
 
 const Complementaries = () => {
   const navigate = useNavigate();
