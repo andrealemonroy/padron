@@ -34,7 +34,7 @@
       { "value": 25, "label": "Manzana Direccion 1" },
       { "value": 26, "label": "Lote Direccion 1" },
       { "value": 27, "label": "Km Direccion 1" },
-      { "value": 28, "label": "Block Direccion 1" },
+      
       { "value": 29, "label": "Etapa Direccion 1" },
       { "value": 30, "label": "Tipo Zona Direccion 1" },
       { "value": 31, "label": "Nombre Zona Direccion 1" },
@@ -51,10 +51,8 @@
       { "value": 37, "label": "Nivel Alcanzado Educativo" },
       { "value": 38, "label": "Centro de estudios Educación Superior" },
       { "value": 39, "label": "Nombre de la profesión" },
-      { "value": 40, "label": "Nombre de Post Grado 1" },
-      { "value": 41, "label": "Institución educativa Post Grado 1" },
-      { "value": 42, "label": "Fecha inicio estudio Post Grado 1" },
-      { "value": 43, "label": "Fecha final estudio Post Grado 1" }
+      { "value": 40, "label": "Nombre de Post Grado 1" }
+      
     ]
   },
   {

@@ -21,3 +21,11 @@
         "Institución educativa Post Grado 2",
         "Fecha inicio estudio Post Grado 2",
         "Fecha final estudio Post Grado 2"
+
+
+        { "value": 28, "label": "Block Direccion 1" },
+
+
+        { "value": 41, "label": "Institución educativa Post Grado 1" },
+      { "value": 42, "label": "Fecha inicio estudio Post Grado 1" },
+      { "value": 43, "label": "Fecha final estudio Post Grado 1" }
