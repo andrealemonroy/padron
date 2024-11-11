@@ -187,16 +187,48 @@ const Incidences = () => {
                   {
                     header: 'Mes',
                     accessorKey: 'month',
-                    cell: (info) => info.getValue(),
+                    cell: (info) => {
+                      const monthMapping = {
+                        1: 'Enero',
+                        2: 'Febrero',
+                        3: 'Marzo',
+                        4: 'Abril',
+                        5: 'Mayo',
+                        6: 'Junio',
+                        7: 'Julio',
+                        8: 'Agosto',
+                        9: 'Septiembre',
+                        10: 'Octubre',
+                        11: 'Noviembre',
+                        12: 'Diciembre',
+                      };
+                    
+                      return monthMapping[info.getValue()] || '';
+                    },
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    filterFn: 'statusFilter' as any,
                     meta: {
+                      width: '200px',
                       filterComponent: (column) => (
-                        <input
-                          type="text"
+                        <select
                           value={(column.getFilterValue() ?? '') as string}
                           onChange={(e) => column.setFilterValue(e.target.value)}
-                          placeholder="Filtrar Mes"
                           className="w-full px-2 py-1 text-sm border rounded"
-                        />
+                        >
+                           <option value="">Todos los Meses</option>
+                            <option value="Enero">Enero</option>
+                            <option value="Febrero">Febrero</option>
+                            <option value="Marzo">Marzo</option>
+                            <option value="Abril">Abril</option>
+                            <option value="Mayo">Mayo</option>
+                            <option value="Junio">Junio</option>
+                            <option value="Julio">Julio</option>
+                            <option value="Agosto">Agosto</option>
+                            <option value="Septiembre">Septiembre</option>
+                            <option value="Octubre">Octubre</option>
+                            <option value="Noviembre">Noviembre</option>
+                            <option value="Diciembre">Diciembre</option>
+                        </select>
                       ),
                     },
                   },

@@ -7,29 +7,57 @@ import Spinner from '../components/Spinner';
 import Breadcrumb from '../components/BreadCrumb';
 import { fetchIncidence, createIncidence, editIncidence } from '../api/incidencesApi';
 import { fetchUsers } from '../api/userApi';
+import { fetchQualityRatings } from '../api/qualityRatingsApi';
+
+interface Option {
+  value: number | string;
+  label: string;
+}
 
 const CreateIncidences = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [defaultValues, setDefaultValues] = useState(null);
   const [error, setError] = useState<string | null>(null);
 
+  const [options, setOptions] = useState<{
+    users: Option[];
+    ratings: Option[];
+  }>({
+    users: [],
+    ratings: [],
+  });
+
   useEffect(() => {
     const loadData = async () => {
       try {
         setLoading(true);
 
-        const usersData = await fetchUsers();
-        const formatted = usersData.map((role) => ({ value: role.id, label: role.name }));
-        setUsers(formatted);
+        const [
+          usersData,
+          ratingsData,
+          responseData,
+        ] = await Promise.all([
+          fetchUsers(),
+          fetchQualityRatings(),
+          id ? fetchIncidence(id) : Promise.resolve(null),
+        ]);
 
-        if (id) {
-          const response = await fetchIncidence(id);
-          setDefaultValues(response);
-        }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const formatOptions = (data: any[]): Option[] =>
+          data.map((value) => ({
+            value: value.id,
+            label: value.description ?? value.name,
+          }));
+
+          setOptions({
+            users: formatOptions(usersData),
+            ratings: formatOptions(ratingsData),
+          });
+
+        setDefaultValues(responseData);
 
         setLoading(false);
       } catch (error) {
@@ -60,13 +88,14 @@ const CreateIncidences = () => {
       name: 'user_id',
       label: 'Trabajador',
       type: 'select',
-      options: users,
+      options: options.users,
       validation: { required: 'El Trabajador es requerido' },
     },
     {
       name: 'code',
-      label: 'Código',
-      type: 'text',
+      label: 'Calificación',
+      type: 'select',
+      options: options.ratings,
       validation: { required: 'El código es requerido' },
     },
     {
@@ -90,13 +119,85 @@ const CreateIncidences = () => {
     {
       name: 'month',
       label: 'Mes',
-      type: 'number',
+      type: 'select',
+      options: [
+        {
+          value: 1,
+          label: 'Enero',
+        },
+        {
+          value: 2,
+          label: 'Febrero',
+        },
+        {
+          value: 3,
+          label: 'Marzo',
+        },
+        {
+          value: 4,
+          label: 'Abril',
+        },
+        {
+          value: 5,
+          label: 'Mayo',
+        },
+        {
+          value: 6,
+          label: 'Junio',
+        },
+        {
+          value: 7,
+          label: 'Julio',
+        },
+        {
+          value: 8,
+          label: 'Agosto',
+        },
+        {
+          value: 9,
+          label: 'Septiembre',
+        },
+        {
+          value: 10,
+          label: 'Octubre',
+        },
+        {
+          value: 11,
+          label: 'Noviembre',
+        },
+        {
+          value: 12,
+          label: 'Diciembre',
+        }
+      ],
       validation: { required: 'El mes es requerido' },
     },
     {
       name: 'year',
       label: 'Año',
-      type: 'number',
+      type: 'select',
+      options: [
+        {
+          value: 2020,
+          label: '2020',
+        },
+        {
+          value: 2021,
+          label: '2021',
+        },
+        {
+          value: 2022,
+          label: '2022',
+        },
+        {
+          value: 2023,
+          label: '2023',
+        },
+        {
+          value: 2024,
+          label: '2024',
+        }        
+      ],
       validation: { required: 'El año es requerido' },
     },
   ];
@@ -126,9 +227,7 @@ const CreateIncidences = () => {
               <Spinner loading={loading} size={50} color="#3498db" /> // Show spinner while loading
             ) : (
               <>
-                {users.length > 0 && (
-                  <DynamicForm fields={formFields} onSubmit={onSubmit} defaultValues={defaultValues} />
-                )}
+                <DynamicForm fields={formFields} onSubmit={onSubmit} defaultValues={defaultValues} />
               </>
             )}
           </div>

@@ -9,6 +9,12 @@ import Breadcrumb from '../../components/BreadCrumb';
 import DynamicForm from '../../components/DynamicForm';
 import { createPeriodicEvaluation, editPeriodicEvaluation, fetchPeriodicEvaluation } from '../../api/periodicEvaluationsApi';
 import { fetchUsers } from '../../api/userApi';
+import { fetchQualityRatings } from '../../api/qualityRatingsApi';
+
+interface Option {
+  value: number | string;
+  label: string;
+}
 
 const CreatePeriodicEvaluation = () => {
   const navigate = useNavigate();
@@ -17,22 +23,42 @@ const CreatePeriodicEvaluation = () => {
   const [loading, setLoading] = useState(true);
   const [defaultValues, setDefaultValues] = useState(null);
   const [error, setError] = useState<string | null>(null);
-  const [users, setUsers] = useState([]);
+
+  const [options, setOptions] = useState<{
+    users: Option[];
+    ratings: Option[];
+  }>({
+    users: [],
+    ratings: [],
+  });
 
   useEffect(() => {
     const load = async () => {
       try {
         setLoading(true);
-        const data = await fetchUsers();
-        const formattedUsers = data.map((value) => ({
-          value: value.id,
-          label: value.name,
-        }));
-        setUsers(formattedUsers);
-        if (id) {
-          const response = await fetchPeriodicEvaluation(id);
-          setDefaultValues(response);
-        }
+        const [
+          usersData,
+          ratingsData,
+          responseData,
+        ] = await Promise.all([
+          fetchUsers(),
+          fetchQualityRatings(),
+          id ? fetchPeriodicEvaluation(id) : Promise.resolve(null),
+        ]);
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const formatOptions = (data: any[]): Option[] =>
+          data.map((value) => ({
+            value: value.id,
+            label: value.description ?? value.name,
+          }));
+
+          setOptions({
+            users: formatOptions(usersData),
+            ratings: formatOptions(ratingsData),
+          });
+        
+        setDefaultValues(responseData);
       } catch (error) {
         setError(`Error al cargar los datos de la evaluación. ${error}`);
       } finally {
@@ -69,7 +95,7 @@ const CreatePeriodicEvaluation = () => {
       name: 'user_id',
       label: 'Usuario',
       type: 'select',
-      options: users,
+      options: options.users,
       validation: { required: 'El ID del usuario es requerido' }
     },
     {
@@ -87,7 +113,8 @@ const CreatePeriodicEvaluation = () => {
     {
       name: 'rating',
       label: 'Calificación',
-      type: 'text',
+      type: 'select',
+      options: options.ratings,
       validation: { required: 'La calificación es requerida' }
     },
     {
