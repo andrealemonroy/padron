@@ -98,6 +98,17 @@ const Hobby = () => {
                     header: 'Nombre',
                     accessorKey: 'name',
                     cell: (info) => info.getValue(),
+                    meta: {
+                      filterComponent: (column) => (
+                        <input
+                          type="text"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          placeholder="Filtrar Nombre"
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
                   },
                   {
                     header: 'Código',
@@ -107,6 +118,17 @@ const Hobby = () => {
                         ? hobbies.map((hobby) => hobby.code).join(' / ')
                         : '';
                     },
+                    meta: {
+                      filterComponent: (column) => (
+                        <input
+                          type="text"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          placeholder="Filtrar Código"
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
                   },
                   {
                     header: 'Descripción',
@@ -115,6 +137,17 @@ const Hobby = () => {
                       return hobbies.length > 0
                         ? hobbies.map((hobby) => hobby.description).join(' / ')
                         : '';
+                    },
+                    meta: {
+                      filterComponent: (column) => (
+                        <input
+                          type="text"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          placeholder="Filtrar Descripción"
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
                     },
                   },
                 ]}

@@ -52,13 +52,33 @@ const CreateWorkCondition = () => {
     {
       name: 'remote_work_condition',
       label: 'Trabajo remoto',
-      type: 'checkbox',
+      type: 'select',
+      options: [
+        {
+          value: 0,
+          label: 'NO',
+        },
+        {
+          value: 1,
+          label: 'SI',
+        }
+      ],
       validation: { required: 'El año de Trabajo remoto es requerido' },
     },
     {
       name: 'computer_type',
       label: 'Tipo de Computadora',
-      type: 'text',
+      type: 'select',
+      options: [
+        {
+          value: 1,
+          label: 'Laptop',
+        },
+        {
+          value: 2,
+          label: 'PC de escritorio',
+        }
+      ],
       validation: { required: 'El nivel Tipo de Computadora es requerido' },
     },
     {
@@ -70,19 +90,53 @@ const CreateWorkCondition = () => {
     {
       name: 'internet_connection',
       label: 'Conexión a Internet',
-      type: 'text',
+      type: 'select',
+      options: [
+        {
+          value: 1,
+          label: 'FIJA',
+        },
+        {
+          value: 2,
+          label: 'WIFI',
+        }
+      ],
       validation: { required: 'El Conexión a Internet es requerido' },
     },
     {
       name: 'adequate_home_environment',
       label: 'Ambiente Hogareño Adecuado',
-      type: 'checkbox',
+      type: 'select',
+      options: [
+        {
+          value: 0,
+          label: 'NO',
+        },
+        {
+          value: 1,
+          label: 'SI',
+        }
+      ],
       validation: { required: 'El Ambiente en Casa es requerido' },
     },
     {
       name: 'home_furniture',
       label: 'Ambiente en Casa',
-      type: 'text',
+      type: 'select',
+      options: [
+        {
+          value: 1,
+          label: 'Mesa',
+        },
+        {
+          value: 2,
+          label: 'Escritorio para el trabajo',
+        },
+        {
+          value: 3,
+          label: 'Silla ergonómica',
+        }
+      ],
       validation: { required: 'El Ambiente en Casa es requerido' },
     },
   ];

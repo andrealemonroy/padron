@@ -125,7 +125,16 @@ const CreateContract = () => {
       name: 'sctr_health',
       label: 'SCTR Salud',
       type: 'select',
-      options: options.healthType,
+      options: [
+        {
+          value: 1,
+          label: 'Essalud',
+        },
+        {
+          value: 2,
+          label: 'EPS',
+        }
+      ],
       validation: { required: 'El SCTR de salud es requerido' }
     },
     {

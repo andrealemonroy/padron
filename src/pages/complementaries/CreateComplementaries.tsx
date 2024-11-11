@@ -112,8 +112,29 @@ const CreateComplementaries = () => {
               label: value.area,
             })),
           });
-
-          setDefaultValues(responseData);
+          if (id) {
+            setDefaultValues(responseData);
+          } else {
+            const data = {
+                "labor_regime": 1,
+                "disability": 0,
+                "sctr_pension": 0,
+                //"contract_type": 1,
+                "subject_to_atypical_regime": 0,
+                "maximum_working_day": 0,
+                "night_shift": 0,
+                "union": 0,
+                "remuneration_period": 1,
+                "situation": 1,
+                "exempt_from_5th_income": 0,
+                "special_situation": 0,
+                "payment_type": 1,
+                "occupational_category": 1,
+                "double_taxation_treaty": 0,
+            }
+            setDefaultValues(data);
+          }
+          
         
       } catch (error) {
         setError(`Error al cargar los datos del permission. ${error}`);
@@ -195,16 +216,7 @@ const CreateComplementaries = () => {
       name: 'contract_type',
       label: 'Tipo de Contrato',
       type: 'select',
-      options: [
-        {
-          value: 0,
-          label: 'NO',
-        },
-        {
-          value: 1,
-          label: 'SI',
-        }
-      ],
+      options: options.contractType,
       validation: { required: 'Tipo de Contrato es requerido' },
     },
     {
@@ -353,6 +365,7 @@ const CreateComplementaries = () => {
       ],
       validation: { required: 'Este campo es requerido' },
     },
+    /*
     {
       name: 'cost_sub_center',
       label: 'Subcentro de Costo',
@@ -360,6 +373,8 @@ const CreateComplementaries = () => {
       options: options.cost_sub_center,
       validation: { required: 'Subcentro de Costo es requerido' },
     },
+    */
+    /*
     {
       name: 'cost_center',
       label: 'Centro de Costo',
@@ -367,6 +382,7 @@ const CreateComplementaries = () => {
       options: options.cost_center,
       validation: { required: 'Centro de Costo es requerido' },
     },
+    */
     {
       name: 'cost_sub_sub_center',
       label: 'Subsubcentro de Costo',
@@ -374,6 +390,7 @@ const CreateComplementaries = () => {
       options: options.cost_sub_sub_center,
       validation: { required: 'Subsubcentro de Costo es requerido' },
     },
+    /*
     {
       name: 'area',
       label: 'Área',
@@ -381,6 +398,7 @@ const CreateComplementaries = () => {
       options: options.area,
       validation: { required: 'Área es requerida' },
     },
+    */
     {
       name: 'payroll_position',
       label: 'Posición en la Nómina',

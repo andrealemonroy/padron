@@ -83,8 +83,18 @@ const CreatePensionSystem = () => {
     },
     {
       name: 'commission_type',
-      label: 'AFP',
-      type: 'text',
+      label: 'Tipo comisión AFP',
+      type: 'select',
+      options: [
+        {
+          value: 1,
+          label: 'Flujo',
+        },
+        {
+          value: 2,
+          label: 'Mixta',
+        }
+      ],
       validation: { required: 'AFP es requerido' },
     },
     {

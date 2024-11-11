@@ -114,66 +114,86 @@ const WorkCondition = () => {
                     },
                   },
                   {
-                    header: 'Institución',
+                    header: 'Trabajo remoto',
                     accessorKey: 'work_condition.remote_work_condition',
-                    cell: (info) => info.getValue(),
+                    cell: (info) => (info.getValue() === 1 ? 'SI' : info.getValue() === 0 ? 'NO' : ''),
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    filterFn: 'statusFilter' as any,
                     meta: {
+                      width: '200px',
                       filterComponent: (column) => (
-                        <input
-                          type="text"
+                        <select
                           value={(column.getFilterValue() ?? '') as string}
                           onChange={(e) => column.setFilterValue(e.target.value)}
-                          placeholder="Filtrar Institución"
                           className="w-full px-2 py-1 text-sm border rounded"
-                        />
+                        >
+                          <option value="">Seleccione</option>
+                          <option value="1">SI</option>
+                          <option value="0">NO</option>
+                        </select>
                       ),
                     },
                   },
                   {
                     header: 'Tipo de Computadora',
                     accessorKey: 'work_condition.computer_type',
-                    cell: (info) => info.getValue(),
+                    cell: (info) => (info.getValue() === 1 ? 'Laptop' : info.getValue() === 2 ? 'Desktop' : ''),
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    filterFn: 'statusFilter' as any,
                     meta: {
+                      width: '200px',
                       filterComponent: (column) => (
-                        <input
-                          type="text"
+                        <select
                           value={(column.getFilterValue() ?? '') as string}
                           onChange={(e) => column.setFilterValue(e.target.value)}
-                          placeholder="Filtrar Computadora"
                           className="w-full px-2 py-1 text-sm border rounded"
-                        />
+                        >
+                          <option value="">Seleccione</option>
+                          <option value="1">Laptop</option>
+                          <option value="2">Desktop</option>
+                        </select>
                       ),
                     },
                   },
                   {
                     header: 'Conexión a Internet',
                     accessorKey: 'work_condition.internet_connection',
-                    cell: (info) => info.getValue(),
+                    cell: (info) => (info.getValue() === 1 ? 'WIFI' : info.getValue() === 2 ? 'CABLE' : ''),
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    filterFn: 'statusFilter' as any,
                     meta: {
+                      width: '200px',
                       filterComponent: (column) => (
-                        <input
-                          type="text"
+                        <select
                           value={(column.getFilterValue() ?? '') as string}
                           onChange={(e) => column.setFilterValue(e.target.value)}
-                          placeholder="Filtrar Internet"
                           className="w-full px-2 py-1 text-sm border rounded"
-                        />
+                        >
+                          <option value="">Seleccione</option>
+                          <option value="1">WIFI</option>
+                          <option value="2">CABLE</option>
+                        </select>
                       ),
                     },
                   },
                   {
                     header: 'Ambiente en Casa',
                     accessorKey: 'work_condition.adequate_home_environment',
-                    cell: (info) => info.getValue(),
+                    cell: (info) => (info.getValue() === 1 ? 'SI' : info.getValue() === 0 ? 'NO' : ''),
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    filterFn: 'statusFilter' as any,
                     meta: {
+                      width: '200px',
                       filterComponent: (column) => (
-                        <input
-                          type="text"
+                        <select
                           value={(column.getFilterValue() ?? '') as string}
                           onChange={(e) => column.setFilterValue(e.target.value)}
-                          placeholder="Filtrar Ambiente"
                           className="w-full px-2 py-1 text-sm border rounded"
-                        />
+                        >
+                          <option value="">Seleccione</option>
+                          <option value="1">SI</option>
+                          <option value="0">NO</option>
+                        </select>
                       ),
                     },
                   },

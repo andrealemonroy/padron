@@ -53,69 +53,59 @@ const CreateWorkExperiences = () => {
       name: 'last_experience_start_date',
       label: 'Fecha de Inicio de Última Experiencia',
       type: 'date',
-      validation: { required: 'Fecha de inicio es requerida' },
     },
     {
       name: 'last_experience_end_date',
       label: 'Fecha de Fin de Última Experiencia',
       type: 'date',
-      validation: { required: 'Fecha de fin es requerida' },
     },
     {
       name: 'last_experience_organization',
       label: 'Organización de Última Experiencia',
       type: 'text',
-      validation: { required: 'Organización es requerida' },
     },
     {
       name: 'last_experience_dismissal_reason',
       label: 'Razón de Despido de Última Experiencia',
       type: 'text',
-      validation: { required: 'Razón de despido es requerida' },
     },
     {
       name: 'last_experience_salary',
       label: 'Salario de Última Experiencia',
       type: 'number',
-      validation: { required: 'Salario es requerido' },
     },
     {
       name: 'penultimate_experience_start_date',
       label: 'Fecha de Inicio de Penúltima Experiencia',
       type: 'date',
-      validation: { required: 'Fecha de inicio es requerida' },
     },
     {
       name: 'penultimate_experience_end_date',
       label: 'Fecha de Fin de Penúltima Experiencia',
       type: 'date',
-      validation: { required: 'Fecha de fin es requerida' },
     },
     {
       name: 'penultimate_experience_organization',
       label: 'Organización de Penúltima Experiencia',
       type: 'text',
-      validation: { required: 'Organización es requerida' },
     },
     {
       name: 'penultimate_experience_dismissal_reason',
       label: 'Razón de Despido de Penúltima Experiencia',
       type: 'text',
-      validation: { required: 'Razón de despido es requerida' },
     },
     {
       name: 'penultimate_experience_salary',
       label: 'Salario de Penúltima Experiencia',
       type: 'number',
-      validation: { required: 'Salario es requerido' },
     },
   ];
   
   
 
   const breadcrumbItems = [
-    { label: 'Datos basicos', path: '/basic' },
-    { label: id ? 'Editar Datos basicos' : 'Crear Datos basicos', path: id ? `/edit-basic/${id}` : '/create-basic' },
+    { label: 'Datos Laborales', path: '/basic' },
+    { label: id ? 'Editar Datos Laborales' : 'Crear Datos Laborales', path: id ? `/edit-basic/${id}` : '/create-basic' },
   ];
 
   return (
