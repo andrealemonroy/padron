@@ -75,7 +75,7 @@ return response.data;
 export const fetchTypeWorker = async (): Promise<any[]> => {
     
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const response = await axios.get<any[]>(`/work-line`)
+  const response = await axios.get<any[]>(`/type-worker`)
   .then(response => {
       return response;
   })

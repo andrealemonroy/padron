@@ -10,11 +10,23 @@ interface CustomSelectProps {
   validation?: Record<string, any>;
   isMulti?: boolean;
   defaultValue?: { value: string | number; label: string } | { value: string | number; label: string }[] | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onChange?: (value: any) => void;
 }
 
-const CustomSelect: React.FC<CustomSelectProps> = ({ name, label, options, validation, isMulti = false, defaultValue }) => {
+const CustomSelect: React.FC<CustomSelectProps> = ({ name, label, options, validation, isMulti = false, defaultValue , onChange}) => {
   const { control, formState: { errors }, getValues } = useFormContext();
 
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = isMulti
+      ? Array.from(event.target.selectedOptions, option => option.value)
+      : event.target.value;
+
+    if (onChange) {
+      onChange(value); // Llama a la función onChange si está definida
+    }
+  };
+  
   useEffect(() => {
   }, [control, name, getValues]);
 
@@ -38,9 +50,14 @@ const CustomSelect: React.FC<CustomSelectProps> = ({ name, label, options, valid
                 onChange={(selectedOption) => {
                   const value = isMulti
                     ? (selectedOption as { value: string | number; label: string }[]).map(option => option.value)
-                    : selectedOption ? (selectedOption as { value: string | number; label: string }).value : null;
-                
-                  field.onChange(value);
+                    : selectedOption
+                    ? (selectedOption as { value: string | number; label: string }).value
+                    : null;
+              
+                  field.onChange(value); 
+                  if (onChange) {
+                    onChange(selectedOption); // Llama a la función onChange si está definida
+                  }
                 }}
               placeholder="Selecciona una opción..."
               classNamePrefix="react-select"

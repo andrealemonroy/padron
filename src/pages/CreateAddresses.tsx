@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
-import { fetchAddresses, editAddresses, fetchViaType, fetchZoneType } from '../api/addressesApi';
+import { fetchAddresses, editAddresses, fetchViaType, fetchZoneType, fetchDepartment, fetchProvince, fetchDistrict } from '../api/addressesApi';
 import Spinner from '../components/Spinner';
 import Breadcrumb from '../components/BreadCrumb';
 import DynamicForm from '../components/DynamicForm';
@@ -10,6 +10,7 @@ import DynamicForm from '../components/DynamicForm';
 interface Option {
   value: number | string;
   label: string;
+  code: string;
 }
 
 const CreateAddresses = () => {
@@ -20,13 +21,32 @@ const CreateAddresses = () => {
   const [defaultValues, setDefaultValues] = useState(null);
   const [error, setError] = useState<string | null>(null);
 
+  const [defaultProvincie, setDefaultProvincie] = useState(null);
+  const [defaultDistrict, setDefaultDistrict] = useState(null);
+
   const [options, setOptions] = useState<{
-    viaType: Option[];
-    zoneType: Option[];
+    viaType?: Option[];
+    zoneType?: Option[];
+    department?: Option[];
+    province?: Option[];
+    district?: Option[];
   }>({
     viaType: [],
     zoneType: [],
+    department: [],
+    province: [],
+    district: [],
   });
+
+    // Función que maneja el cambio de Departamento
+  
+
+    // Función que maneja el cambio de Provincia
+    /*const handleProvinceChange = (provinceId) => {
+      const newDistrictOptions = getDistrictsByProvince(provinceId); // función que obtiene distritos
+      setDistrictOptions(newDistrictOptions); // Actualiza las opciones de distritos
+    };
+*/
 
   useEffect(() => {
     const load = async () => {
@@ -35,10 +55,16 @@ const CreateAddresses = () => {
         const [
           viaTypeData,
           zoneTypeData,
+          departmentData,
+          provinceData,
+          districtData,
           addressResponse,
         ] = await Promise.all([
           fetchViaType(),
           fetchZoneType(),
+          fetchDepartment(),
+          fetchProvince(),
+          fetchDistrict(),
           id ? fetchAddresses(id) : Promise.resolve(null),
         ]);
 
@@ -47,14 +73,21 @@ const CreateAddresses = () => {
         const formatOptions = (data: any[]): Option[] =>
           data.map((value) => ({
             value: value.id,
-            label: value.description,
+            label: value.description ?? value.department ?? value.province,
+            code: value.code ?? null,
           }));
-
           setOptions({
             viaType: formatOptions(viaTypeData),
             zoneType: formatOptions(zoneTypeData),
+            department: formatOptions(departmentData),
+            province: formatOptions(provinceData).filter(str => str.code.startsWith(departmentData.find(f => f.id == addressResponse.department).code)),
+            district: formatOptions(districtData).filter(str => str.code.startsWith(provinceData.find(f => f.id == addressResponse.province).code)),
           });
+
+          setDefaultProvincie(formatOptions(provinceData));
+          setDefaultDistrict(formatOptions(districtData));
           setDefaultValues(addressResponse);
+
       } catch (error) {
         setError(`Error al cargar los datos del permission. ${error}`);
       } finally {
@@ -75,6 +108,27 @@ const CreateAddresses = () => {
     } catch (error) {
       setError(id ? 'Error al actualizar el addresses.' : `Error al crear el addresses. ${error}`);
     }
+  };
+
+  const handleDepartmentChange = (department) => {
+  
+    const newProvinceOptions = defaultProvincie.filter(str => str.code.startsWith(department.code));
+
+    setOptions({
+      ...options,
+      province: newProvinceOptions,
+      district: [],
+    });
+  };
+
+  const handleProvincieChange = (provincie) => {
+  
+    const newDistrictOptions = defaultDistrict.filter(str => str.code.startsWith(provincie.code));
+
+    setOptions({
+      ...options,
+      district: newDistrictOptions,
+    });
   };
 
   const formFields = [
@@ -156,36 +210,23 @@ const CreateAddresses = () => {
       name: 'department',
       label: 'Departamento',
       type: 'select',
-      options: [
-        { value: 1, label: 'Lima' },
-        { value: 2, label: 'Arequipa' },
-        { value: 3, label: 'Cusco' },
-        { value: 4, label: 'Piura' },
-      ],
+      options: options.department,
       validation: { required: 'Departamento es requerido' },
+      onChange: (value) => handleDepartmentChange(value),
     },
     {
       name: 'province',
       label: 'Provincia',
       type: 'select',
-      options: [
-        { value: 1, label: 'Lima' },
-        { value: 2, label: 'Callao' },
-        { value: 3, label: 'Cusco' },
-        { value: 4, label: 'Piura' },
-      ],
+      options: options.province,
       validation: { required: 'Provincia es requerida' },
+      onChange: (value) => handleProvincieChange(value),
     },
     {
       name: 'district',
       label: 'Distrito',
       type: 'select',
-      options: [
-        { value: 1, label: 'Miraflores' },
-        { value: 2, label: 'San Isidro' },
-        { value: 3, label: 'Surco' },
-        { value: 4, label: 'San Borja' },
-      ],
+      options: options.district,
       validation: { required: 'Distrito es requerido' },
     }
   ];

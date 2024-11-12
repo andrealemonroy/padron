@@ -75,7 +75,6 @@ export const deleteAddresses = async (id: number): Promise<User> => {
 };
 
 export const fetchAddresses = async (id): Promise<User> => {
-    console.log(id);
     const response = await axios.get<User>(`/addresses/${id}`)
     .then(response => {
         return response;
@@ -112,6 +111,57 @@ export const fetchZoneType = async (): Promise<User[]> => {
   })
   .catch(error => {
       console.error('Error fetching zone-type:', error.response || error);
+      throw error;
+  });
+
+
+return response.data;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const fetchDepartment = async (): Promise<any[]> => {
+    
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const response = await axios.get<any[]>(`/department`)
+  .then(response => {
+      return response;
+  })
+  .catch(error => {
+      console.error('Error fetching department:', error.response || error);
+      throw error;
+  });
+
+
+return response.data;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const fetchProvince = async (): Promise<any[]> => {
+    
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const response = await axios.get<any[]>(`/province`)
+  .then(response => {
+      return response;
+  })
+  .catch(error => {
+      console.error('Error fetching province:', error.response || error);
+      throw error;
+  });
+
+
+return response.data;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const fetchDistrict = async (): Promise<any[]> => {
+    
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const response = await axios.get<any[]>(`/district`)
+  .then(response => {
+      return response;
+  })
+  .catch(error => {
+      console.error('Error fetching district:', error.response || error);
       throw error;
   });
 

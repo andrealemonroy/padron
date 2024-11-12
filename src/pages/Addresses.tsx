@@ -159,7 +159,7 @@ const Addresses = () => {
                   },
                   {
                     header: 'Departamento',
-                    accessorKey: 'address.department',
+                    accessorKey: 'address.department_list.department',
                     cell: (info) => info.getValue(),
                     meta: {
                       filterComponent: (column) => (
@@ -175,7 +175,7 @@ const Addresses = () => {
                   },
                   {
                     header: 'Provincia',
-                    accessorKey: 'address.province',
+                    accessorKey: 'address.province_list.province',
                     cell: (info) => info.getValue(),
                     meta: {
                       filterComponent: (column) => (
@@ -191,7 +191,7 @@ const Addresses = () => {
                   },
                   {
                     header: 'Distrito',
-                    accessorKey: 'address.district',
+                    accessorKey: 'address.district_list.description',
                     cell: (info) => info.getValue(),
                     meta: {
                       filterComponent: (column) => (

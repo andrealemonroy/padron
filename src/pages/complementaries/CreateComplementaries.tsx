@@ -10,8 +10,9 @@ import {
   editComplementary,
   fetchComplementary,
 } from '../../api/complementariesApi';
-import { fetchCen, fetchContractType, fetchOccupationalCategory, fetchOccupations, fetchPaymentPeriod, fetchPaymentType, fetchSit } from '../../api/occupationsApi';
+import { fetchContractType, fetchOccupationalCategory, fetchOccupations, fetchPaymentPeriod, fetchPaymentType, fetchSit } from '../../api/occupationsApi';
 import { fetchTypeWorker } from '../../api/contractApi';
+import { fetchProjects } from '../../api/projectApi';
 
 interface Option {
   value: number | string;
@@ -34,10 +35,10 @@ const CreateComplementaries = () => {
     situation: Option[]; // situation fetchSit
     paymentType: Option[]; // payment_type fetchPaymentType
     occupationalCategory: Option[]; // occupational_category fetchOccupationalCategory
-    cost_sub_center: Option[]; // fetchCen
-    cost_center: Option[];
+    //cost_sub_center: Option[]; // fetchCen
+    //cost_center: Option[];
     cost_sub_sub_center: Option[];
-    area: Option[];
+    //area: Option[];
   }>({
     occupations: [],
     typeWorker: [],
@@ -46,10 +47,10 @@ const CreateComplementaries = () => {
     situation: [],
     paymentType: [],
     occupationalCategory: [],
-    cost_sub_center: [],
-    cost_center: [],
+    //cost_sub_center: [],
+    //cost_center: [],
     cost_sub_sub_center: [],
-    area: [],
+    //area: [],
   });
 
 
@@ -76,7 +77,7 @@ const CreateComplementaries = () => {
           fetchSit(),
           fetchPaymentType(),
           fetchOccupationalCategory(),
-          fetchCen(),
+          fetchProjects(),
           id ? fetchComplementary(id) : Promise.resolve(null),
         ]);
 
@@ -84,18 +85,10 @@ const CreateComplementaries = () => {
         const formatOptions = (data: any[]): Option[] =>
           data.map((value) => ({
             value: value.id,
-            label: value.description ?? value.name,
+            label: value.description ?? value.code ?? value.name,
           }));
-
-          setOptions({
-            occupations: formatOptions(occupationsData),
-            typeWorker: formatOptions(typeWorkerData),
-            contractType: formatOptions(contractTypeData),
-            paymentPeriod: formatOptions(paymentPeriodData),
-            situation: formatOptions(situationData),
-            paymentType: formatOptions(paymentTypeData),
-            occupationalCategory: formatOptions(occupationalCategoryData),
-            cost_sub_center: cost_sub_centerData.map((value) => ({
+/**
+             cost_sub_center: cost_sub_centerData.map((value) => ({
               value: value.id,
               label: value.sub_center,
             })),
@@ -103,16 +96,26 @@ const CreateComplementaries = () => {
               value: value.id,
               label: value.short_description,
             })),
-            cost_sub_sub_center: cost_sub_centerData.map((value) => ({
-              value: value.id,
-              label: value.sub_center2,
-            })),
             area: cost_sub_centerData.map((value) => ({
               value: value.id,
               label: value.area,
             })),
+             */
+          setOptions({
+            occupations: formatOptions(occupationsData),
+            typeWorker: formatOptions(typeWorkerData),
+            contractType: formatOptions(contractTypeData),
+            paymentPeriod: formatOptions(paymentPeriodData),
+            situation: formatOptions(situationData),
+            paymentType: formatOptions(paymentTypeData),//fetchProjects
+            occupationalCategory: formatOptions(occupationalCategoryData),
+            cost_sub_sub_center: formatOptions(cost_sub_centerData),
+            
           });
-          if (id) {
+
+          console.log(responseData)
+
+          if (responseData.id) {
             setDefaultValues(responseData);
           } else {
             const data = {

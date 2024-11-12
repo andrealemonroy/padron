@@ -7,7 +7,7 @@ import Spinner from '../components/Spinner';
 import Breadcrumb from '../components/BreadCrumb';
 import { fetchIncidence, createIncidence, editIncidence } from '../api/incidencesApi';
 import { fetchUsers } from '../api/userApi';
-import { fetchQualityRatings } from '../api/qualityRatingsApi';
+import { fetchQuality } from '../api/qualityApi';
 
 interface Option {
   value: number | string;
@@ -41,7 +41,7 @@ const CreateIncidences = () => {
           responseData,
         ] = await Promise.all([
           fetchUsers(),
-          fetchQualityRatings(),
+          fetchQuality(),
           id ? fetchIncidence(id) : Promise.resolve(null),
         ]);
 
@@ -102,13 +102,19 @@ const CreateIncidences = () => {
       name: 'days',
       label: 'Días',
       type: 'number',
-      validation: { required: 'El número de días es requerido' },
+      validation: {
+        required: 'El número de días es requerido',
+        min: { value: 1, message: 'El número de días debe ser positivo' },
+      },
     },
     {
       name: 'hours',
       label: 'Horas',
       type: 'number',
-      validation: { required: 'Las horas son requeridas' },
+      validation: {
+        required: 'El número de horas es requerido',
+        min: { value: 1, message: 'El número de horas debe ser positivo' },
+      },
     },
     {
       name: 'amount',
@@ -178,25 +184,13 @@ const CreateIncidences = () => {
       type: 'select',
       options: [
         {
-          value: 2020,
-          label: '2020',
-        },
-        {
-          value: 2021,
-          label: '2021',
-        },
-        {
-          value: 2022,
-          label: '2022',
-        },
-        {
-          value: 2023,
-          label: '2023',
-        },
-        {
           value: 2024,
           label: '2024',
-        }        
+        },
+        {
+          value: 2025,
+          label: '2025',
+        }       
       ],
       validation: { required: 'El año es requerido' },
     },

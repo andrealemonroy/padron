@@ -81,6 +81,30 @@ const Nomina = () => {
         
       },
     },
+    {
+      label: 'RRHH',
+      // icon: <FiEdit />,
+      onClick: async (row: RowData)  => {
+        // Handle Complementarios action
+        try {
+          setLoading(true);
+          console.log('Complementarios clicked for', row);
+          const users = {
+            users: [row.id]
+          }
+          await editManagement(users, 3);
+          toast.success('Proyecto actualizado exitosamente');
+          const data = await fetchManagement(1);
+          setDataValues(data);
+        } catch (error) {
+          console.error('Error fetching projects:', error);
+          toast.error('Error al cargar los proyectos');
+        } finally {
+          setLoading(false);
+        }
+        
+      },
+    },
   ];
 
   // Handle select all checkbox

@@ -8,7 +8,7 @@ import Spinner from '../../components/Spinner';
 import Breadcrumb from '../../components/BreadCrumb';
 import DynamicForm from '../../components/DynamicForm';
 import { fetchUsers } from '../../api/userApi';
-import { createContract, editContract, fetchcessationReasons, fetchContract, fetchHealthEntity, fetchHealthType, fetchTypeWorker } from '../../api/contractApi';
+import { createContract, editContract, fetchcessationReasons, fetchContract, fetchHealthType, fetchTypeWorker } from '../../api/contractApi';
 
 interface Option {
   value: number | string;
@@ -53,7 +53,7 @@ const CreateContract = () => {
         ] = await Promise.all([
           fetchUsers(),
           fetchHealthType(),
-          fetchHealthEntity(),
+          fetchHealthType(),
           fetchTypeWorker(),
           fetchcessationReasons(),
           id ? fetchContract(id) : Promise.resolve(null),
@@ -175,6 +175,10 @@ const CreateContract = () => {
         {
           value: 2,
           label: 'Baja',
+        },
+        {
+          value: 3,
+          label: 'Alta',
         }
       ],
       validation: { required: 'El estado es requerido' }

@@ -57,6 +57,8 @@ import CreateContract from './pages/contract/CreateContract';
 import Management from './pages/management/Management';
 import Password from './pages/password/Password';
 import Nomina from './pages/management/Nomina';
+import Qualirfication from './pages/qualirfication/Qualirfication';
+import CreateQualirfication from './pages/qualirfication/CreateQualirfication';
 
 function App() {
   return (
@@ -220,6 +222,15 @@ function App() {
             <Route
               path="/password"
               element={<Password />}
+            />
+            <Route path="/qualirfication" element={<Qualirfication />} />
+            <Route
+              path="/edit-qualirfication/:id"
+              element={<CreateQualirfication />}
+            />
+            <Route
+              path="/create-qualirfication"
+              element={<CreateQualirfication />}
             />
           </Routes>
         </Router>

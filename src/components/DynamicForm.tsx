@@ -13,6 +13,7 @@ interface FieldProps {
   options?: { value: string | number; label: string }[];
   isMulti?: boolean;
   colSpan?: number; // New property to specify column span
+  onChange?: (value: any) => void;
 }
 
 interface FormProps {
@@ -20,6 +21,7 @@ interface FormProps {
   onSubmit: SubmitHandler<any>;
   defaultValues?: Record<string, any>;
   columns?: number; // New prop to specify number of columns
+  
 }
 
 const DynamicForm: React.FC<FormProps> = ({
@@ -28,6 +30,8 @@ const DynamicForm: React.FC<FormProps> = ({
   defaultValues,
   columns = 1, // Default to 1 column if not specified
 }) => {
+
+  
   const methods = useForm();
   const {
     handleSubmit,
@@ -98,10 +102,12 @@ const DynamicForm: React.FC<FormProps> = ({
                   label={field.label}
                   options={field.options}
                   isMulti={field.isMulti || false}
+                  onChange={field.onChange} 
                   defaultValue={
                     defaultValues?.[field.name] || (field.isMulti ? [] : null)
                   }
                   validation={field.validation}
+                  
                 />
               ) : field.type === 'checkbox' ? (
                 <div className="space-y-1">
@@ -164,6 +170,7 @@ const DynamicForm: React.FC<FormProps> = ({
                     type={field.type}
                     id={field.name}
                     placeholder={field.placeholder}
+                    min={field.type === 'number' ? 1 : undefined}
                     {...methods.register(field.name, field.validation)}
                     defaultValue={defaultValues?.[field.name]}
                     className={`block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none ${

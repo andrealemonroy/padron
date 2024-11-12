@@ -101,7 +101,17 @@ const CreatePeriodicEvaluation = () => {
     {
       name: 'period',
       label: 'Período',
-      type: 'number',
+      type: 'select',
+      options: [
+        {
+          value: 2024,
+          label: '2024',
+        },
+        {
+          value: 2025,
+          label: '2025',
+        }       
+      ],
       validation: { required: 'El período es requerido' }
     },
     {
@@ -120,25 +130,197 @@ const CreatePeriodicEvaluation = () => {
     {
       name: 'development_quality',
       label: 'Calidad de Desarrollo',
-      type: 'number',
+      type: 'select',
+      options: [
+        {
+          value: 1,
+          label: '1',
+        },
+        {
+          value: 2,
+          label: '2',
+        },
+        {
+          value: 3,
+          label: '3',
+        },
+        {
+          value: 4,
+          label: '4',
+        },
+        {
+          value: 5,
+          label: '5',
+        },
+        {
+          value: 6,
+          label: '6',
+        },
+        {
+          value: 7,
+          label: '7',
+        },
+        {
+          value: 8,
+          label: '8',
+        },
+        {
+          value: 9,
+          label: '9',
+        },
+        {
+          value: 10,
+          label: '10',
+        }
+          
+      ],
       validation: { required: 'La calidad de desarrollo es requerida' }
     },
     {
       name: 'software_management',
       label: 'Gestión de Software',
-      type: 'number',
+      type: 'select',
+      options: [
+        {
+          value: 1,
+          label: '1',
+        },
+        {
+          value: 2,
+          label: '2',
+        },
+        {
+          value: 3,
+          label: '3',
+        },
+        {
+          value: 4,
+          label: '4',
+        },
+        {
+          value: 5,
+          label: '5',
+        },
+        {
+          value: 6,
+          label: '6',
+        },
+        {
+          value: 7,
+          label: '7',
+        },
+        {
+          value: 8,
+          label: '8',
+        },
+        {
+          value: 9,
+          label: '9',
+        },
+        {
+          value: 10,
+          label: '10',
+        }
+          
+      ],
       validation: { required: 'La gestión de software es requerida' }
     },
     {
       name: 'learning_capacity',
       label: 'Capacidad de Aprendizaje',
-      type: 'number',
+      type: 'select',
+      options: [
+        {
+          value: 1,
+          label: '1',
+        },
+        {
+          value: 2,
+          label: '2',
+        },
+        {
+          value: 3,
+          label: '3',
+        },
+        {
+          value: 4,
+          label: '4',
+        },
+        {
+          value: 5,
+          label: '5',
+        },
+        {
+          value: 6,
+          label: '6',
+        },
+        {
+          value: 7,
+          label: '7',
+        },
+        {
+          value: 8,
+          label: '8',
+        },
+        {
+          value: 9,
+          label: '9',
+        },
+        {
+          value: 10,
+          label: '10',
+        }
+          
+      ],
       validation: { required: 'La capacidad de aprendizaje es requerida' }
     },
     {
       name: 'process_compliance',
       label: 'Cumplimiento de Procesos',
-      type: 'number',
+      type: 'select',
+      options: [
+        {
+          value: 1,
+          label: '1',
+        },
+        {
+          value: 2,
+          label: '2',
+        },
+        {
+          value: 3,
+          label: '3',
+        },
+        {
+          value: 4,
+          label: '4',
+        },
+        {
+          value: 5,
+          label: '5',
+        },
+        {
+          value: 6,
+          label: '6',
+        },
+        {
+          value: 7,
+          label: '7',
+        },
+        {
+          value: 8,
+          label: '8',
+        },
+        {
+          value: 9,
+          label: '9',
+        },
+        {
+          value: 10,
+          label: '10',
+        }
+          
+      ],
       validation: { required: 'El cumplimiento de procesos es requerido' }
     }
   ];
