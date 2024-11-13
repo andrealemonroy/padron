@@ -36,7 +36,14 @@ const PersonalInformation = () => {
       try {
         setLoading(true);
         const data = await fetchPersonalInformations();
-        setPersonalInformation(data);
+        const dataDev = data.map(e => {
+          console.log(e.personal_information.first_name)
+          if (e.personal_information.first_name) {
+            e.name = e.personal_information.first_name + ' ' + e.personal_information.last_name_father + ' ' + e.personal_information.last_name_mother;
+          }
+          return e;
+        })
+        setPersonalInformation(dataDev);
       } catch (error) {
         console.error('Error fetching personal information:', error);
       } finally {
