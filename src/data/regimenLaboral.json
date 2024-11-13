@@ -26,54 +26,57 @@
   {
     "seccion": "DIRECCIÓN",
     "campos": [
-      { "value": 20, "label": "Tipo Vía Direccion 1" },
-      { "value": 21, "label": "Nombre Vía Direccion 1" },
-      { "value": 22, "label": "N° Vía Direccion 1" },
-      { "value": 23, "label": "Departamento Nro Direccion 1" },
-      { "value": 24, "label": "Interior Direccion 1" },
-      { "value": 25, "label": "Manzana Direccion 1" },
-      { "value": 26, "label": "Lote Direccion 1" },
-      { "value": 27, "label": "Km Direccion 1" },
-      
-      { "value": 29, "label": "Etapa Direccion 1" },
-      { "value": 30, "label": "Tipo Zona Direccion 1" },
-      { "value": 31, "label": "Nombre Zona Direccion 1" },
-      { "value": 32, "label": "Referencia Direccion 1" },
-      { "value": 33, "label": "Departamento Direccion 1" },
-      { "value": 34, "label": "Provincia Direccion 1" },
-      { "value": 35, "label": "Distrito Direccion 1" }
+      { "value": 20, "label": "Trabajador" },
+      { "value": 21, "label": "Tipo Vía Direccion" },
+      { "value": 22, "label": "Nombre Vía Direccion" },
+      { "value": 23, "label": "N° Vía Direccion" },
+      { "value": 24, "label": "Departamento Nro Direccion" },
+      { "value": 25, "label": "Interior Direccion" },
+      { "value": 26, "label": "Manzana Direccion" },
+      { "value": 27, "label": "Lote Direccion" },
+      { "value": 28, "label": "Km Direccion" },
+      { "value": 39, "label": "Etapa Direccion" },
+      { "value": 30, "label": "Tipo Zona Direccion" },
+      { "value": 31, "label": "Nombre Zona Direccion" },
+      { "value": 32, "label": "Referencia Direccion" },
+      { "value": 33, "label": "Departamento Direccion" },
+      { "value": 34, "label": "Provincia Direccion" },
+      { "value": 35, "label": "Distrito Direccion" }
     ]
   },
   {
     "seccion": "DATOS EDUCATIVOS",
     "campos": [
-      { "value": 36, "label": "Año de egreso Educación Superior" },
-      { "value": 37, "label": "Nivel Alcanzado Educativo" },
-      { "value": 38, "label": "Centro de estudios Educación Superior" },
-      { "value": 39, "label": "Nombre de la profesión" },
-      { "value": 40, "label": "Nombre de Post Grado 1" }
+      { "value": 36, "label": "Trabajador" },
+      { "value": 37, "label": "Año de egreso Educación Superior" },
+      { "value": 38, "label": "Nivel Alcanzado Educativo" },
+      { "value": 39, "label": "Centro de estudios Educación Superior" },
+      { "value": 40, "label": "Nombre de la profesión" }
       
     ]
   },
   {
     "seccion": "BANCO",
     "campos": [
-      { "value": 44, "label": "Banco" },
-      { "value": 45, "label": "Número de cuenta de abono" },
-      { "value": 46, "label": "Código interbancario" }
+      { "value": 41, "label": "Trabajador" },
+      { "value": 42, "label": "Banco" },
+      { "value": 43, "label": "Número de cuenta de abono" },
+      { "value": 44, "label": "Código interbancario" }
     ]
   },
   {
     "seccion": "SISTEMA PENSIONARIO",
     "campos": [
-      { "value": 47, "label": "Sistema Pensionario" },
-      { "value": 48, "label": "Tipo de Comisión AFP" },
-      { "value": 49, "label": "Ingresa tu CUSPP (Código Único de Identificación del Sistema Privado de Pensiones)" }
+      { "value": 45, "label": "Trabajador" },
+      { "value": 46, "label": "Sistema Pensionario" },
+      { "value": 47, "label": "Tipo de Comisión AFP" },
+      { "value": 48, "label": "Ingresa tu CUSPP (Código Único de Identificación del Sistema Privado de Pensiones)" }
     ]
   },
   {
     "seccion": "DATOS LABORALES PREVIOS",
     "campos": [
+      { "value": 49, "label": "Trabajador" },
       { "value": 50, "label": "Fecha de inicio última experiencia laboral" },
       { "value": 51, "label": "Fecha de fin última experiencia laboral" },
       { "value": 52, "label": "Organización última experiencia laboral" },
@@ -89,107 +92,115 @@
   {
     "seccion": "DERECHO HABIENTES",
     "campos": [
-      { "value": 60, "label": "tipo documento de identificación del derecho habiente" },
-      { "value": 61, "label": "número de documento de identificación del derecho habiente" },
-      { "value": 62, "label": "País Emisión Documento" },
-      { "value": 63, "label": "Fecha de Nacimiento" },
-      { "value": 64, "label": "Apellido Paterno" },
-      { "value": 65, "label": "Apellido Materno" },
-      { "value": 66, "label": "Nombres" },
-      { "value": 67, "label": "Sexo" },
-      { "value": 68, "label": "Vínculo Familiar" },
-      { "value": 69, "label": "Tipo de Doc. Que acredita el Vinculo" },
-      { "value": 70, "label": "N.° de Doc.que acredita el vínculo" },
-      { "value": 71, "label": "Mes de concepción" }
+      { "value": 60, "label": "Trabajador" },
+      { "value": 61, "label": "tipo documento de identificación del derecho habiente" },
+      { "value": 62, "label": "número de documento de identificación del derecho habiente" },
+      { "value": 63, "label": "País Emisión Documento" },
+      { "value": 64, "label": "Fecha de Nacimiento" },
+      { "value": 65, "label": "Apellido Paterno" },
+      { "value": 66, "label": "Apellido Materno" },
+      { "value": 67, "label": "Nombres" },
+      { "value": 68, "label": "Sexo" },
+      { "value": 69, "label": "Vínculo Familiar" },
+      { "value": 70, "label": "Tipo de Doc. Que acredita el Vinculo" },
+      { "value": 71, "label": "N.° de Doc.que acredita el vínculo" },
+      { "value": 72, "label": "Mes de concepción" }
     ]
   },
   {
     "seccion": "HOBBIES",
     "campos": [
-      { "value": 72, "label": "hobbie" }
+      { "value": 73, "label": "Trabajador" },
+      { "value": 74, "label": "hobbie" }
     ]
   },
   {
     "seccion": "TRABAJO REMOTO",
     "campos": [
-      { "value": 73, "label": "¿Esta en condiciones de realizar trabajo remoto?" },
-      { "value": 74, "label": "Tipo de computadora" },
-      { "value": 75, "label": "Tipo de trabajo que va realizar" },
-      { "value": 76, "label": "Conexión a internet" },
-      { "value": 77, "label": "¿En su hogar cuenta con un ambiente adecuado para realizar sus actividades?" },
-      { "value": 78, "label": "En su hogar cuenta con" }
+      { "value": 75, "label": "Trabajador" },
+      { "value": 76, "label": "¿Esta en condiciones de realizar trabajo remoto?" },
+      { "value": 77, "label": "Tipo de computadora" },
+      { "value": 78, "label": "Tipo de trabajo que va realizar" },
+      { "value": 79, "label": "Conexión a internet" },
+      { "value": 80, "label": "¿En su hogar cuenta con un ambiente adecuado para realizar sus actividades?" },
+      { "value": 81, "label": "En su hogar cuenta con" }
     ]
   },
   {
     "seccion": "COMPLEMENTARIOS",
     "campos": [
-      { "value": 79, "label": "Régimen Laboral" },
-      { "value": 80, "label": "Ocupación" },
-      { "value": 81, "label": "Discapacidad" },
-      { "value": 82, "label": "SCTR Pensión" },
-      { "value": 83, "label": "Tipo Contrato" },
-      { "value": 84, "label": "Sujeto a Régimen Atipico" },
-      { "value": 85, "label": "Jornada Máxima" },
-      { "value": 86, "label": "Horario Nocturno" },
-      { "value": 87, "label": "Sindicato" },
-      { "value": 88, "label": "Periodo de Remuneración" },
-      { "value": 89, "label": "Sueldo" },
-      { "value": 90, "label": "Situación" },
-      { "value": 91, "label": "Exonerado Renta de 5ta" },
-      { "value": 92, "label": "Situación especial" },
-      { "value": 93, "label": "Tipo Pago" },
-      { "value": 94, "label": "Categoria Ocupacional" },
-      { "value": 95, "label": "Convenio Doble Tributación" },
-      { "value": 96, "label": "Sub Centro de Costo" },
-      { "value": 97, "label": "Centro de Costo" },
-      { "value": 98, "label": "Sub Sub Centro de Costo" },
-      { "value": 99, "label": "Área" },
-      { "value": 100, "label": "Cargo Boleta" }
+      { "value": 82, "label": "Trabajador" },
+      { "value": 83, "label": "Régimen Laboral" },
+      { "value": 84, "label": "Ocupación" },
+      { "value": 85, "label": "Discapacidad" },
+      { "value": 86, "label": "SCTR Pensión" },
+      { "value": 87, "label": "Tipo Contrato" },
+      { "value": 88, "label": "Sujeto a Régimen Atipico" },
+      { "value": 89, "label": "Jornada Máxima" },
+      { "value": 90, "label": "Horario Nocturno" },
+      { "value": 91, "label": "Sindicato" },
+      { "value": 92, "label": "Periodo de Remuneración" },
+      { "value": 93, "label": "Sueldo" },
+      { "value": 94, "label": "Situación" },
+      { "value": 95, "label": "Exonerado Renta de 5ta" },
+      { "value": 96, "label": "Situación especial" },
+      { "value": 97, "label": "Tipo Pago" },
+      { "value": 98, "label": "Categoria Ocupacional" },
+      { "value": 99, "label": "Convenio Doble Tributación" },
+      { "value": 100, "label": "Sub Centro de Costo" },
+      { "value": 101, "label": "Centro de Costo" },
+      { "value": 102, "label": "Sub Sub Centro de Costo" },
+      { "value": 103, "label": "Área" },
+      { "value": 104, "label": "Cargo Boleta" }
     ]
   },
   {
     "seccion": "INCIDENCIAS",
     "campos": [
-      { "value": 101, "label": "Código" },
-      { "value": 102, "label": "Días" },
-      { "value": 103, "label": "Horas" },
-      { "value": 104, "label": "importe" },
-      { "value": 105, "label": "Mes" },
-      { "value": 106, "label": "Año" }
+      { "value": 105, "label": "Trabajador" },
+      { "value": 106, "label": "Código" },
+      { "value": 107, "label": "Días" },
+      { "value": 108, "label": "Horas" },
+      { "value": 109, "label": "importe" },
+      { "value": 110, "label": "Mes" },
+      { "value": 111, "label": "Año" }
     ]
   },
   {
     "seccion": "CONTRATO",
     "campos": [
-      { "value": 107, "label": "Fecha Inicio" },
-      { "value": 108, "label": "Fecha Fin" },
-      { "value": 109, "label": "Motivo del Fin (Baja)" },
-      { "value": 110, "label": "Tipo de Trabajador" },
-      { "value": 111, "label": "Regimen Salud" },
-      { "value": 112, "label": "EPS/Serv. Propios" },
-      { "value": 113, "label": "SCTR Salud" }
+      { "value": 112, "label": "Trabajador" },
+      { "value": 113, "label": "Fecha Inicio" },
+      { "value": 114, "label": "Fecha Fin" },
+      { "value": 115, "label": "Motivo del Fin (Baja)" },
+      { "value": 116, "label": "Tipo de Trabajador" },
+      { "value": 117, "label": "Regimen Salud" },
+      { "value": 118, "label": "EPS/Serv. Propios" },
+      { "value": 119, "label": "SCTR Salud" }
     ]
   },
   {
     "seccion": "EVALUACION PERIODICA",
     "campos": [
-      { "value": 114, "label": "PERIODO" },
-      { "value": 115, "label": "FECHA" },
-      { "value": 116, "label": "CALIFICACION" },
-      { "value": 117, "label": "CALIDAD EN DESARROLLOS" },
-      { "value": 118, "label": "MANEJO DE PROGRAMAS INFORMÁTICOS" },
-      { "value": 119, "label": "CAPACIDAD DE APRENDIZAJE" },
-      { "value": 120, "label": "CUMPLIMIENTO DE PROCESOS" },
-      { "value": 121, "label": "COORDINADOR" }
+      { "value": 120, "label": "Trabajador" },
+      { "value": 121, "label": "PERIODO" },
+      { "value": 122, "label": "FECHA" },
+      { "value": 123, "label": "CALIFICACION" },
+      { "value": 124, "label": "CALIDAD EN DESARROLLOS" },
+      { "value": 125, "label": "MANEJO DE PROGRAMAS INFORMÁTICOS" },
+      { "value": 126, "label": "CAPACIDAD DE APRENDIZAJE" },
+      { "value": 127, "label": "CUMPLIMIENTO DE PROCESOS" },
+      { "value": 128, "label": "COORDINADOR" }
     ]
   },
   {
     "seccion": "EVALUACION DE CAMPO",
     "campos": [
-      { "value": 122, "label": "Fecha de evaluación" },
-      { "value": 123, "label": "Opciones predefinidas" },
-      { "value": 124, "label": "Detalles que sustentan la calificación" },
-      { "value": 125, "label": "Id del usuario" }
+      { "value": 129, "label": "Trabajador" },
+      { "value": 130, "label": "Fecha de evaluación" },
+      { "value": 131, "label": "Opciones predefinidas" },
+      { "value": 132, "label": "Detalles que sustentan la calificación" },
+      { "value": 133, "label": "Id del usuario" }
     ]
   }
 ]
