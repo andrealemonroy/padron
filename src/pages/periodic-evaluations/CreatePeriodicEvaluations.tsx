@@ -8,7 +8,7 @@ import Spinner from '../../components/Spinner';
 import Breadcrumb from '../../components/BreadCrumb';
 import DynamicForm from '../../components/DynamicForm';
 import { createPeriodicEvaluation, editPeriodicEvaluation, fetchPeriodicEvaluation } from '../../api/periodicEvaluationsApi';
-import { fetchUsers } from '../../api/userApi';
+import { fetchCoordinator } from '../../api/userApi';
 import { fetchQualityRatings } from '../../api/qualityRatingsApi';
 
 interface Option {
@@ -41,7 +41,7 @@ const CreatePeriodicEvaluation = () => {
           ratingsData,
           responseData,
         ] = await Promise.all([
-          fetchUsers(),
+          fetchCoordinator(),
           fetchQualityRatings(),
           id ? fetchPeriodicEvaluation(id) : Promise.resolve(null),
         ]);
@@ -49,8 +49,8 @@ const CreatePeriodicEvaluation = () => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const formatOptions = (data: any[]): Option[] =>
           data.map((value) => ({
-            value: value.id,
-            label: value.description ?? value.name,
+            value: value.user_id ?? value.id,
+            label: value.description ?? value.name ?? value.first_name + ' ' + value.last_name_father + ' ' + value.last_name_mother,
           }));
 
           setOptions({

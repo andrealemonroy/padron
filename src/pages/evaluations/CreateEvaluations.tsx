@@ -7,7 +7,7 @@ import Header from '../../components/Header';
 import Spinner from '../../components/Spinner';
 import Breadcrumb from '../../components/BreadCrumb';
 import DynamicForm from '../../components/DynamicForm';
-import { fetchUsers } from '../../api/userApi';
+import { fetchCoordinator } from '../../api/userApi';
 import { createEvaluation, editEvaluation, fetchEvaluation } from '../../api/EvaluationsApi';
 
 const CreateEvaluation = () => {
@@ -23,10 +23,10 @@ const CreateEvaluation = () => {
     const load = async () => {
       try {
         setLoading(true);
-        const data = await fetchUsers();
+        const data = await fetchCoordinator();
         const formattedUsers = data.map((value) => ({
-          value: value.id,
-          label: value.name,
+          value: value.user_id ?? value.id,
+          label: value.description ?? value.name ?? value.first_name + ' ' + value.last_name_father + ' ' + value.last_name_mother,
         }));
         setUsers(formattedUsers);
         if (id) {

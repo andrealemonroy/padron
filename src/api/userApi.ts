@@ -62,6 +62,23 @@ export const fetchUsers = async (): Promise<User[]> => {
   return response.data;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const fetchCoordinator = async (): Promise<any[]> => {
+    
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const response = await axios.get<any[]>(`/coordinator`)
+    .then(response => {
+        return response;
+    })
+    .catch(error => {
+        console.error('Error fetching users:', error.response || error);
+        throw error;
+    });
+
+ 
+  return response.data;
+};
+
 export const createUser = async (userData: Omit<User, 'id'>): Promise<User> => {
   const response = await axios.post<User>(`${import.meta.env.VITE_API_URL}/users`, {...userData, status_id: 1, password: '12345678' })
     .then(response => {

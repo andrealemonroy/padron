@@ -16,6 +16,7 @@ import DynamicForm from '../../components/DynamicForm';
 import { fetchCountries } from '../../api/countriesApi';
 import { fetchBloodGroup } from '../../api/bloodGroupApi';
 import { fetchCivilStatus } from '../../api/civilStatusApi';
+import { fetchUsers } from '../../api/userApi';
 
 interface Option {
   value: number | string;
@@ -40,6 +41,7 @@ interface PersonalInformationData {
   emergency_phone_number: string;
   has_children_under_18: boolean;
   number_of_children_under_18: number;
+  coordinator: number;
 }
 
 const CreatePersonalInformation = () => {
@@ -58,6 +60,7 @@ const CreatePersonalInformation = () => {
     civilStatuses: Option[];
     sexes: Option[];
     nationalities: Option[];
+    users: Option[];
   }>({
     documents: [],
     countries: [],
@@ -65,6 +68,7 @@ const CreatePersonalInformation = () => {
     civilStatuses: [],
     sexes: [],
     nationalities: [],
+    users: [],
   });
 
   useEffect(() => {
@@ -80,6 +84,7 @@ const CreatePersonalInformation = () => {
           civilStatusData,
           sexData,
           nationalityData,
+          usersData,
           personalInfoResponse,
         ] = await Promise.all([
           fetchDocument(),
@@ -88,6 +93,7 @@ const CreatePersonalInformation = () => {
           fetchCivilStatus(),
           fetchSex(),
           fetchNationality(),
+          fetchUsers(),
           id ? fetchPersonalInformation(id) : Promise.resolve(null),
         ]);
 
@@ -96,7 +102,7 @@ const CreatePersonalInformation = () => {
         const formatOptions = (data: any[]): Option[] =>
           data.map((value) => ({
             value: value.id,
-            label: value.description,
+            label: value.description ?? value.name,
           }));
 
         // Update options state
@@ -107,12 +113,12 @@ const CreatePersonalInformation = () => {
           civilStatuses: formatOptions(civilStatusData),
           sexes: formatOptions(sexData),
           nationalities: formatOptions(nationalityData),
+          users: formatOptions(usersData),
         });
 
         // Set default values if editing
         if (personalInfoResponse) {
           const response = personalInfoResponse;
-          console.log(response);
 
           const defaultValues: PersonalInformationData = {
             document_type: response.document_type,
@@ -132,6 +138,7 @@ const CreatePersonalInformation = () => {
             emergency_phone_number: response.emergency_phone_number || '',
             has_children_under_18: response.has_children_under_18 || false,
             number_of_children_under_18: response.number_of_children_under_18 || 0,
+            coordinator: response.coordinator || 0,
           };
 
           setDefaultValues(defaultValues);
@@ -313,6 +320,14 @@ const CreatePersonalInformation = () => {
       label: 'Archivo',
       type: 'file',
       //validation: { required: 'Archivo es requerido' },
+      colSpan: 1,
+    },
+    {
+      name: 'coordinator',
+      label: 'Cooordinador',
+      type: 'select',
+      options: options.users,
+      validation: { required: 'Coordinador es requerida' },
       colSpan: 1,
     },
     {
