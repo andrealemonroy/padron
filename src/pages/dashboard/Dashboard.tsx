@@ -1,11 +1,41 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Sidebar from '../../components/Sidebar';
 import Header from '../../components/Header';
 import { useNavigate } from 'react-router-dom'; 
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { fetchNotification } from '../../api/userApi';
 
 const Dashboard: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate(); 
+
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const data = await fetchNotification();
+        if (data.rrhh > 0) {
+          toast.info(data.message);
+        }
+
+        if (data.nomina > 0) {
+          toast.info(data.message1);
+        }
+
+        if (data.excel > 0) {
+          toast.info(data.message2);
+        }
+        
+        console.log(data);
+      } catch (error) {
+        console.error('Error fetching periodic evaluations:', error);
+        toast.error('Error al cargar las evaluaciones');
+      }
+    };
+
+    load();
+  }, []);
 
   const findFirstRoute = (menu) => {
     for (const item of menu) {
@@ -34,6 +64,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="flex h-[100dvh] overflow-hidden">
+      <ToastContainer />
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
         <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />

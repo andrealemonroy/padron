@@ -139,3 +139,20 @@ export const createPassword = async (userData): Promise<any> => {
   };
 
 // send-api
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const fetchNotification = async (): Promise<any> => {
+    
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const response = await axios.get<any>(`/notification`)
+    .then(response => {
+        return response;
+    })
+    .catch(error => {
+        console.error('Error fetching users:', error.response || error);
+        throw error;
+    });
+
+ 
+  return response.data;
+};
