@@ -56,7 +56,7 @@ const CreateProject = () => {
       console.log(data);
       if (id) {
         await editFormUser(data, Number(id));
-        toast.success('Proyecto actualizado exitosamente');
+        toast.success('Registro actualizado exitosamente');
       } else {
         await createFormUser(data);
         toast.success('Proyecto creado exitosamente');

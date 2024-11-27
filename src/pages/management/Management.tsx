@@ -69,7 +69,7 @@ const Management = () => {
             users: [row.id]
           }
           await editManagement(users, 2);
-          toast.success('Proyecto actualizado exitosamente');
+          toast.success('Registro actualizado exitosamente');
           const data = await fetchManagement(1);
           setDataValues(data);
         } catch (error) {
@@ -119,7 +119,7 @@ const Management = () => {
                 users: selectedRowData.map(e => e.id),
               }
               await editManagement(users, 2);
-              toast.success('Proyecto actualizado exitosamente');
+              toast.success('Registro actualizado exitosamente');
               const data = await fetchManagement(1);
               setDataValues(data);
             } catch (error) {

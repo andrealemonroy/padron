@@ -49,7 +49,7 @@ const CreateMasterData = () => {
       
       if (id) {
         await editMasterData(data, Number(id));
-        toast.success('Proyecto actualizado exitosamente');
+        toast.success('Registro actualizado exitosamente');
       } else {
         await createMasterData(data);
         toast.success('Master Data Base creado exitosamente');

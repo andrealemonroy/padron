@@ -89,6 +89,25 @@ return response.data;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const fetchWorkLine = async (): Promise<any[]> => {
+    
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const response = await axios.get<any[]>(`/work-line`)
+  .then(response => {
+      return response;
+  })
+  .catch(error => {
+      console.error('Error fetching fetchwork-line:', error.response || error);
+      throw error;
+  });
+
+
+return response.data;
+};
+
+
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const fetchHealthType = async (): Promise<any[]> => {
     
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -11,7 +11,7 @@ import {
   fetchComplementary,
 } from '../../api/complementariesApi';
 import { fetchContractType, fetchOccupationalCategory, fetchOccupations, fetchPaymentPeriod, fetchPaymentType, fetchSit } from '../../api/occupationsApi';
-import { fetchTypeWorker } from '../../api/contractApi';
+import { fetchWorkLine } from '../../api/contractApi';
 import { fetchProjects } from '../../api/projectApi';
 
 interface Option {
@@ -71,7 +71,7 @@ const CreateComplementaries = () => {
           responseData,
         ] = await Promise.all([
           fetchOccupations(),
-          fetchTypeWorker(),
+          fetchWorkLine(),
           fetchContractType(),
           fetchPaymentPeriod(),
           fetchSit(),

@@ -80,8 +80,8 @@ const CreateAddresses = () => {
             viaType: formatOptions(viaTypeData),
             zoneType: formatOptions(zoneTypeData),
             department: formatOptions(departmentData),
-            province: formatOptions(provinceData).filter(str => str.code.startsWith(departmentData.find(f => f.id == addressResponse.department).code)),
-            district: formatOptions(districtData).filter(str => str.code.startsWith(provinceData.find(f => f.id == addressResponse.province).code)),
+            province: formatOptions(provinceData).filter(str => str.code.startsWith(departmentData.find(f => f.id == addressResponse.department)?.code)),
+            district: formatOptions(districtData).filter(str => str.code.startsWith(provinceData.find(f => f.id == addressResponse.province)?.code)),
           });
 
           setDefaultProvincie(formatOptions(provinceData));

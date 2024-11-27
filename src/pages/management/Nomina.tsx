@@ -69,7 +69,7 @@ const Nomina = () => {
             users: [row.id]
           }
           await editManagement(users, 3);
-          toast.success('Proyecto actualizado exitosamente');
+          toast.success('Registro actualizado exitosamente');
           const data = await fetchManagement(2);
           setDataValues(data);
         } catch (error) {
@@ -93,7 +93,7 @@ const Nomina = () => {
             users: [row.id]
           }
           await editManagement(users, 3);
-          toast.success('Proyecto actualizado exitosamente');
+          toast.success('Registro actualizado exitosamente');
           const data = await fetchManagement(1);
           setDataValues(data);
         } catch (error) {
@@ -143,7 +143,7 @@ const Nomina = () => {
                 users: selectedRowData.map(e => e.id),
               }
               await editManagement(users, 3);
-              toast.success('Proyecto actualizado exitosamente');
+              toast.success('Registro actualizado exitosamente');
               const data = await fetchManagement(2);
               setDataValues(data);
             } catch (error) {

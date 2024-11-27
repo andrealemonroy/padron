@@ -90,7 +90,7 @@ const CreateContract = () => {
       console.log(data);
       if (id) {
         await editContract(data, Number(id));
-        toast.success('Proyecto actualizado exitosamente');
+        toast.success('Registro actualizado exitosamente');
       } else {
         await createContract(data);
         toast.success('Proyecto creado exitosamente');
