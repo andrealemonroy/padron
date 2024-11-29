@@ -161,7 +161,7 @@ const CreateContract = () => {
       label: 'Tipo trabajdor',
       type: 'select',
       options: options.typeWorker,
-      validation: { required: 'La razón de terminación es requerida' }
+      validation: {}
     },
     {
       name: 'status',

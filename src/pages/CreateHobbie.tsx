@@ -31,7 +31,7 @@ const CreateHobbie = () => {
         if (id) {
           const response = await fetchHobbie(id);
             const { name, hobbies } = response;
-            const selected = hobbies.map((perm) => (perm.id));
+            const selected = hobbies.map((perm) => (perm.hobby_id));
             console.log(selected)
             setDefaultValues({
               name,

@@ -1,6 +1,7 @@
 import axios from './api';
 
 interface Hobbie {
+  hobby_id: number;
   code: number;
   description: string;
   updated_at: string;
