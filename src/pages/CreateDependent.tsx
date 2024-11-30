@@ -9,6 +9,13 @@ import Breadcrumb from '../components/BreadCrumb';
 import DynamicForm from '../components/DynamicForm';
 import { editDependent, fetchDependent } from '../api/dependentApi';
 import { fetchCountries } from '../api/countriesApi';
+import { fetchBeneficiaryProofDocuments } from '../api/beneficiaryProofDocuments';
+import { fetchFamilyRelationshipTypes } from '../api/familyRelationshipTypesApi';
+
+interface Option {
+  value: number | string;
+  label: string;
+}
 
 const CreateDependent = () => {
   const navigate = useNavigate();
@@ -17,39 +24,60 @@ const CreateDependent = () => {
   const [loading, setLoading] = useState(true);
   const [defaultValues, setDefaultValues] = useState(null);
   const [error, setError] = useState<string | null>(null);
-  const [documents, setDocument] = useState([]);
-  const [sexs, setSex] = useState([]);
-  const [countries, setCountries] = useState([]);
+  // beneficiary
+
+  const [options, setOptions] = useState<{
+    document: Option[];
+    countries: Option[];
+    sex: Option[];
+    beneficiary: Option[];
+    relationshipTypes: Option[]
+  }>({
+    document: [],
+    countries: [],
+    sex: [],
+    beneficiary: [],
+    relationshipTypes: []
+  });
 
   useEffect(() => {
     const load = async () => {
       try {
         setLoading(true);
-        setLoading(true);
-        const data = await fetchDocument();
-        const countriesData = await fetchCountries();
-        const formattedCountries = countriesData.map((value) => ({
-          value: value.id,
-          label: value.description,
-        }));
-        setCountries(formattedCountries);
-        const formatted = data.map((value) => ({
-          value: value.id,
-          label: value.description,
-        }));
-        setDocument(formatted);
+        
+        const [
+          documentData,
+          countriesData,
+          sexData,
+          beneficiaryPeriodData,
+          relationshipTypesData,
+          responseData
+        ] = await Promise.all([
+          fetchDocument(),
+          fetchCountries(),
+          fetchSex(),
+          fetchBeneficiaryProofDocuments(),
+          fetchFamilyRelationshipTypes(),
+          id ? fetchDependent(id) : Promise.resolve(null),
+        ]);
 
-        const dataSex = await fetchSex();
-        const formattedSex = dataSex.map((value) => ({
-          value: value.id,
-          label: value.description,
-        }));
-        setSex(formattedSex);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const formatOptions = (data: any[]): Option[] =>
+          data.map((value) => ({
+            value: value.id,
+            label: value.description,
+          }));
 
-        if (id) {
-          const response = await fetchDependent(id);
-            setDefaultValues(response);
-        }
+          console.log(relationshipTypesData)
+          setOptions({
+            document: formatOptions(documentData),
+            countries: formatOptions(countriesData),
+            sex: formatOptions(sexData),
+            beneficiary: formatOptions(beneficiaryPeriodData),
+            relationshipTypes: formatOptions(relationshipTypesData),
+          });
+
+        setDefaultValues(responseData);
       } catch (error) {
         setError(`Error al cargar los datos del permission. ${error}`);
       } finally {
@@ -78,20 +106,22 @@ const CreateDependent = () => {
       name: 'document_type',
       label: 'Tipo de Documento',
       type: 'select',
-      options: documents,
-      validation: { required: 'Tipo de Documento es requerido' }
+      options: options.document,
+      validation: { required: 'Tipo de Documento es requerido' },
+      //onChange: (value) => handleChange(value),
     },
     {
       name: 'document_number',
       label: 'Número de Documento',
       type: 'text',
-      validation: { required: 'Número de Documento es requerido' }
+      validation: { required: 'Número de Documento es requerido' },
+     // onBlur: () => console.log('Saliste del input'),
     },
     {
       name: 'document_country',
       label: 'País del Documento',
       type: 'select',
-      options: countries,
+      options: options.countries,
       validation: { required: 'País del Documento es requerido' }
     },
     {
@@ -122,19 +152,21 @@ const CreateDependent = () => {
       name: 'gender',
       label: 'Género',
       type: 'select',
-      options: sexs,
+      options: options.sex,
       validation: { required: 'Género es requerido' }
     },
     {
       name: 'family_relationship',
       label: 'Relación Familiar',
-      type: 'text',
+      type: 'select',
+      options: options.relationshipTypes,
       validation: { required: 'Relación Familiar es requerida' }
     },
     {
       name: 'relationship_document_type',
       label: 'Tipo de Documento de Relación',
-      type: 'text',
+      type: 'select',
+      options: options.beneficiary,
       validation: { required: 'Tipo de Documento de Relación es requerido' }
     },
     {
@@ -173,9 +205,7 @@ const CreateDependent = () => {
             {loading ? (
               <Spinner loading={loading} size={50} color="#3498db" />
             ) : (
-              sexs.length > 0 && documents.length > 0 && (
-                <DynamicForm fields={formFields} onSubmit={onSubmit} defaultValues={defaultValues} />
-              )
+              <DynamicForm fields={formFields} onSubmit={onSubmit} defaultValues={defaultValues} />
             )}
           </div>
         </main>

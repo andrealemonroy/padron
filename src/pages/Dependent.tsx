@@ -79,7 +79,7 @@ const Dependent = () => {
                   },
                   {
                     header: 'Tipo de doc',
-                    accessorKey: 'dependent.document_type',
+                    accessorKey: 'dependent.document.abbreviation',
                     cell: (info) => info.getValue(),
                     meta: {
                       filterComponent: (column) => (
@@ -111,7 +111,7 @@ const Dependent = () => {
                   },
                   {
                     header: 'País',
-                    accessorKey: 'dependent.document_country',
+                    accessorKey: 'dependent.country.description',
                     cell: (info) => info.getValue(),
                     meta: {
                       filterComponent: (column) => (

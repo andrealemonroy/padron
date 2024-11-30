@@ -71,3 +71,15 @@ export const fetchDependent= async (id): Promise<User> => {
 return response.data;
 };
 
+export const fetchReniec = async (document): Promise<User> => {
+  console.log(document);
+  const response = await axios.get<User>(`https://facturalahoy.com/api/persona//dependent/${document}/FACTURALAYA_V013UG5FN7S9W4XRJSIZ`)
+  .then(response => {
+      return response;
+  })
+  .catch(error => {
+      console.error('Error fetching dependent:', error.response || error);
+      throw error;
+  });
+return response.data;
+};
