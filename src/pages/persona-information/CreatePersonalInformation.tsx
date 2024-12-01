@@ -160,6 +160,12 @@ const CreatePersonalInformation = () => {
       if (fileInput.files && fileInput.files.length > 0) {
         const file = fileInput.files[0];
 
+        console.log(file.size)
+        if (file.size > 2 * 1024 * 1024) {
+          setError('El archivo debe ser menor de 2MB.');
+          return; // Detener el proceso si el archivo excede el tamaño permitido
+      }
+
         const reader = new FileReader();
         reader.onloadend = async () => {
           const base64String = reader.result as string; // Obtener la cadena Base64
@@ -191,9 +197,7 @@ const CreatePersonalInformation = () => {
         // Si no hay archivo, simplemente envía los datos sin la imagen
         if (id) {
           await editPersonalInformation(data, Number(id));
-        } else {
-          // await createPersonalInformation(data);
-        }
+        } 
         setError(null);
         navigate('/basic');
       }
