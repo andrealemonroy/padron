@@ -23,7 +23,14 @@ const WorkCondition = () => {
       try {
         setLoading(true);
         const data = await fetchWorkConditions();
-        setfetchWorkConditions(data);
+        const dataDev = data.map(e => {
+         
+          if (e.personal_information?.first_name) {
+            e.name = e.personal_information.last_name_father + ' ' + e.personal_information.last_name_mother + ' ' + e.personal_information.first_name;
+          }
+          return e;
+        })
+        setfetchWorkConditions(dataDev);
       } catch (error) {
         console.error('Error fetching work conditions:', error);
       } finally {
@@ -98,7 +105,7 @@ const WorkCondition = () => {
               <Table
                 columns={[
                   {
-                    header: 'Nombre',
+                    header: 'Apellidos / Nombre',
                     accessorKey: 'name',
                     cell: (info) => info.getValue(),
                     meta: {
@@ -114,7 +121,43 @@ const WorkCondition = () => {
                     },
                   },
                   {
-                    header: 'Trabajo remoto',
+                    header: 'Tipo documento',
+                    accessorKey: 'personal_information.document.abbreviation',
+                    cell: (info) => info.getValue(),
+                    meta: {
+                      width: '150px',
+                      filterComponent: (column) => (
+                        <input
+                          type="text"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          placeholder="Filtrar Tipo Documento"
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
+                    filterFn: 'includesString',
+                  },
+                  {
+                    header: 'Nro documento',
+                    accessorKey: 'personal_information.document_number',
+                    cell: (info) => info.getValue(),
+                    meta: {
+                      width: '150px',
+                      filterComponent: (column) => (
+                        <input
+                          type="text"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          placeholder="Filtrar Número Documento"
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
+                    filterFn: 'includesString',
+                  },
+                  {
+                    header: 'Equipo propio',
                     accessorKey: 'work_condition.remote_work_condition',
                     cell: (info) => (info.getValue() === 1 ? 'SI' : info.getValue() === 0 ? 'NO' : ''),
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any

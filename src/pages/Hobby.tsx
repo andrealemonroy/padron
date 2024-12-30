@@ -24,7 +24,14 @@ const Hobby = () => {
       try {
         setLoading(true);
         const data = await fetchHobbies();
-        setHobbies(data);
+        const dataDev = data.map(e => {
+         
+          if (e.personal_information?.first_name) {
+            e.name = e.personal_information.last_name_father + ' ' + e.personal_information.last_name_mother + ' ' + e.personal_information.first_name;
+          }
+          return e;
+        })
+        setHobbies(dataDev);
       } catch (error) {
         console.error('Error fetching :', error);
       } finally {
@@ -95,9 +102,9 @@ const Hobby = () => {
               <Table
                 columns={[
                   {
-                    header: 'Nombre',
+                    header: 'Apellidos / Nombre',
                     accessorKey: 'name',
-                    cell: (info) => info.getValue(),
+                    cell: (info) => info.getValue().toUpperCase(),
                     meta: {
                       filterComponent: (column) => (
                         <input
@@ -111,27 +118,43 @@ const Hobby = () => {
                     },
                   },
                   {
-                    header: 'Código',
-                    cell: (info) => {
-                      const hobbies = info.row.original.hobbies_user || [];
-                      return hobbies.length > 0
-                        ? hobbies.map((hobby) => hobby.code).join(' / ')
-                        : '';
-                    },
+                    header: 'Tipo documento',
+                    accessorKey: 'personal_information.document.abbreviation',
+                    cell: (info) => info.getValue(),
                     meta: {
+                      width: '150px',
                       filterComponent: (column) => (
                         <input
                           type="text"
                           value={(column.getFilterValue() ?? '') as string}
                           onChange={(e) => column.setFilterValue(e.target.value)}
-                          placeholder="Filtrar Código"
+                          placeholder="Filtrar Tipo Documento"
                           className="w-full px-2 py-1 text-sm border rounded"
                         />
                       ),
                     },
+                    filterFn: 'includesString',
                   },
                   {
-                    header: 'Descripción',
+                    header: 'Nro documento',
+                    accessorKey: 'personal_information.document_number',
+                    cell: (info) => info.getValue(),
+                    meta: {
+                      width: '150px',
+                      filterComponent: (column) => (
+                        <input
+                          type="text"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          placeholder="Filtrar Número Documento"
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
+                    filterFn: 'includesString',
+                  },
+                  {
+                    header: 'Hobbies',
                     cell: (info) => {
                       const hobbies = info.row.original.hobbies_user || [];
                       return hobbies.length > 0

@@ -72,7 +72,7 @@ const PeriodicEvaluations = () => {
   };
 
   const breadcrumbItems = [
-    { label: 'Evaluación Periodico', path: '/periodic-evaluations' },
+    { label: 'Evaluación de Desempeño', path: '/periodic-evaluations' },
   ];
 
   const handleAdd = () => {

@@ -37,9 +37,9 @@ const PersonalInformation = () => {
         setLoading(true);
         const data = await fetchPersonalInformations();
         const dataDev = data.map(e => {
-          console.log(e.personal_information.first_name)
-          if (e.personal_information.first_name) {
-            e.name = e.personal_information.first_name + ' ' + e.personal_information.last_name_father + ' ' + e.personal_information.last_name_mother;
+         
+          if (e.personal_information?.first_name) {
+            e.name = e.personal_information.last_name_father + ' ' + e.personal_information.last_name_mother + ' ' + e.personal_information.first_name;
           }
           return e;
         })
@@ -84,6 +84,39 @@ const PersonalInformation = () => {
     navigate(`/edit-basic/${data.id}`);
   };
 
+  /*
+  const btnContract = async (contract) => {
+    try {
+      console.log(contract);
+        setLoading(true);
+
+        // Realiza la solicitud para obtener el archivo
+        const blob = await fetchDownload(contract.user_id, 1); // Obtiene el Blob del archivo
+
+        // Crea un enlace temporal para descargar el archivo
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+
+        // Asigna un nombre al archivo que se descargará
+        link.download = `${contract.user.name || 'contrato'}.pdf`; // Cambia `.pdf` según el tipo de archivo
+
+        // Simula un clic para iniciar la descarga
+        document.body.appendChild(link);
+        link.click();
+
+        // Limpia el URL creado y elimina el enlace
+        link.remove();
+        window.URL.revokeObjectURL(url);
+
+    } catch (error) {
+        console.error('Error fetching contract:', error);
+    } finally {
+        setLoading(false);
+    }
+};
+  */
+
   const breadcrumbItems = [{ label: 'Datos Básicos', path: '/basic' }];
 
   // Define the columns
@@ -92,7 +125,7 @@ const PersonalInformation = () => {
     {
       header: 'Nombre',
       accessorKey: 'name',
-      cell: (info) => info.getValue(),
+      cell: (info) => info.getValue().toUpperCase(),
       meta: {
         width: '400px',
         filterComponent: (column) => (
@@ -127,7 +160,7 @@ const PersonalInformation = () => {
     },
     {
       header: 'Tipo documento',
-      accessorKey: 'personal_information.document_type',
+      accessorKey: 'personal_information.document.abbreviation',
       cell: (info) => info.getValue(),
       meta: {
         width: '150px',

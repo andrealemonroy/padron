@@ -137,8 +137,8 @@ const CreatePersonalInformation = () => {
             phone_number: response.phone_number || '',
             emergency_phone_number: response.emergency_phone_number || '',
             has_children_under_18: response.has_children_under_18 || false,
-            number_of_children_under_18: response.number_of_children_under_18 || 0,
-            coordinator: response.coordinator || 0,
+            number_of_children_under_18: response.number_of_children_under_18 || '',
+            coordinator: response.coordinator || '',
           };
 
           setDefaultValues(defaultValues);
@@ -323,7 +323,7 @@ const CreatePersonalInformation = () => {
       name: 'file',
       label: 'Archivo',
       type: 'file',
-      //validation: { required: 'Archivo es requerido' },
+      validation: {},
       colSpan: 1,
     },
     {
