@@ -4,6 +4,7 @@ interface QualityRatings {
   id: number;
   code: string;
   description: string;
+  type: number;
 }
 
 

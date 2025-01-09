@@ -9,6 +9,12 @@ import Breadcrumb from '../../components/BreadCrumb';
 import DynamicForm from '../../components/DynamicForm';
 import { fetchCoordinator } from '../../api/userApi';
 import { createEvaluation, editEvaluation, fetchEvaluation } from '../../api/EvaluationsApi';
+import { fetchQualityRatings } from '../../api/qualityRatingsApi';
+
+interface Option {
+  value: number | string;
+  label: string;
+}
 
 const CreateEvaluation = () => {
   const navigate = useNavigate();
@@ -18,17 +24,26 @@ const CreateEvaluation = () => {
   const [defaultValues, setDefaultValues] = useState(null);
   const [error, setError] = useState<string | null>(null);
   const [users, setUsers] = useState([]);
+  const [quality, setQuality] = useState([]);
 
   useEffect(() => {
     const load = async () => {
       try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const formatOptions = (data: any[]): Option[] =>
+          data.map((value) => ({
+            value: value.user_id ?? value.id,
+            label: value.description ?? value.name ?? value.first_name + ' ' + value.last_name_father + ' ' + value.last_name_mother,
+          }));
         setLoading(true);
         const data = await fetchCoordinator();
+        const qualityData = await fetchQualityRatings()
         const formattedUsers = data.map((value) => ({
           value: value.user_id ?? value.id,
           label: value.description ?? value.name ?? value.first_name + ' ' + value.last_name_father + ' ' + value.last_name_mother,
         }));
         setUsers(formattedUsers);
+        setQuality(formatOptions(qualityData.filter(e => e.type == 2)));
         if (id) {
           const response = await fetchEvaluation(id);
           setDefaultValues(response);
@@ -90,11 +105,18 @@ const CreateEvaluation = () => {
       validation: { required: 'La opción predefinida es requerida' }
     },
     {
+      name: 'quality',
+      label: 'Evaluación',
+      type: 'select', // Asumiendo que es un campo de selección
+      options: quality,
+      validation: { required: 'Evaluación es requerida' }
+    },
+    {
       name: 'details',
       label: 'Detalles',
       type: 'textarea', // Asumiendo que los detalles requieren un área de texto
       validation: { required: 'Los detalles son requeridos' }
-    }
+    }// quality
   ];
   
   const breadcrumbItems = [

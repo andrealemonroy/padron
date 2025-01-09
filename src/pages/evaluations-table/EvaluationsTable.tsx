@@ -8,13 +8,10 @@ import Table from '../../components/Table';
 import Spinner from '../../components/Spinner';
 import Breadcrumb from '../../components/BreadCrumb';
 import Alert from '../../components/Alert';
-import {
-  deleteQualityRating,
-  fetchQualityRatings,
-} from '../../api/qualityRatingsApi';
 import { getActions } from '../../utils/actions';
+import { deleteQuality, fetchQuality } from '../../api/qualityApi';
 
-const QualityRatings = () => {
+const Qualirfication = () => {
   const navigate = useNavigate();
   const [showAlert, setShowAlert] = useState(false);
   const [idToDelete, setIdToDelete] = useState<number | null>(null);
@@ -26,10 +23,10 @@ const QualityRatings = () => {
     const load = async () => {
       try {
         setLoading(true);
-        const data = await fetchQualityRatings();
+        const data = await fetchQuality();
         setDataValues(data);
       } catch (error) {
-        console.error('Error fetching quality-ratings:', error);
+        console.error('Error fetching qualirfication:', error);
         toast.error('Error al cargar los calificadores');
       } finally {
         setLoading(false);
@@ -40,7 +37,7 @@ const QualityRatings = () => {
   }, []);
 
   const handleEdit = (data) => {
-    navigate(`/edit-quality-ratings/${data.id}`);
+    navigate(`/edit-qualirfication/${data.id}`);
   };
 
   const handleDelete = async (id: number) => {
@@ -52,11 +49,11 @@ const QualityRatings = () => {
     if (idToDelete) {
       setLoading(true);
       try {
-        await deleteQualityRating(idToDelete);
+        await deleteQuality(idToDelete);
         setDataValues((prev) => prev.filter((dev) => dev.id !== idToDelete));
         setShowAlert(false);
         toast.success('Calificador eliminado exitosamente');
-        navigate('/quality-ratings');
+        navigate('/qualirfication');
       } catch (error) {
         console.error('Error al eliminar el proyecto:', error);
         toast.error('Error al eliminar el proyecto');
@@ -72,11 +69,11 @@ const QualityRatings = () => {
   };
 
   const breadcrumbItems = [
-    { label: 'Calificadores', path: '/quality-ratings' },
+    { label: 'Calificadores', path: '/qualirfication' },
   ];
 
   const handleAdd = () => {
-    navigate('/create-quality-ratings');
+    navigate('/create-qualirfication');
   };
 
   return (
@@ -99,7 +96,7 @@ const QualityRatings = () => {
           <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
             <div className="sm:flex sm:justify-between sm:items-center">
               {/* Add breadcrumb here */}
-              <Breadcrumb items={breadcrumbItems} buttons={[{ text: 'Crear Calificadores', action: handleAdd }]} />
+              <Breadcrumb items={breadcrumbItems} buttons={[{ text: 'Crear Calificacion', action: handleAdd }]} />
             </div>
 
             {loading ? (
@@ -117,11 +114,6 @@ const QualityRatings = () => {
                     accessorKey: 'description',
                     cell: (info) => info.getValue(),
                   },
-                  {
-                    header: 'Tipo',
-                    accessorKey: 'type',
-                    cell: (info) => info.getValue() == 1 ? 'Evaluación' : info.getValue() == 2 ? 'Calificación' : '',
-                  }
                 ]}
                 data={dataValues}
                 actions={getActions({ handleEdit, handleDelete })}
@@ -134,4 +126,4 @@ const QualityRatings = () => {
   );
 };
 
-export default QualityRatings;
+export default Qualirfication;

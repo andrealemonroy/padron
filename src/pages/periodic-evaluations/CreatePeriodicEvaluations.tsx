@@ -55,7 +55,7 @@ const CreatePeriodicEvaluation = () => {
 
           setOptions({
             users: formatOptions(usersData),
-            ratings: formatOptions(ratingsData),
+            ratings: formatOptions(ratingsData.filter(e => e.type == 1)),
           });
         
         setDefaultValues(responseData);

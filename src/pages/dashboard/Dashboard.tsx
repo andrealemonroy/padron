@@ -4,7 +4,7 @@ import Header from '../../components/Header';
 import { useNavigate } from 'react-router-dom'; 
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { fetchNotification } from '../../api/userApi';
+import { fetchNotification, fetchSendEmail } from '../../api/userApi';
 
 const Dashboard: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -26,8 +26,8 @@ const Dashboard: React.FC = () => {
         if (data.excel > 0) {
           toast.info(data.message2);
         }
-        
-        console.log(data);
+        const notification = await fetchSendEmail();
+        console.log(data, notification);
       } catch (error) {
         console.error('Error fetching periodic evaluations:', error);
         toast.error('Error al cargar las evaluaciones');

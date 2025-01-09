@@ -173,3 +173,20 @@ export const fetchNotification = async (): Promise<any> => {
  
   return response.data;
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const fetchSendEmail = async (): Promise<any> => {
+    
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const response = await axios.get<any>(`/send-contract-emails`)
+    .then(response => {
+        return response;
+    })
+    .catch(error => {
+        console.error('Error fetching users:', error.response || error);
+        throw error;
+    });
+
+ 
+  return response.data;
+};

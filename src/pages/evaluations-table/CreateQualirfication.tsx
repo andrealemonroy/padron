@@ -7,9 +7,9 @@ import Header from '../../components/Header';
 import Spinner from '../../components/Spinner';
 import Breadcrumb from '../../components/BreadCrumb';
 import DynamicForm from '../../components/DynamicForm';
-import { createQualityRating, editQualityRating, fetchQualityRating } from '../../api/qualityRatingsApi';
+import { createQuality, editQuality, fetchQualitys } from '../../api/qualityApi';
 
-const CreateQualityRatings = () => {
+const CreateQualirfication = () => {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { id } = useParams<{ id: string }>();
@@ -23,7 +23,7 @@ const CreateQualityRatings = () => {
       try {
         setLoading(true);
         if (id) {
-          const response = await fetchQualityRating(id);
+          const response = await fetchQualitys(id);
           setDefaultValues(response);
         }
       } catch (error) {
@@ -40,15 +40,15 @@ const CreateQualityRatings = () => {
     try {
       console.log(data);
       if (id) {
-        await editQualityRating(data, Number(id));
+        await editQuality(data, Number(id));
         toast.success('Calificador actualizado exitosamente');
       } else {
-        await createQualityRating(data);
+        await createQuality(data);
         toast.success('Calificador creado exitosamente');
       }
       setError(null);
       setTimeout(() => {
-        navigate('/quality-ratings');
+        navigate('/qualirfication');
       }, 2000); 
     } catch (error) {
       const errorMessage = id ? 'Error al actualizar el calificador' : 'Error al crear el calificador';
@@ -70,30 +70,14 @@ const CreateQualityRatings = () => {
       type: 'text',
       validation: { required: 'La descripción es requerida' }
     },
-    {
-      name: 'type',
-      label: 'Tipo',
-      type: 'select',
-      options: [
-        {
-          value: 1,
-          label: 'Evaluación'
-        },
-        {
-          value: 2,
-          label: 'Calificación'
-        }
-      ],
-      validation: { required: 'El tipo es requerida' }
-    },
   ]
   ;
   
   
 
   const breadcrumbItems = [
-    { label: 'Calificadores', path: '/quality-ratings' },
-    { label: id ? 'Editar Calificador' : 'Crear Calificador', path: id ? `/edit-quality-ratings/${id}` : '/create-quality-ratings' },
+    { label: 'Calificacion', path: '/qualirfication' },
+    { label: id ? 'Editar Calificacion' : 'Crear Calificacion', path: id ? `/edit-qualirfication/${id}` : '/create-qualirfication' },
   ];
 
   return (
@@ -121,4 +105,4 @@ const CreateQualityRatings = () => {
   );
 };
 
-export default CreateQualityRatings;
+export default CreateQualirfication;
