@@ -14,6 +14,7 @@ import { fetchImportMasterData } from '../../api/ImportsApi';
 import { getActions } from '../../utils/actions';
 import { HiCloudUpload, HiUserAdd } from 'react-icons/hi';
 import { ColumnDef } from '@tanstack/react-table';
+import { fetchDownloadMasterData } from '../../api/contractApi';
 
 const MasterData = () => {
   const navigate = useNavigate();
@@ -106,8 +107,47 @@ const MasterData = () => {
     }
   };
 
+  const btnExport = async () => {
+    try {
+        setLoading(true);
+
+        // Realiza la solicitud para obtener el archivo
+        const blob = await fetchDownloadMasterData(); // Obtiene el Blob del archivo
+
+        // Crea un enlace temporal para descargar el archivo
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+
+        // Asigna un nombre al archivo que se descargará
+        link.download = `${'mastedata'}.xlsx`; // Cambia `.pdf` a `.xlsx` para un archivo Excel
+
+        // Simula un clic para iniciar la descarga
+        document.body.appendChild(link);
+        link.click();
+
+        // Limpia el URL creado y elimina el enlace
+        link.remove();
+        window.URL.revokeObjectURL(url);
+
+    } catch (error) {
+        console.error('Error fetching contract:', error);
+        toast.error('Error al descargar el archivo');
+    } finally {
+        setLoading(false);
+    }
+};
+
   const addButton = (
     <div className="flex space-x-4">
+      <Button
+        type="button"
+        className="w-fit h-10 btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white rounded-md flex gap-1 items-center"
+        onClick={btnExport}
+      >
+        <HiUserAdd size={20} />
+        <span className="max-xs:sr-only">Exportar Data Base</span>
+      </Button>
       <Button
         type="button"
         className="w-fit h-10 btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white rounded-md flex gap-1 items-center"

@@ -205,5 +205,23 @@ export const fetchRporte = async (data): Promise<any> => {
   }
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const fetchDownloadMasterData = async (): Promise<any> => {
+  
+  try {
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/masterdata-export`, {
+      responseType: 'blob', // Asegúrate de que la respuesta se maneje como Blob
+    });
 
+    // Verifica que la respuesta sea un archivo Excel
+    if (response.headers['content-type'] !== 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+      throw new Error('El archivo descargado no es un archivo Excel.');
+    }
+
+    return response.data; // Devuelve el Blob
+  } catch (error) {
+    console.error('No se pudo descargar el archivo:', error.response || error);
+    throw error; // Lanza el error para manejarlo en la función que llama
+  }
+};
 

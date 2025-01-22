@@ -28,13 +28,13 @@ const getActions = ({ handleEdit, handleDelete, sendEmail, sendUrl, btnContract,
   dynamicActions[0].onClick = handleEdit;
   dynamicActions[1].onClick = handleDelete;
 
-  // Lista de nuevas acciones a insertar
+  // Lista de nuevas acciones a insertar <HiDownload size={20} />
   const newActions = [
     sendEmail && { icon: <HiMail size={20} />, label: '', onClick: sendEmail },
     sendUrl && { icon: <HiEye size={20} />, label: '', onClick: sendUrl },
-    btnContract && { icon: <HiDownload size={20} />, label: '', onClick: btnContract },
-    btnContract2 && { icon: <HiDownload size={20} />, label: '', onClick: btnContract2 },
-    btnContract3 && { icon: <HiDownload size={20} />, label: '', onClick: btnContract3 },
+    btnContract && { icon: '', label: 'CITTIAE', onClick: btnContract },
+    btnContract2 && { icon: '', label: 'CTODSE', onClick: btnContract2 },
+    btnContract3 && { icon: '', label: 'CTPI', onClick: btnContract3 },
   ].filter(Boolean); // Filtrar para eliminar elementos nulos o undefined
 
   // Insertar nuevas acciones al principio, después de la acción de eliminación

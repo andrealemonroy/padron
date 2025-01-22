@@ -8,6 +8,9 @@ import Spinner from '../components/Spinner';
 import Breadcrumb from '../components/BreadCrumb';
 import { fetchUserBanks } from '../api/userBanksApi';
 import { getActions } from '../utils/actions';
+import { HiCloudUpload } from 'react-icons/hi';
+import { toast } from 'react-toastify';
+import { fetchImportUserBanks } from '../api/ImportsApi';
 
 const UserBanks = () => {
   const navigate = useNavigate();
@@ -64,7 +67,49 @@ const UserBanks = () => {
     navigate(`/edit-user-banks/${data.id}`);
   };
 
+  const handleAddMassive = async (
+      event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+      if (!event.target.files || event.target.files.length === 0) {
+        toast.error('No se seleccionó ningún archivo');
+        return;
+      }
+  
+      const file = event.target.files[0];
+      const formData = new FormData();
+      formData.append('file', file);
+      console.log(formData);
+      setLoading(true);
+      try {
+        const result = await fetchImportUserBanks(formData);
+        console.log('Trabajadores importados exitosamente:', result);
+        toast.success('Trabajadores importados exitosamente');
+      } catch (error) {
+        console.error('Error al importar usuarios:', error);
+        toast.error('Error al importar usuarios. Por favor, intente de nuevo.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
   const breadcrumbItems = [{ label: 'Datos Bancarios', path: '/user-banks' }];
+
+  const addButton = (
+    <div className="flex space-x-4">
+      <label className="w-44 h-10 btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white cursor-pointer flex gap-1 items-center">
+        <input
+          type="file"
+          className="hidden"
+          onChange={handleAddMassive}
+          accept=".xlsx,.xls,.csv"
+        />
+        <HiCloudUpload size={20} />
+        <span className="max-xs:sr-only">Importar</span>
+      </label>
+    </div>
+  );
+
+  
 
   return (
     <div className="flex h-[100dvh] overflow-hidden">
@@ -85,7 +130,7 @@ const UserBanks = () => {
           <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
             <div className="sm:flex sm:justify-between sm:items-center">
               {/* Add breadcrumb here */}
-              <Breadcrumb items={breadcrumbItems} />
+              <Breadcrumb items={breadcrumbItems} >{addButton}</Breadcrumb>
             </div>
 
             {loading ? (
