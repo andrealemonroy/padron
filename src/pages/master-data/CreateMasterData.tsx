@@ -73,6 +73,12 @@ const CreateMasterData = () => {
       validation: { required: 'El código ID es requerido' }
     },
     {
+      name: 'codigo',
+      label: 'Código',
+      type: 'text',
+      validation: { required: 'El código ID es requerido' }
+    },
+    {
       name: 'surname1',
       label: 'Primer Apellido',
       type: 'text',
