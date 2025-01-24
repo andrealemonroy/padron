@@ -7,6 +7,7 @@ import Spinner from '../components/Spinner';
 import Breadcrumb from '../components/BreadCrumb';
 import { fetchDependents } from '../api/dependentApi';
 import { getActions } from '../utils/actions';
+import { HiDownload } from 'react-icons/hi';
 
 const Dependent = () => {
   const navigate = useNavigate();
@@ -188,7 +189,43 @@ const Dependent = () => {
                         />
                       ),
                     },
-                  }
+                  },
+                  {
+                  header: 'P. Nacimiento',
+                  accessorKey: 'dependent.pdf_nacimiento_url',
+                  cell: (info) => {
+                    const url = info.getValue();
+                    return url ? (
+                      <a href={url} target="_blank" rel="noopener noreferrer">
+                        <HiDownload size={20} />
+                      </a>
+                    ) : null;
+                  },
+                },
+                {
+                  header: 'P. Matrimonio',
+                  accessorKey: 'dependent.pdf_matrimonio_url',
+                  cell: (info) => {
+                    const url = info.getValue();
+                    return url ? (
+                      <a href={url} target="_blank" rel="noopener noreferrer">
+                        <HiDownload size={20} />
+                      </a>
+                    ) : null;
+                  },
+                },
+                {
+                  header: 'E. publica',
+                  accessorKey: 'dependent.pdf_judicial_url',
+                  cell: (info) => {
+                    const url = info.getValue();
+                    return url ? (
+                      <a href={url} target="_blank" rel="noopener noreferrer">
+                        <HiDownload size={20} />
+                      </a>
+                    ) : null;
+                  },
+                },
                 ]}
                 data={dependents}
                 actions={getActions({ handleEdit, handleDelete })}
