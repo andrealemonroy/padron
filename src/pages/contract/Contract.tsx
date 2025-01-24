@@ -10,7 +10,7 @@ import Breadcrumb from '../../components/BreadCrumb';
 import Alert from '../../components/Alert';
 import { getActions } from '../../utils/actions';
 import { deleteContract, fetchContracts, fetchDownload, fetchImportData } from '../../api/contractApi';
-import { HiCloudUpload, HiUserAdd } from 'react-icons/hi';
+import { HiCloudUpload, HiDownload, HiUserAdd } from 'react-icons/hi';
 import Button from '../../components/Button';
 
 const Contract = () => {
@@ -309,7 +309,18 @@ const btnContract3 = async (contract) => {
                     ),
                   },
                 },
-                
+                {
+                  header: 'Archivo',
+                  accessorKey: 'pdf_contract_url',
+                  cell: (info) => {
+                    const url = info.getValue();
+                    return url ? (
+                      <a href={url} target="_blank" rel="noopener noreferrer">
+                        <HiDownload size={20} />
+                      </a>
+                    ) : null;
+                  },
+                },
               ]}
               data={dataValues}
               actions={getActions({ handleEdit, btnContract3, btnContract2, btnContract, handleDelete })}

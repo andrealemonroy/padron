@@ -85,7 +85,7 @@ const CreateContract = () => {
     load();
   }, [id]);
 
-  const onSubmit = async (data) => {
+  /*const onSubmit = async (data) => {
     try {
       console.log(data);
       if (id) {
@@ -104,7 +104,65 @@ const CreateContract = () => {
       toast.error(`${errorMessage}. ${error}`);
       setError(`${errorMessage}. ${error}`);
     }
-  };
+  };*/
+
+  const onSubmit = async (data) => {
+      try {
+        const fileInput = document.getElementById('pdf_contract') as HTMLInputElement; // Asegúrate de que el input tenga este ID
+        if (fileInput.files && fileInput.files.length > 0) {
+          const file = fileInput.files[0];
+  
+          console.log(file.size)
+          if (file.size > 2 * 1024 * 1024) {
+            setError('El archivo debe ser menor de 2MB.');
+            return; // Detener el proceso si el archivo excede el tamaño permitido
+        }
+  
+          const reader = new FileReader();
+          reader.onloadend = async () => {
+            const base64String = reader.result as string; // Obtener la cadena Base64
+            const base64Data = base64String.split(',')[1]; // Extraer solo la parte Base64
+  
+            // Agregar la imagen en formato Base64 a los datos
+            const personalInfoData = {
+              ...data, // Mantener otros campos
+              pdf_contract: base64Data, // Agregar la imagen en formato Base64
+            };
+  
+            try {
+              if (id) {
+                await editContract(personalInfoData, Number(id));
+                toast.success('Proyecto actualizado exitosamente');
+              } else {
+                await createContract(personalInfoData);
+                toast.success('Proyecto creado exitosamente');
+              }
+              setError(null);
+              navigate('/contract');
+            } catch (error) {
+              console.error('Error al enviar los datos:', error);
+              setError(id ? 'Error al actualizar los datos.' : 'Error al crear los datos.');
+            }
+          };
+  
+          reader.readAsDataURL(file); // Leer el archivo como Data URL (Base64)
+        } else {
+          // Si no hay archivo, simplemente envía los datos sin la imagen
+          if (id) {
+            await editContract(data, Number(id));
+            toast.success('Proyecto actualizado exitosamente');
+          } else {
+            await createContract(data);
+            toast.success('Proyecto creado exitosamente');
+          }
+          setError(null);
+          navigate('/basic');
+        }
+      } catch (error) {
+        console.error('Error submitting form:', error);
+        setError(id ? 'Error al actualizar los datos.' : 'Error al crear los datos.');
+      }
+    };
 
   const formFields = [
     {
@@ -161,7 +219,7 @@ const CreateContract = () => {
       label: 'Tipo trabajdor',
       type: 'select',
       options: options.typeWorker,
-      validation: {}
+      validation: { required: 'El campo es requerido' },
     },
     {
       name: 'status',
@@ -182,6 +240,13 @@ const CreateContract = () => {
         }
       ],
       validation: { required: 'El estado es requerido' }
+    },
+    {
+      name: 'pdf_contract',
+      label: 'Contrato Firmado',
+      type: 'file',
+      validation: { required: 'El campo es requerido' },
+      //colSpan: 1,
     },
   ]
   ;
