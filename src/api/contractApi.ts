@@ -11,9 +11,11 @@ interface Contract {
 }
 
 
-export const fetchContracts = async (): Promise<Contract[]> => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const fetchContracts = async (): Promise<any[]> => {
     
-  const response = await axios.get<Contract[]>(`/contracts`)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const response = await axios.get<any[]>(`/contracts`)
   .then(response => {
       return response;
   })

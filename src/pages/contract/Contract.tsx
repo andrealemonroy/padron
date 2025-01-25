@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -13,19 +13,32 @@ import { deleteContract, fetchContracts, fetchDownload, fetchImportData } from '
 import { HiCloudUpload, HiDownload, HiUserAdd } from 'react-icons/hi';
 import Button from '../../components/Button';
 
+interface RowData {
+  id: number;
+  user: {
+    name: string;
+  };
+  start_date: string;
+  end_date: string;
+  pdf_contract_url: string;
+  // Add other fields as needed
+}
+
 const Contract = () => {
   const navigate = useNavigate();
   const [showAlert, setShowAlert] = useState(false);
   const [idToDelete, setIdToDelete] = useState<number | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [dataValues, setDataValues] = useState([]);
+  const [dataValues, setDataValues] = useState<RowData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedRows, setSelectedRows] = useState<Record<number, boolean>>({});
+  const selectAllCheckboxRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const load = async () => {
       try {
         setLoading(true);
-        const data = await fetchContracts();
+        const data: RowData[] = await fetchContracts();
         setDataValues(data);
       } catch (error) {
         console.error('Error fetching projects:', error);
@@ -177,6 +190,33 @@ const btnContract3 = async (contract) => {
     { label: 'Contratos', path: '/contract' },
   ];
 
+  // Handle select all checkbox
+  const handleSelectAll = (isChecked: boolean) => {
+    const newSelectedRows = {};
+    dataValues.forEach((row) => {
+      newSelectedRows[row.id] = isChecked;
+    });
+    setSelectedRows(newSelectedRows);
+  };
+
+  // Handle individual row checkbox
+  const handleSelectRow = (rowId: number, isChecked: boolean) => {
+    setSelectedRows((prev) => ({
+      ...prev,
+      [rowId]: isChecked,
+    }));
+  };
+
+  useEffect(() => {
+    if (selectAllCheckboxRef.current) {
+      if (dataValues.length > 0 && dataValues.every((row) => selectedRows[row.id])) {
+        selectAllCheckboxRef.current.checked = true;
+      } else {
+        selectAllCheckboxRef.current.checked = false;
+      }
+    }
+  }, [selectedRows, dataValues]);
+
   const handleAddMassive = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -190,11 +230,10 @@ const btnContract3 = async (contract) => {
     formData.append('file', file);
     setLoading(true);
     try {
-      
       const result = await fetchImportData(formData);
       toast.success('Usuarios importados exitosamente');
       console.log(result);
-      const data = await fetchContracts();
+      const data: RowData[] = await fetchContracts();
       setDataValues(data);
     } catch (error) {
       console.error('Error al importar usuarios:', error);
@@ -203,9 +242,140 @@ const btnContract3 = async (contract) => {
       setLoading(false);
     }
   };
-  
+
+  const selectedRowData = dataValues.filter((row) => selectedRows[row.id]);
   const addButton = (
     <div className="flex space-x-4">
+      <button
+        onClick={ async () => {
+          // Handle Enviar a Nóminas action
+          try {
+            setLoading(true);
+            const users = {
+              users: selectedRowData.map(e => e.id),
+            }
+
+            // Realiza la solicitud para obtener el archivo
+            users.users.forEach(async element => {
+              const igem = element;
+              const blob = await fetchDownload(element, 1); // Obtiene el Blob del archivo
+              // Crea un enlace temporal para descargar el archivo
+              const url = window.URL.createObjectURL(blob);
+              const link = document.createElement('a');
+              link.href = url;
+              // Asigna un nombre al archivo que se descargará
+              link.download = `${dataValues.filter(e => e.id === igem)[0]?.user.name || 'contrato'}.pdf`; // Cambia `.pdf` según el tipo de archivo
+
+              // Simula un clic para iniciar la descarga
+              document.body.appendChild(link);
+              link.click();
+
+              // Limpia el URL creado y elimina el enlace
+              link.remove();
+              window.URL.revokeObjectURL(url);
+            });
+            
+            //btnContract();
+            /*await editManagement(users, 3);
+            toast.success('Registro actualizado exitosamente');
+            const data = await fetchManagement(2);
+            setDataValues(data);*/
+          } catch (error) {
+            console.error('Error fetching projects:', error);
+            toast.error('Error al cargar los proyectos');
+          } finally {
+            setLoading(false);
+          }
+        }}
+        disabled={selectedRowData.length === 0}
+        className="bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50"
+      >
+        CITTIAE
+      </button>
+      <button
+        onClick={ async () => {
+          // Handle Enviar a Nóminas action
+          try {
+            setLoading(true);
+            const users = {
+              users: selectedRowData.map(e => e.id),
+            }
+            users.users.forEach(async element => {
+              const igem = element;
+              const blob = await fetchDownload(element, 2); // Obtiene el Blob del archivo
+              // Crea un enlace temporal para descargar el archivo
+              const url = window.URL.createObjectURL(blob);
+              const link = document.createElement('a');
+              link.href = url;
+              // Asigna un nombre al archivo que se descargará
+              link.download = `${dataValues.filter(e => e.id === igem)[0]?.user.name || 'contrato'}.pdf`; // Cambia `.pdf` según el tipo de archivo
+
+              // Simula un clic para iniciar la descarga
+              document.body.appendChild(link);
+              link.click();
+
+              // Limpia el URL creado y elimina el enlace
+              link.remove();
+              window.URL.revokeObjectURL(url);
+            });
+            /*await editManagement(users, 3);
+            toast.success('Registro actualizado exitosamente');
+            const data = await fetchManagement(2);
+            setDataValues(data);*/
+          } catch (error) {
+            console.error('Error fetching projects:', error);
+            toast.error('Error al cargar los proyectos');
+          } finally {
+            setLoading(false);
+          }
+        }}
+        disabled={selectedRowData.length === 0}
+        className="bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50"
+      >
+        CTODSE
+      </button>
+      <button
+        onClick={ async () => {
+          // Handle Enviar a Nóminas action
+          try {
+            setLoading(true);
+            const users = {
+              users: selectedRowData.map(e => e.id),
+            }
+            users.users.forEach(async element => {
+              const igem = element;
+              const blob = await fetchDownload(element, 3); // Obtiene el Blob del archivo
+              // Crea un enlace temporal para descargar el archivo
+              const url = window.URL.createObjectURL(blob);
+              const link = document.createElement('a');
+              link.href = url;
+              // Asigna un nombre al archivo que se descargará
+              link.download = `${dataValues.filter(e => e.id === igem)[0]?.user.name || 'contrato'}.pdf`; // Cambia `.pdf` según el tipo de archivo
+
+              // Simula un clic para iniciar la descarga
+              document.body.appendChild(link);
+              link.click();
+
+              // Limpia el URL creado y elimina el enlace
+              link.remove();
+              window.URL.revokeObjectURL(url);
+            });
+            /*await editManagement(users, 3);
+            toast.success('Registro actualizado exitosamente');
+            const data = await fetchManagement(2);
+            setDataValues(data);*/
+          } catch (error) {
+            console.error('Error fetching projects:', error);
+            toast.error('Error al cargar los proyectos');
+          } finally {
+            setLoading(false);
+          }
+        }}
+        disabled={selectedRowData.length === 0}
+        className="bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50"
+      >
+        CTPI
+      </button>
       <Button
         type="button"
         className="w-44 h-10 btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white rounded-md flex gap-1 items-center"
@@ -222,22 +392,21 @@ const btnContract3 = async (contract) => {
           accept=".xlsx,.xls,.csv"
         />
         <HiCloudUpload size={20} />
-        <span className="max-xs:sr-only">Importar Contratos</span>
+        <span className="max-xs:sr-only">Importar</span>
       </label>
     </div>
   );
- 
 
   return (
     <div className="flex h-[100dvh] overflow-hidden">
       <ToastContainer />
       {showAlert && (
-                <Alert
-                    message="¿Estás seguro de que deseas eliminar este usuario?"
-                    onConfirm={confirmDelete}
-                    onCancel={cancelDelete}
-                />
-            )}
+        <Alert
+          message="¿Estás seguro de que deseas eliminar este usuario?"
+          onConfirm={confirmDelete}
+          onCancel={cancelDelete}
+        />
+      )}
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       {/* Content area */}
       <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
@@ -253,83 +422,105 @@ const btnContract3 = async (contract) => {
             <div className="sm:flex sm:justify-between sm:items-center">
               {/* Add breadcrumb here */}
               <Breadcrumb items={breadcrumbItems} >
-              {addButton}
+                {addButton}
               </Breadcrumb>
             </div>
 
             {loading ? (
               <Spinner loading={loading} size={50} color="#3498db" />
             ) : (
-                <Table
-              columns={[
-                {
-                  header: 'Nombre',
-                  accessorKey: 'user.name',
-                  cell: (info) => info.getValue(),
-                  meta: {
-                    width: '350px',
-                    filterComponent: (column) => (
+              <Table
+                columns={[
+                  {
+                    id: 'selection',
+                    header: ({ table }) => (
                       <input
-                        type="text"
-                        value={(column.getFilterValue() ?? '') as string}
-                        onChange={(e) => column.setFilterValue(e.target.value)}
-                        placeholder="Filtrar Nombre"
-                        className="w-full px-2 py-1 text-sm border rounded"
+                        ref={selectAllCheckboxRef}
+                        type="checkbox"
+                        onChange={(e) =>
+                          handleSelectAll(e.target.checked)
+                        }
+                        checked={
+                          dataValues.length > 0 && dataValues.every((row) => selectedRows[row.id])
+                        }
                       />
                     ),
-                  },
-                },
-                {
-                  header: 'Fecha de inicio',
-                  accessorKey: 'start_date',
-                  cell: (info) => info.getValue(),
-                  meta: {
-                    filterComponent: (column) => (
+                    cell: ({ row }) => (
                       <input
-                        type="date"
-                        value={(column.getFilterValue() ?? '') as string}
-                        onChange={(e) => column.setFilterValue(e.target.value)}
-                        className="w-full px-2 py-1 text-sm border rounded"
+                        type="checkbox"
+                        checked={!!selectedRows[row.original.id]}
+                        onChange={(e) =>
+                          handleSelectRow(row.original.id, e.target.checked)
+                        }
                       />
                     ),
+                    meta: { width: '50px' },
                   },
-                },
-                {
-                  header: 'Fecha de finalización',
-                  accessorKey: 'end_date',
-                  cell: (info) => info.getValue(),
-                  meta: {
-                    filterComponent: (column) => (
-                      <input
-                        type="date"
-                        value={(column.getFilterValue() ?? '') as string}
-                        onChange={(e) => column.setFilterValue(e.target.value)}
-                        className="w-full px-2 py-1 text-sm border rounded"
-                      />
-                    ),
+                  {
+                    header: 'Nombre',
+                    accessorKey: 'user.name',
+                    cell: (info) => info.getValue(),
+                    meta: {
+                      width: '350px',
+                      filterComponent: (column) => (
+                        <input
+                          type="text"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          placeholder="Filtrar Nombre"
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
                   },
-                },
-                {
-                  header: 'Archivo',
-                  accessorKey: 'pdf_contract_url',
-                  cell: (info) => {
-                    const url = info.getValue();
-                    return url ? (
-                      <a href={url} target="_blank" rel="noopener noreferrer">
-                        <HiDownload size={20} />
-                      </a>
-                    ) : null;
+                  {
+                    header: 'Fecha de inicio',
+                    accessorKey: 'start_date',
+                    cell: (info) => info.getValue(),
+                    meta: {
+                      filterComponent: (column) => (
+                        <input
+                          type="date"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
                   },
-                },
-              ]}
-              data={dataValues}
-              actions={getActions({ handleEdit, btnContract3, btnContract2, btnContract, handleDelete })}
-            />
+                  {
+                    header: 'Fecha de finalización',
+                    accessorKey: 'end_date',
+                    cell: (info) => info.getValue(),
+                    meta: {
+                      filterComponent: (column) => (
+                        <input
+                          type="date"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
+                  },
+                  {
+                    header: 'Archivo',
+                    accessorKey: 'pdf_contract_url',
+                    cell: (info) => {
+                      const url = info.getValue();
+                      return url ? (
+                        <a href={url} target="_blank" rel="noopener noreferrer">
+                          <HiDownload size={20} />
+                        </a>
+                      ) : null;
+                    },
+                  },
+                ]}
+                data={dataValues}
+                actions={getActions({ handleEdit, btnContract3, btnContract2, btnContract, handleDelete })}
+              />
             )}
-            
-
           </div>
-
         </main>
       </div>
     </div>
