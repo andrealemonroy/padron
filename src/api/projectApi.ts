@@ -25,6 +25,21 @@ export const fetchProjects = async (): Promise<Project[]> => {
 return response.data;
 };
 
+export const fetchLines = async (): Promise<any[]> => {
+    
+  const response = await axios.get<any[]>(`/code-line`)
+  .then(response => {
+      return response;
+  })
+  .catch(error => {
+      console.error('Error fetching projects:', error.response || error);
+      throw error;
+  });
+
+
+return response.data;
+};
+
 export const createProject = async (userData: Omit<Project, 'id'>): Promise<Project> => {
   const response = await axios.post<Project>(`${import.meta.env.VITE_API_URL}/projects`, {...userData, status: '1' });
   return response.data;

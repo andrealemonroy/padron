@@ -7,7 +7,7 @@ import Header from '../../components/Header';
 import Spinner from '../../components/Spinner';
 import Breadcrumb from '../../components/BreadCrumb';
 import DynamicForm from '../../components/DynamicForm';
-import { createProject, editProject, fetchProject } from '../../api/projectApi';
+import { createProject, editProject, fetchLines, fetchProject } from '../../api/projectApi';
 
 const CreateProject = () => {
   const navigate = useNavigate();
@@ -15,6 +15,7 @@ const CreateProject = () => {
   const { id } = useParams<{ id: string }>();
   const [loading, setLoading] = useState(true);
   const [defaultValues, setDefaultValues] = useState(null);
+  const [lines, setLines] = useState([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -22,6 +23,8 @@ const CreateProject = () => {
     const load = async () => {
       try {
         setLoading(true);
+        const linesData = await fetchLines();
+        setLines(linesData.map((role) => ({ value: role.id, label: role.descripcion })));
         if (id) {
           const response = await fetchProject(id);
           setDefaultValues(response);
@@ -59,6 +62,13 @@ const CreateProject = () => {
 
   const formFields = [
     {
+      name: 'line',
+      label: 'Linea de negocio',
+      type: 'select',
+      options: lines,
+      validation: { required: 'Linea de negocio es requerida' }
+    },
+    {
       name: 'code',
       label: 'Código',
       type: 'text',
@@ -72,9 +82,9 @@ const CreateProject = () => {
     },
     {
       name: 'client',
-      label: 'Cliente',
+      label: 'Nombre Corto',
       type: 'text',
-      validation: { required: 'El cliente es requerido' }
+      validation: { required: 'El Nombre Corto es requerido' }
     },
     {
       name: 'start_date',
@@ -87,6 +97,42 @@ const CreateProject = () => {
       label: 'Fecha de Finalización',
       type: 'date',
       validation: { required: 'La fecha de finalización es requerida' }
+    },
+    {
+      name: 'indicator',
+      label: 'Indicador',
+      type: 'select',
+      options: [
+        {
+          value: 1,
+          label: 'Asignado'
+        },
+        {
+          value: 2,
+          label: 'Predertimo'
+        }
+      ],
+      validation: { required: 'El tipo es requerida' }
+    },
+    {
+      name: 'status',
+      label: 'Estado',
+      type: 'select',
+      options: [
+        {
+          value: 1,
+          label: 'Inabilitado'
+        },
+        {
+          value: 2,
+          label: 'Habilitado'
+        },
+        {
+          value: 3,
+          label: 'Por Habilitar'
+        }
+      ],
+      validation: { required: 'El tipo es requerida' }
     },
   ]
   ;

@@ -198,7 +198,7 @@ const User = () => {
           accept=".xlsx,.xls,.csv"
         />
         <HiCloudUpload size={20} />
-        <span className="max-xs:sr-only">Importar Trabajadores</span>
+        <span className="max-xs:sr-only">Importar Padron de Trabajadores</span>
       </label>
     </div>
   );

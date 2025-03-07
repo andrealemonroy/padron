@@ -183,6 +183,30 @@ export const fetchDownload = async (id, type: number): Promise<any> => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const reportsPadron = async (data): Promise<any> => {
+  try {
+    const response = await axios.post(`${import.meta.env.VITE_API_URL}/reports-padron`, data, {
+      responseType: 'blob', // Asegúrate de que la respuesta se maneje como Blob
+    });
+
+    // Obtener el tipo de contenido
+    const contentType = response.headers['content-type'];
+    console.log('Content-Type:', contentType); // Verificar el tipo de archivo
+
+    // Verificar si el tipo de contenido incluye formatos esperados
+    if (!contentType.includes('application/pdf') &&
+        !contentType.includes('spreadsheet') &&
+        !contentType.includes('text/csv')) {
+      throw new Error('El archivo descargado no es del tipo esperado.');
+    }
+
+    return response.data; // Devuelve el Blob
+  } catch (error) {
+    console.error('No se pudo descargar el archivo:', error.response || error);
+    throw error; // Lanza el error para manejarlo en la función que llama
+  }
+};
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const fetchRporte = async (data): Promise<any> => {
   try {
     const response = await axios.post(`${import.meta.env.VITE_API_URL}/reports`, data, {

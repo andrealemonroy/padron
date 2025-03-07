@@ -59,6 +59,7 @@ import Password from './pages/password/Password';
 import Nomina from './pages/management/Nomina';
 import Qualirfication from './pages/qualirfication/Qualirfication';
 import CreateQualirfication from './pages/qualirfication/CreateQualirfication';
+import { HistoricoPage } from './pages/historico';
 
 function App() {
   return (
@@ -191,6 +192,14 @@ function App() {
               element={
                 <PrivateRoute>
                   <ReportsPage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/historico"
+              element={
+                <PrivateRoute>
+                  <HistoricoPage />
                 </PrivateRoute>
               }
             />
