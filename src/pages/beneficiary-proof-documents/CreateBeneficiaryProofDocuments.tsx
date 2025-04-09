@@ -8,6 +8,7 @@ import Spinner from '../../components/Spinner';
 import Breadcrumb from '../../components/BreadCrumb';
 import DynamicForm from '../../components/DynamicForm';
 import { createBeneficiaryProofDocument, editBeneficiaryProofDocument, fetchBeneficiaryProofDocument } from '../../api/beneficiaryProofDocuments';
+import React from 'react';
 
 const CreateBeneficiaryProofDocuments = () => {
   const navigate = useNavigate();
@@ -79,6 +80,7 @@ const CreateBeneficiaryProofDocuments = () => {
     { label: 'Documentos de acreditación', path: '/beneficiary-proof-documents' },
     { label: id ? 'Editar Documento de acreditación' : 'Crear Documento de acreditación', path: id ? `/edit-beneficiary-proof-documents/${id}` : '/create-beneficiary-proof-documents' },
   ];
+
 
   return (
     <div className="flex h-[100dvh] overflow-hidden">

@@ -13,6 +13,7 @@ import {
   fetchBeneficiaryProofDocuments,
 } from '../../api/beneficiaryProofDocuments';
 import { getActions } from '../../utils/actions';
+import React from 'react';
 
 const BeneficiaryProofDocuments = () => {
   const navigate = useNavigate();
@@ -32,7 +33,7 @@ const BeneficiaryProofDocuments = () => {
         console.error('Error fetching beneficiary-proof-documents:', error);
         toast.error('Error al cargar los documentos de acreditación');
       } finally {
-        setLoading(false);
+        setLoading(false); // Ensure loading is set to false even if an error occurs
       }
     };
 
@@ -82,6 +83,10 @@ const BeneficiaryProofDocuments = () => {
     navigate('/create-beneficiary-proof-documents');
   };
 
+  // Wrap Table and Breadcrumb with React.memo to prevent unnecessary re-renders
+  const MemoizedTable = React.memo(Table);
+  const MemoizedBreadcrumb = React.memo(Breadcrumb);
+
   return (
     <div className="flex h-[100dvh] overflow-hidden">
       <ToastContainer />
@@ -102,7 +107,7 @@ const BeneficiaryProofDocuments = () => {
           <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
             <div className="sm:flex sm:justify-between sm:items-center">
               {/* Add breadcrumb here */}
-              <Breadcrumb
+              <MemoizedBreadcrumb
                 items={breadcrumbItems}
                 buttons={[
                   {
@@ -116,7 +121,7 @@ const BeneficiaryProofDocuments = () => {
             {loading ? (
               <Spinner loading={loading} size={50} color="#3498db" /> // Show spinner while loading
             ) : (
-              <Table
+              <MemoizedTable
                 columns={[
                   {
                     header: 'Codigo',

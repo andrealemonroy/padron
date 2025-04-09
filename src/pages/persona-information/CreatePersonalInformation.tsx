@@ -42,6 +42,7 @@ interface PersonalInformationData {
   has_children_under_18: boolean;
   number_of_children_under_18: number;
   coordinator: number;
+  service: string;
 }
 
 const CreatePersonalInformation = () => {
@@ -139,6 +140,7 @@ const CreatePersonalInformation = () => {
             has_children_under_18: response.has_children_under_18 || false,
             number_of_children_under_18: response.number_of_children_under_18 || '',
             coordinator: response.coordinator || '',
+            service: response.service || '',
           };
 
           setDefaultValues(defaultValues);
@@ -310,6 +312,17 @@ const CreatePersonalInformation = () => {
       label: 'Número de Teléfono',
       type: 'text',
       validation: {},
+      colSpan: 1,
+    },
+    {
+      name: 'service',
+      label: 'Prestación de Servicio',
+      type: 'select',
+      options: [
+        { value: 0, label: 'NO' },
+        { value: 1, label: 'SI' },
+      ],
+      validation: { required: 'Género es requerido' },
       colSpan: 1,
     },
     {

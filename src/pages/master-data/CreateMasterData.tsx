@@ -20,7 +20,6 @@ const CreateMasterData = () => {
   const [documents, setDocument] = useState([]);
 
   useEffect(() => {
-    console.log('Effect running');
     const load = async () => {
       try {
         setLoading(true);
@@ -30,14 +29,16 @@ const CreateMasterData = () => {
           label: value.description,
         }));
         setDocument(formattedDocument);
+
         if (id) {
           const response = await fetchMasterData(id);
           setDefaultValues(response);
         }
       } catch (error) {
-        setError(`Error al cargar los datos del projects. ${error}`);
+        console.error('Error fetching data:', error); // Log error for debugging
+        setError(`Error al cargar los datos del projects. ${error.message || error}`);
       } finally {
-        setLoading(false);
+        setLoading(false); // Ensure loading is set to false
       }
     };
 
@@ -46,7 +47,7 @@ const CreateMasterData = () => {
 
   const onSubmit = async (data) => {
     try {
-      
+      setLoading(true); // Show loading during submission
       if (id) {
         await editMasterData(data, Number(id));
         toast.success('Registro actualizado exitosamente');
@@ -57,11 +58,14 @@ const CreateMasterData = () => {
       setError(null);
       setTimeout(() => {
         navigate('/master-data');
-      }, 2000); 
+      }, 2000);
     } catch (error) {
+      console.error('Error during submission:', error); // Log error for debugging
       const errorMessage = id ? 'Error al actualizar el Master Data Base' : 'Error al crear el Master Data Base';
-      toast.error(`${errorMessage}. ${error}`);
-      setError(`${errorMessage}. ${error}`);
+      toast.error(`${errorMessage}. ${error.message || error}`);
+      setError(`${errorMessage}. ${error.message || error}`);
+    } finally {
+      setLoading(false); // Ensure loading is set to false
     }
   };
 

@@ -157,7 +157,29 @@ const btnContract3 = async (contract) => {
   }
 };
 
-  
+const handleMassiveDownload = async (type: number) => {
+  try {
+    setLoading(true);
+    const downloadPromises = selectedRowData.map(async (contract) => {
+      const blob = await fetchDownload(contract.id, type);
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${contract.user.name || 'contrato'}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    });
+    await Promise.all(downloadPromises);
+    toast.success('Descargas completadas exitosamente');
+  } catch (error) {
+    console.error('Error en la descarga masiva:', error);
+    toast.error('Error al descargar los archivos');
+  } finally {
+    setLoading(false);
+  }
+};
 
   const confirmDelete = async () => {
     if (idToDelete) {
@@ -247,130 +269,21 @@ const btnContract3 = async (contract) => {
   const addButton = (
     <div className="flex space-x-4">
       <button
-        onClick={ async () => {
-          // Handle Enviar a Nóminas action
-          try {
-            setLoading(true);
-            const users = {
-              users: selectedRowData.map(e => e.id),
-            }
-
-            // Realiza la solicitud para obtener el archivo
-            users.users.forEach(async element => {
-              const igem = element;
-              const blob = await fetchDownload(element, 1); // Obtiene el Blob del archivo
-              // Crea un enlace temporal para descargar el archivo
-              const url = window.URL.createObjectURL(blob);
-              const link = document.createElement('a');
-              link.href = url;
-              // Asigna un nombre al archivo que se descargará
-              link.download = `${dataValues.filter(e => e.id === igem)[0]?.user.name || 'contrato'}.pdf`; // Cambia `.pdf` según el tipo de archivo
-
-              // Simula un clic para iniciar la descarga
-              document.body.appendChild(link);
-              link.click();
-
-              // Limpia el URL creado y elimina el enlace
-              link.remove();
-              window.URL.revokeObjectURL(url);
-            });
-            
-            //btnContract();
-            /*await editManagement(users, 3);
-            toast.success('Registro actualizado exitosamente');
-            const data = await fetchManagement(2);
-            setDataValues(data);*/
-          } catch (error) {
-            console.error('Error fetching projects:', error);
-            toast.error('Error al cargar los proyectos');
-          } finally {
-            setLoading(false);
-          }
-        }}
+        onClick={() => handleMassiveDownload(1)}
         disabled={selectedRowData.length === 0}
         className="bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50"
       >
         CITTIAE
       </button>
       <button
-        onClick={ async () => {
-          // Handle Enviar a Nóminas action
-          try {
-            setLoading(true);
-            const users = {
-              users: selectedRowData.map(e => e.id),
-            }
-            users.users.forEach(async element => {
-              const igem = element;
-              const blob = await fetchDownload(element, 2); // Obtiene el Blob del archivo
-              // Crea un enlace temporal para descargar el archivo
-              const url = window.URL.createObjectURL(blob);
-              const link = document.createElement('a');
-              link.href = url;
-              // Asigna un nombre al archivo que se descargará
-              link.download = `${dataValues.filter(e => e.id === igem)[0]?.user.name || 'contrato'}.pdf`; // Cambia `.pdf` según el tipo de archivo
-
-              // Simula un clic para iniciar la descarga
-              document.body.appendChild(link);
-              link.click();
-
-              // Limpia el URL creado y elimina el enlace
-              link.remove();
-              window.URL.revokeObjectURL(url);
-            });
-            /*await editManagement(users, 3);
-            toast.success('Registro actualizado exitosamente');
-            const data = await fetchManagement(2);
-            setDataValues(data);*/
-          } catch (error) {
-            console.error('Error fetching projects:', error);
-            toast.error('Error al cargar los proyectos');
-          } finally {
-            setLoading(false);
-          }
-        }}
+        onClick={() => handleMassiveDownload(2)}
         disabled={selectedRowData.length === 0}
         className="bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50"
       >
         CTODSE
       </button>
       <button
-        onClick={ async () => {
-          // Handle Enviar a Nóminas action
-          try {
-            setLoading(true);
-            const users = {
-              users: selectedRowData.map(e => e.id),
-            }
-            users.users.forEach(async element => {
-              const igem = element;
-              const blob = await fetchDownload(element, 3); // Obtiene el Blob del archivo
-              // Crea un enlace temporal para descargar el archivo
-              const url = window.URL.createObjectURL(blob);
-              const link = document.createElement('a');
-              link.href = url;
-              // Asigna un nombre al archivo que se descargará
-              link.download = `${dataValues.filter(e => e.id === igem)[0]?.user.name || 'contrato'}.pdf`; // Cambia `.pdf` según el tipo de archivo
-
-              // Simula un clic para iniciar la descarga
-              document.body.appendChild(link);
-              link.click();
-
-              // Limpia el URL creado y elimina el enlace
-              link.remove();
-              window.URL.revokeObjectURL(url);
-            });
-            /*await editManagement(users, 3);
-            toast.success('Registro actualizado exitosamente');
-            const data = await fetchManagement(2);
-            setDataValues(data);*/
-          } catch (error) {
-            console.error('Error fetching projects:', error);
-            toast.error('Error al cargar los proyectos');
-          } finally {
-            setLoading(false);
-          }
-        }}
+        onClick={() => handleMassiveDownload(3)}
         disabled={selectedRowData.length === 0}
         className="bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50"
       >

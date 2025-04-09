@@ -53,92 +53,77 @@ const CreateComplementaries = () => {
     //area: [],
   });
 
-
   useEffect(() => {
     const load = async () => {
       try {
         setLoading(true);
 
-        const [
-          occupationsData,
-          typeWorkerData,
-          contractTypeData,
-          paymentPeriodData,
-          situationData,
-          paymentTypeData,
-          occupationalCategoryData,
-          cost_sub_centerData,
-          responseData,
-        ] = await Promise.all([
-          fetchOccupations(),
-          fetchWorkLine(),
-          fetchContractType(),
-          fetchPaymentPeriod(),
-          fetchSit(),
-          fetchPaymentType(),
-          fetchOccupationalCategory(),
-          fetchProjects(),
-          id ? fetchComplementary(id) : Promise.resolve(null),
-        ]);
-
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // Mover el formateo de datos a una función separada para evitar cálculos innecesarios en el render.
         const formatOptions = (data: any[]): Option[] =>
           data.map((value) => ({
             value: value.id,
             label: value.description ?? value.code ?? value.name,
           }));
-/**
-             cost_sub_center: cost_sub_centerData.map((value) => ({
-              value: value.id,
-              label: value.sub_center,
-            })),
-            cost_center: cost_sub_centerData.map((value) => ({
-              value: value.id,
-              label: value.short_description,
-            })),
-            area: cost_sub_centerData.map((value) => ({
-              value: value.id,
-              label: value.area,
-            })),
-             */
+
+        // Dividir las llamadas a la API en partes más pequeñas para evitar bloqueos.
+        const fetchData = async () => {
+          const [
+            occupationsData,
+            typeWorkerData,
+            contractTypeData,
+            paymentPeriodData,
+            situationData,
+            paymentTypeData,
+            occupationalCategoryData,
+            cost_sub_centerData,
+          ] = await Promise.all([
+            fetchOccupations(),
+            fetchWorkLine(),
+            fetchContractType(),
+            fetchPaymentPeriod(),
+            fetchSit(),
+            fetchPaymentType(),
+            fetchOccupationalCategory(),
+            fetchProjects(),
+          ]);
+
           setOptions({
             occupations: formatOptions(occupationsData),
             typeWorker: formatOptions(typeWorkerData),
             contractType: formatOptions(contractTypeData),
             paymentPeriod: formatOptions(paymentPeriodData),
             situation: formatOptions(situationData),
-            paymentType: formatOptions(paymentTypeData),//fetchProjects
+            paymentType: formatOptions(paymentTypeData),
             occupationalCategory: formatOptions(occupationalCategoryData),
             cost_sub_sub_center: formatOptions(cost_sub_centerData),
-            
           });
+        };
 
-          console.log(responseData)
-
-          if (responseData.id) {
-            setDefaultValues(responseData);
+        const fetchDefaultValues = async () => {
+          if (id) {
+            const responseData = await fetchComplementary(id);
+            setDefaultValues(responseData.id ? responseData : null);
           } else {
-            const data = {
-                "labor_regime": 1,
-                "disability": 0,
-                "sctr_pension": 0,
-                //"contract_type": 1,
-                "subject_to_atypical_regime": 0,
-                "maximum_working_day": 0,
-                "night_shift": 0,
-                "union": 0,
-                "remuneration_period": 1,
-                "situation": 1,
-                "exempt_from_5th_income": 0,
-                "special_situation": 0,
-                "payment_type": 1,
-                "occupational_category": 1,
-                "double_taxation_treaty": 0,
-            }
-            setDefaultValues(data);
+            setDefaultValues({
+              labor_regime: 1,
+              disability: 0,
+              sctr_pension: 0,
+              subject_to_atypical_regime: 0,
+              maximum_working_day: 0,
+              night_shift: 0,
+              union: 0,
+              remuneration_period: 1,
+              situation: 1,
+              exempt_from_5th_income: 0,
+              special_situation: 0,
+              payment_type: 1,
+              occupational_category: 1,
+              double_taxation_treaty: 0,
+            });
           }
-          
-        
+        };
+
+        await Promise.all([fetchData(), fetchDefaultValues()]);
       } catch (error) {
         setError(`Error al cargar los datos del permission. ${error}`);
       } finally {

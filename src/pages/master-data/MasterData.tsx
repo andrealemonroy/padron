@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -93,8 +93,32 @@ const MasterData = () => {
 
     setLoading(true);
     try {
-      const result = await fetchImportMasterData(formData);
-      console.log('Master Data Base importados exitosamente:', result);
+      // Procesar el archivo en partes pequeñas para evitar bloqueos
+      await new Promise((resolve, reject) => {
+        const CHUNK_SIZE = 1024 * 1024; // 1MB
+        let offset = 0;
+
+        const processChunk = async () => {
+          if (offset >= file.size) {
+            resolve(true);
+            return;
+          }
+
+          const chunk = file.slice(offset, offset + CHUNK_SIZE);
+          formData.set('file', chunk);
+
+          try {
+            await fetchImportMasterData(formData); // Procesar el chunk
+            offset += CHUNK_SIZE;
+            setTimeout(processChunk, 0); // Liberar el hilo principal
+          } catch (error) {
+            reject(error);
+          }
+        };
+
+        processChunk();
+      });
+
       toast.success('Master Data Base importados exitosamente');
     } catch (error) {
       console.error('Error al importar Master Data Base:', error);
@@ -170,7 +194,7 @@ const MasterData = () => {
   );
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const columns: ColumnDef<any, any>[] = [
+  const columns: ColumnDef<any, any>[] = useMemo(() => [
     {
       accessorKey: 'document',
       header: 'Tipo de Documento',
@@ -258,7 +282,7 @@ const MasterData = () => {
         ),
       },
     },
-  ];
+  ], [dataValues]);
 
   return (
     <div className="flex h-[100dvh] overflow-hidden">

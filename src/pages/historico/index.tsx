@@ -35,21 +35,24 @@ export const HistoricoPage = () => {
       // Realiza la solicitud para obtener el archivo
       const blob = await reportsPadron(response); // Obtiene el Blob del archivo
 
-      // Crea un enlace temporal para descargar el archivo
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
+      setTimeout(() => {
+        // Crea un enlace temporal para descargar el archivo
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
 
-      // Asigna un nombre al archivo que se descargará
-      link.download = `reporte.xlsx`; // Usa la extensión determinada
+        // Asigna un nombre al archivo que se descargará
+        link.download = `reporte.xlsx`; // Usa la extensión determinada
 
-      // Simula un clic para iniciar la descarga
-      document.body.appendChild(link);
-      link.click();
+        // Simula un clic para iniciar la descarga
+        document.body.appendChild(link);
+        link.click();
 
-      // Limpia el URL creado y elimina el enlace
-      link.remove();
-      window.URL.revokeObjectURL(url);
+        // Limpia el URL creado y elimina el enlace
+        link.remove();
+        window.URL.revokeObjectURL(url);
+      }, 0); // Delegate download to avoid blocking UI
+
       toast.success('Se descargó el archivo');
     } catch (error) {
       console.error('Error fetching report:', error);

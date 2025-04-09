@@ -140,10 +140,23 @@ const CreateAddresses = () => {
       validation: { required: 'Tipo de Vía es requerido' },
     },
     {
+      name: 'address_type_2',
+      label: 'Tipo de Vía (2)',
+      type: 'select',
+      options: options.viaType,
+      validation: {},
+    },
+    {
       name: 'address_name',
       label: 'Nombre de la Dirección',
       type: 'text',
       validation: { required: 'Nombre de la Dirección es requerido' },
+    },
+    {
+      name: 'address_name_2',
+      label: 'Nombre de la Dirección (2)',
+      type: 'text',
+      validation: {},
     },
     {
       name: 'address_number',
@@ -152,8 +165,20 @@ const CreateAddresses = () => {
       validation: { required: 'Número de la Dirección es requerido' },
     },
     {
+      name: 'address_number_2',
+      label: 'Número de la Dirección (2)',
+      type: 'text',
+      validation: {},
+    },
+    {
       name: 'department_number',
       label: 'Número del Departamento',
+      type: 'text',
+      validation: {},
+    },
+    {
+      name: 'department_number_2',
+      label: 'Número del Departamento (2)',
       type: 'text',
       validation: {},
     },
@@ -164,8 +189,32 @@ const CreateAddresses = () => {
       validation: {},
     },
     {
+      name: 'interior_2',
+      label: 'Interior (2)',
+      type: 'text',
+      validation: {},
+    },
+    {
       name: 'block',
       label: 'Bloque',
+      type: 'text',
+      validation: {},
+    },
+    {
+      name: 'block_2',
+      label: 'Bloque (2)',
+      type: 'text',
+      validation: {},
+    },
+    {
+      name: 'mz',
+      label: 'Manzana',
+      type: 'text',
+      validation: {},
+    },
+    {
+      name: 'mz_2',
+      label: 'Manzana (2)',
       type: 'text',
       validation: {},
     },
@@ -176,14 +225,32 @@ const CreateAddresses = () => {
       validation: {},
     },
     {
+      name: 'lot_2',
+      label: 'Lote (2)',
+      type: 'text',
+      validation: {},
+    },
+    {
       name: 'km',
       label: 'Kilómetro',
       type: 'text',
       validation: {},
     },
     {
+      name: 'km_2',
+      label: 'Kilómetro (2)',
+      type: 'text',
+      validation: {},
+    },
+    {
       name: 'stage',
       label: 'Etapa',
+      type: 'text',
+      validation: {},
+    },
+    {
+      name: 'stage_2',
+      label: 'Etapa (2)',
       type: 'text',
       validation: {},
     },
@@ -195,14 +262,33 @@ const CreateAddresses = () => {
       validation: {},
     },
     {
+      name: 'zone_type_2',
+      label: 'Tipo de Zona (2)',
+      type: 'select',
+      options: options.zoneType,
+      validation: {},
+    },
+    {
       name: 'zone_name',
       label: 'Nombre de la Zona',
       type: 'text',
       validation: {},
     },
     {
+      name: 'zone_name_2',
+      label: 'Nombre de la Zona (2)',
+      type: 'text',
+      validation: {},
+    },
+    {
       name: 'reference',
       label: 'Referencia',
+      type: 'text',
+      validation: {},
+    },
+    {
+      name: 'reference_2',
+      label: 'Referencia (2)',
       type: 'text',
       validation: {},
     },
@@ -215,6 +301,13 @@ const CreateAddresses = () => {
       onChange: (value) => handleDepartmentChange(value),
     },
     {
+      name: 'department_2',
+      label: 'Departamento (2)',
+      type: 'select',
+      options: options.department,
+      validation: {},
+    },
+    {
       name: 'province',
       label: 'Provincia',
       type: 'select',
@@ -223,13 +316,28 @@ const CreateAddresses = () => {
       onChange: (value) => handleProvincieChange(value),
     },
     {
+      name: 'province_2',
+      label: 'Provincia (2)',
+      type: 'select',
+      options: options.province,
+      validation: {},
+    },
+    {
       name: 'district',
       label: 'Distrito',
       type: 'select',
       options: options.district,
       validation: { required: 'Distrito es requerido' },
-    }
+    },
+    {
+      name: 'district_2',
+      label: 'Distrito (2)',
+      type: 'select',
+      options: options.district,
+      validation: {},
+    },
   ];
+  
   
   
 
@@ -252,7 +360,11 @@ const CreateAddresses = () => {
             {loading ? (
               <Spinner loading={loading} size={50} color="#3498db" />
             ) : (
-              <DynamicForm fields={formFields} onSubmit={onSubmit} defaultValues={defaultValues} />
+              <DynamicForm 
+              fields={formFields} 
+              onSubmit={onSubmit} defaultValues={defaultValues} 
+              columns={2}
+              />
             )}
           </div>
         </main>

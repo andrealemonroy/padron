@@ -18,27 +18,32 @@ const CreateUserBanks = () => {
   const [banks, setBanks] = useState([]);
 
   useEffect(() => {
-    const load = async () => {
+    const loadBanks = async () => {
       try {
-        setLoading(true);
         const data = await fetchBanks();
         const formatted = data.map((permission) => ({
           value: permission.id,
           label: permission.description,
         }));
         setBanks(formatted);
+      } catch (error) {
+        setError(`Error al cargar los bancos. ${error}`);
+      }
+    };
+
+    const loadUserBank = async () => {
+      try {
         if (id) {
           const response = await fetchUserBank(id);
           setDefaultValues(response);
         }
       } catch (error) {
-        setError(`Error al cargar los datos del permission. ${error}`);
-      } finally {
-        setLoading(false);
+        setError(`Error al cargar los datos del usuario. ${error}`);
       }
     };
 
-    load();
+    setLoading(true);
+    Promise.all([loadBanks(), loadUserBank()]).finally(() => setLoading(false));
   }, [id]);
 
   const onSubmit = async (data) => {
@@ -72,6 +77,39 @@ const CreateUserBanks = () => {
       label: 'Código Interbancario',
       type: 'text',
       validation: { required: 'Código Interbancario es requerido' },
+    },
+    {
+      name: 'moneda',
+      label: 'Tipo de moneda CTS',
+      type: 'select',
+      options: [
+        { value: 1, label: 'Soles' },
+        { value: 2, label: 'Dólares' },
+      ],
+      validation: { required: 'Tipo de moneda es requerido' },
+    },
+    {
+      name: 'entidad',
+      label: 'Entidad Bancaria CTS',
+      type: 'select',
+      options: banks,
+      validation: { required: 'Entidad Bancaria es requerido' },
+    },
+    {
+      name: 'cuenta_cts',
+      label: 'Cuenta CTS',
+      type: 'text',
+      validation: { required: 'Cuenta CTS es requerido' },
+    },
+    {
+      name: 'regimen',
+      label: 'Regimen Pensionario',
+      type: 'select',
+      options: [
+        { value: 1, label: 'AFP' },
+        { value: 2, label: 'ONP' },
+      ],
+      validation: { required: 'Regimen Pensionario es requerido' },
     },
   ];
   

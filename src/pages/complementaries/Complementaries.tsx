@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import Sidebar from '../../components/Sidebar';
 import Header from '../../components/Header';
 import Table from '../../components/Table';
@@ -14,15 +14,18 @@ const Complementaries = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [complementary, setComplementary] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null); // Estado para manejar errores
 
   useEffect(() => {
     const load = async () => {
       try {
         setLoading(true);
+        setError(null); // Reinicia el estado de error
         const data = await fetchComplementaries();
         setComplementary(data);
       } catch (error) {
         console.error('Error fetching complementaries:', error);
+        setError('Hubo un problema al cargar los datos.'); // Manejo de errores
       } finally {
         setLoading(false);
       }
@@ -30,6 +33,8 @@ const Complementaries = () => {
 
     load();
   }, []);
+
+  const memoizedData = useMemo(() => complementary, [complementary]); // Memoriza los datos
 
   const handleEdit = (data) => {
     navigate(`/edit-complementaries/${data.id}`);
@@ -59,6 +64,8 @@ const Complementaries = () => {
 
             {loading ? (
               <Spinner loading={loading} size={50} color="#3498db" /> // Show spinner while loading
+            ) : error ? ( // Muestra un mensaje de error si ocurre
+              <div className="text-red-500">{error}</div>
             ) : (
               <Table
                 columns={[
@@ -159,7 +166,7 @@ const Complementaries = () => {
                     },
                   },
                 ]}
-                data={complementary}
+                data={memoizedData} // Usa los datos memorizados
                 actions={getActions({ handleEdit, handleDelete })}
               />
             )}

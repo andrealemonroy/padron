@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -38,6 +38,8 @@ const FormUsers = () => {
     
     load();
   }, []);
+
+  const memoizedData = useMemo(() => dataValues, [dataValues]);
 
   const handleEdit = (data) => {
     navigate(`/edit-form/${data.id}`);
@@ -220,7 +222,7 @@ const FormUsers = () => {
                     },
                   },
                 ]}
-                data={dataValues}
+                data={memoizedData}
                 actions={getActions({ handleEdit, handleDelete, sendEmail, sendUrl })}
               />
               </>

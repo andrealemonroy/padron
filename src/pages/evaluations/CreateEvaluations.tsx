@@ -11,11 +11,6 @@ import { fetchCoordinator } from '../../api/userApi';
 import { createEvaluation, editEvaluation, fetchEvaluation } from '../../api/EvaluationsApi';
 import { fetchQualityRatings } from '../../api/qualityRatingsApi';
 
-interface Option {
-  value: number | string;
-  label: string;
-}
-
 const CreateEvaluation = () => {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -29,25 +24,22 @@ const CreateEvaluation = () => {
   useEffect(() => {
     const load = async () => {
       try {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const formatOptions = (data: any[]): Option[] =>
+        setLoading(true);
+        const [data, qualityData, evaluationData] = await Promise.all([
+          fetchCoordinator(),
+          fetchQualityRatings(),
+          id ? fetchEvaluation(id) : Promise.resolve(null),
+        ]);
+
+        const formatOptions = (data) =>
           data.map((value) => ({
             value: value.user_id ?? value.id,
-            label: value.description ?? value.name ?? value.first_name + ' ' + value.last_name_father + ' ' + value.last_name_mother,
+            label: value.description ?? value.name ?? `${value.first_name} ${value.last_name_father} ${value.last_name_mother}`,
           }));
-        setLoading(true);
-        const data = await fetchCoordinator();
-        const qualityData = await fetchQualityRatings()
-        const formattedUsers = data.map((value) => ({
-          value: value.user_id ?? value.id,
-          label: value.description ?? value.name ?? value.first_name + ' ' + value.last_name_father + ' ' + value.last_name_mother,
-        }));
-        setUsers(formattedUsers);
-        setQuality(formatOptions(qualityData.filter(e => e.type == 2)));
-        if (id) {
-          const response = await fetchEvaluation(id);
-          setDefaultValues(response);
-        }
+
+        setUsers(formatOptions(data));
+        setQuality(formatOptions(qualityData.filter((e) => e.type === 2)));
+        if (evaluationData) setDefaultValues(evaluationData);
       } catch (error) {
         setError(`Error al cargar los datos de la evaluación. ${error}`);
       } finally {

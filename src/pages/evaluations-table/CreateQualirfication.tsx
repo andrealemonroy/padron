@@ -18,16 +18,17 @@ const CreateQualirfication = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    console.log('Effect running');
     const load = async () => {
       try {
         setLoading(true);
+        setError(null); // Asegurarse de limpiar errores previos
         if (id) {
           const response = await fetchQualitys(id);
           setDefaultValues(response);
         }
       } catch (error) {
-        setError(`Error al cargar los datos del projects. ${error}`);
+        console.error('Error al cargar los datos:', error); // Agregar logging para depuración
+        setError(`Error al cargar los datos del proyecto. ${error.message || error}`);
       } finally {
         setLoading(false);
       }
@@ -38,7 +39,7 @@ const CreateQualirfication = () => {
 
   const onSubmit = async (data) => {
     try {
-      console.log(data);
+      setLoading(true); // Mostrar spinner durante la operación
       if (id) {
         await editQuality(data, Number(id));
         toast.success('Calificador actualizado exitosamente');
@@ -51,9 +52,12 @@ const CreateQualirfication = () => {
         navigate('/qualirfication');
       }, 2000); 
     } catch (error) {
+      console.error('Error en el envío del formulario:', error); // Agregar logging para depuración
       const errorMessage = id ? 'Error al actualizar el calificador' : 'Error al crear el calificador';
-      toast.error(`${errorMessage}. ${error}`);
-      setError(`${errorMessage}. ${error}`);
+      toast.error(`${errorMessage}. ${error.message || error}`);
+      setError(`${errorMessage}. ${error.message || error}`);
+    } finally {
+      setLoading(false); // Asegurarse de ocultar el spinner
     }
   };
 
