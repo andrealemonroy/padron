@@ -116,13 +116,13 @@ const CreateContract = () => {
           if (file.size > 2 * 1024 * 1024) {
             setError('El archivo debe ser menor de 2MB.');
             return; // Detener el proceso si el archivo excede el tamaño permitido
-        }
+          }
   
           const reader = new FileReader();
           reader.onloadend = async () => {
             const base64String = reader.result as string; // Obtener la cadena Base64
             const base64Data = base64String.split(',')[1]; // Extraer solo la parte Base64
-  
+            
             // Agregar la imagen en formato Base64 a los datos
             const personalInfoData = {
               ...data, // Mantener otros campos
@@ -148,15 +148,21 @@ const CreateContract = () => {
           reader.readAsDataURL(file); // Leer el archivo como Data URL (Base64)
         } else {
           // Si no hay archivo, simplemente envía los datos sin la imagen
+          console.log('No se ha seleccionado un archivo.');
+          console.log(data);
+          const personalInfoData = {
+            ...data, // Mantener otros campos
+            pdf_contract: '', // Agregar la imagen en formato Base64
+          };
           if (id) {
-            await editContract(data, Number(id));
+            await editContract(personalInfoData, Number(id));
             toast.success('Proyecto actualizado exitosamente');
           } else {
-            await createContract(data);
+            await createContract(personalInfoData);
             toast.success('Proyecto creado exitosamente');
           }
           setError(null);
-          navigate('/basic');
+          navigate('/contract');
         }
       } catch (error) {
         console.error('Error submitting form:', error);
@@ -192,8 +198,7 @@ const CreateContract = () => {
           value: 2,
           label: 'EPS',
         }
-      ],
-      validation: { required: 'El SCTR de salud es requerido' }
+      ]
     },
     {
       name: 'start_date',
@@ -245,7 +250,6 @@ const CreateContract = () => {
       name: 'pdf_contract',
       label: 'Contrato Firmado',
       type: 'file',
-      validation: { required: 'El campo es requerido' },
       //colSpan: 1,
     },
   ]

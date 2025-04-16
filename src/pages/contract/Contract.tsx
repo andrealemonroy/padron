@@ -21,6 +21,7 @@ interface RowData {
   start_date: string;
   end_date: string;
   pdf_contract_url: string;
+  status: number;
   // Add other fields as needed
 }
 
@@ -39,7 +40,7 @@ const Contract = () => {
       try {
         setLoading(true);
         const data: RowData[] = await fetchContracts();
-        setDataValues(data);
+        setDataValues(data.filter((item) => item.status === 1));
       } catch (error) {
         console.error('Error fetching projects:', error);
         toast.error('Error al cargar los proyectos');
@@ -66,7 +67,7 @@ const Contract = () => {
         setLoading(true);
 
         // Realiza la solicitud para obtener el archivo
-        const blob = await fetchDownload(contract.user_id, 1); // Obtiene el Blob del archivo
+        const blob = await fetchDownload(contract.id, 1); // Obtiene el Blob del archivo
 
         // Crea un enlace temporal para descargar el archivo
         const url = window.URL.createObjectURL(blob);
@@ -99,7 +100,7 @@ const btnContract2 = async (contract) => {
       setLoading(true);
 
       // Realiza la solicitud para obtener el archivo
-      const blob = await fetchDownload(contract.user_id, 2); // Obtiene el Blob del archivo
+      const blob = await fetchDownload(contract.id, 2); // Obtiene el Blob del archivo
 
       // Crea un enlace temporal para descargar el archivo
       const url = window.URL.createObjectURL(blob);
@@ -131,7 +132,7 @@ const btnContract3 = async (contract) => {
       setLoading(true);
 
       // Realiza la solicitud para obtener el archivo
-      const blob = await fetchDownload(contract.user_id, 3); // Obtiene el Blob del archivo
+      const blob = await fetchDownload(contract.id, 3); // Obtiene el Blob del archivo
 
       // Crea un enlace temporal para descargar el archivo
       const url = window.URL.createObjectURL(blob);
@@ -416,6 +417,29 @@ const handleMassiveDownload = async (type: number) => {
                       ),
                     },
                   },
+                  /*
+                  {
+                    header: 'Estado',
+                    accessorKey: 'status',
+                    cell: (info) => (info.getValue() === 1 ? 'Activo' : 'Inactivo'),
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    filterFn: 'statusFilter' as any,
+                    meta: {
+                      width: '200px',
+                      filterComponent: (column) => (
+                        <select
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        >
+                          <option value="">Todos los Estados</option>
+                          <option value="Activo">Activo</option>
+                          <option value="Inactivo">Inactivo</option>
+                        </select>
+                      ),
+                    },
+                  },
+                  */
                   {
                     header: 'Archivo',
                     accessorKey: 'pdf_contract_url',
