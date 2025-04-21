@@ -182,8 +182,7 @@ const CreateContract = () => {
       name: 'health_regime',
       label: 'Régimen de Salud',
       type: 'select',
-      options: options.healthEntity,
-      validation: { required: 'El régimen de salud es requerido' }
+      options: options.healthEntity
     },
     {
       name: 'sctr_health',
@@ -216,8 +215,7 @@ const CreateContract = () => {
       name: 'termination_reason',
       label: 'Razón de Terminación',
       type: 'select',
-      options: options.cessationReasons,
-      validation: { required: 'La razón de terminación es requerida' }
+      options: options.cessationReasons
     },
     {
       name: 'worker_type',

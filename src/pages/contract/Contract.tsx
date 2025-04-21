@@ -190,7 +190,8 @@ const handleMassiveDownload = async (type: number) => {
             //setDataValues((prev) => prev.filter(dev => dev.id !== idToDelete));
             setShowAlert(false);
             toast.success('Proyecto eliminado exitosamente');
-            navigate('/contract');
+            const data: RowData[] = await fetchContracts();
+            setDataValues(data.filter((item) => item.status === 1));
         } catch (error) {
             console.error('Error al eliminar el proyecto:', error);
             toast.error('Error al eliminar el proyecto');
