@@ -183,6 +183,32 @@ export const fetchDownload = async (id, type: number): Promise<any> => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const fetchDownloadForm = async (id): Promise<any> => {
+  console.log(id);
+
+  try {
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/exportAllForm/${id}`, {
+      responseType: 'blob', // Manejar como archivo binario
+    });
+
+    // Verifica que la respuesta sea un Excel
+    const contentType = response.headers['content-type'];
+    if (
+      contentType !== 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' &&
+      contentType !== 'application/vnd.ms-excel'
+    ) {
+      throw new Error('El archivo descargado no es un Excel.');
+    }
+
+    return response.data; // Devuelve el Blob para que lo puedas guardar
+  } catch (error) {
+    console.error('No se pudo descargar el archivo:', error.response || error);
+    throw error;
+  }
+};
+
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const reportsPadron = async (data): Promise<any> => {
   try {
     const response = await axios.post(`${import.meta.env.VITE_API_URL}/reports-padron`, data, {
