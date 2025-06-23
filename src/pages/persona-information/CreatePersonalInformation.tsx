@@ -102,7 +102,7 @@ const CreatePersonalInformation = () => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const formatOptions = (data: any[]): Option[] =>
           data.map((value) => ({
-            value: value.id,
+            value: value.id, // Ensure value is a string
             label: value.description ?? value.name,
           }));
 
@@ -319,7 +319,7 @@ const CreatePersonalInformation = () => {
       label: 'Prestación de Servicio',
       type: 'select',
       options: [
-        { value: 0, label: 'NO' },
+        { value: 2, label: 'NO' },
         { value: 1, label: 'SI' },
       ],
       validation: { required: 'Género es requerido' },

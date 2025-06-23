@@ -55,7 +55,7 @@ const CreateWorkCondition = () => {
       type: 'select',
       options: [
         {
-          value: 0,
+          value: 2,
           label: 'NO',
         },
         {
@@ -109,7 +109,7 @@ const CreateWorkCondition = () => {
       type: 'select',
       options: [
         {
-          value: 0,
+          value: 2,
           label: 'NO',
         },
         {

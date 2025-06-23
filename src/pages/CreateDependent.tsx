@@ -243,21 +243,18 @@ const CreateDependent = () => {
       name: 'pdf_nacimiento',
       label: 'Partida de nacimiento',
       type: 'file',
-      validation: { required: 'El campo es requerido' },
       colSpan: 1,
     },
     {
       name: 'pdf_matrimonio',
       label: 'Partida de Matrimonio',
       type: 'file',
-      validation: { required: 'El campo es requerido' },
       colSpan: 1,
     },
     {
       name: 'pdf_judicial',
       label: 'Escritura publica o resolución judicial',
       type: 'file',
-      validation: { required: 'El campo es requerido' },
       colSpan: 1,
     },
   ];

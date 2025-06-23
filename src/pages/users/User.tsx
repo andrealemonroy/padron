@@ -49,9 +49,10 @@ const User = () => {
     loadUsers();
   }, []);
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (data: any) => {
     setShowAlert(true);
-    setUserIdToDelete(id);
+    setUserIdToDelete(data.id);
+    console.log('User ID to delete:', data.id);
   };
 
   const confirmDelete = async () => {
