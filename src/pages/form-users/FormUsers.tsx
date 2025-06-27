@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -12,6 +12,7 @@ import { fetchFormUsers } from '../../api/formUserApi';
 import { deleteProject } from '../../api/projectApi';
 import { getActions } from '../../utils/actions';
 import { sendEmailApi } from '../../api/userApi';
+import { fetchDownloadForm } from '../../api/contractApi';
 
 const FormUsers = () => {
   const navigate = useNavigate();
@@ -20,6 +21,8 @@ const FormUsers = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [dataValues, setDataValues] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedRows, setSelectedRows] = useState<Record<number, boolean>>({});
+  const selectAllCheckboxRef = useRef<HTMLInputElement>(null);
   
 
   useEffect(() => {
@@ -45,6 +48,16 @@ const FormUsers = () => {
     navigate(`/edit-form/${data.id}`);
   };
 
+  useEffect(() => {
+    if (selectAllCheckboxRef.current) {
+      if (dataValues.length > 0 && dataValues.every((row) => selectedRows[row.id])) {
+        selectAllCheckboxRef.current.checked = true;
+      } else {
+        selectAllCheckboxRef.current.checked = false;
+      }
+    }
+  }, [selectedRows, dataValues]);
+
   const sendEmail = async (data) => {
     try {
       const response = await sendEmailApi(data.id);
@@ -67,6 +80,23 @@ const FormUsers = () => {
     setIdToDelete(data.id);
   };
 
+  // Handle select all checkbox
+  const handleSelectAll = (isChecked: boolean) => {
+    const newSelectedRows = {};
+    dataValues.forEach((row) => {
+      newSelectedRows[row.id] = isChecked;
+    });
+    setSelectedRows(newSelectedRows);
+  };
+
+  // Handle individual row checkbox
+  const handleSelectRow = (rowId: number, isChecked: boolean) => {
+    setSelectedRows((prev) => ({
+      ...prev,
+      [rowId]: isChecked,
+    }));
+  };
+
   const confirmDelete = async () => {
     if (idToDelete) {
       console.log(idToDelete);
@@ -83,6 +113,33 @@ const FormUsers = () => {
         } finally {
           setLoading(false);
         }
+    }
+  };
+
+   const selectedRowData = dataValues.filter((row) => selectedRows[row.id]);
+
+  const handleMassiveDownload = async (type: number) => {
+    try {
+      setLoading(true);
+      const downloadPromises = selectedRowData.map(async (contract) => {
+        const blob = await fetchDownloadForm(contract.id);
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${contract.user.name || 'formulario'}.xlsx`; // Cambia a .xlsx
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.URL.revokeObjectURL(url);
+
+      });
+      await Promise.all(downloadPromises);
+      toast.success('Descargas completadas exitosamente');
+    } catch (error) {
+      console.error('Error en la descarga masiva:', error);
+      toast.error('Error al descargar los archivos');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -130,6 +187,10 @@ const FormUsers = () => {
                     text: 'Agregar Formulario',
                     action: handleAdd,
                   },
+                   {
+                    text: 'Descargar',
+                    action: handleMassiveDownload,
+                  },
                 ]}
               />
             </div>
@@ -141,6 +202,32 @@ const FormUsers = () => {
 
               <Table
                 columns={[
+                  {
+                    id: 'selection',
+                    // eslint-disable-next-line no-empty-pattern
+                    header: ({ }) => (
+                      <input
+                        ref={selectAllCheckboxRef}
+                        type="checkbox"
+                        onChange={(e) =>
+                          handleSelectAll(e.target.checked)
+                        }
+                        checked={
+                          dataValues.length > 0 && dataValues.every((row) => selectedRows[row.id])
+                        }
+                      />
+                    ),
+                    cell: ({ row }) => (
+                      <input
+                        type="checkbox"
+                        checked={!!selectedRows[row.original.id]}
+                        onChange={(e) =>
+                          handleSelectRow(row.original.id, e.target.checked)
+                        }
+                      />
+                    ),
+                    meta: { width: '50px' },
+                  },
                   {
                     header: 'Descripción',
                     accessorKey: 'description',

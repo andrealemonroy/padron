@@ -258,7 +258,7 @@ const handleMassiveDownload = async (type: number) => {
       toast.success('Usuarios importados exitosamente');
       console.log(result);
       const data: RowData[] = await fetchContracts();
-      setDataValues(data);
+      setDataValues(data.filter((item) => item.status === 1));
     } catch (error) {
       console.error('Error al importar usuarios:', error);
       toast.error('Error al importar usuarios. Por favor, intente de nuevo.');
@@ -348,7 +348,8 @@ const handleMassiveDownload = async (type: number) => {
                 columns={[
                   {
                     id: 'selection',
-                    header: ({ table }) => (
+                    // eslint-disable-next-line no-empty-pattern
+                    header: ({ }) => (
                       <input
                         ref={selectAllCheckboxRef}
                         type="checkbox"
