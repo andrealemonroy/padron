@@ -95,13 +95,11 @@ const CreatePensionSystem = () => {
           label: 'Mixta',
         }
       ],
-      validation: { required: 'AFP es requerido' },
     },
     {
       name: 'cuspp',
       label: 'Código AFP',
       type: 'text',
-      validation: { required: 'Código AFP es requerido' },
     },
   ];
   
