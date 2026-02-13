@@ -68,29 +68,29 @@ const UserBanks = () => {
   };
 
   const handleAddMassive = async (
-      event: React.ChangeEvent<HTMLInputElement>
-    ) => {
-      if (!event.target.files || event.target.files.length === 0) {
-        toast.error('No se seleccionó ningún archivo');
-        return;
-      }
-  
-      const file = event.target.files[0];
-      const formData = new FormData();
-      formData.append('file', file);
-      console.log(formData);
-      setLoading(true);
-      try {
-        const result = await fetchImportUserBanks(formData);
-        console.log('Trabajadores importados exitosamente:', result);
-        toast.success('Trabajadores importados exitosamente');
-      } catch (error) {
-        console.error('Error al importar usuarios:', error);
-        toast.error('Error al importar usuarios. Por favor, intente de nuevo.');
-      } finally {
-        setLoading(false);
-      }
-    };
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (!event.target.files || event.target.files.length === 0) {
+      toast.error('No se seleccionó ningún archivo');
+      return;
+    }
+
+    const file = event.target.files[0];
+    const formData = new FormData();
+    formData.append('file', file);
+    console.log(formData);
+    setLoading(true);
+    try {
+      const result = await fetchImportUserBanks(formData);
+      console.log('Trabajadores importados exitosamente:', result);
+      toast.success('Trabajadores importados exitosamente');
+    } catch (error) {
+      console.error('Error al importar usuarios:', error);
+      toast.error('Error al importar usuarios. Por favor, intente de nuevo.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const breadcrumbItems = [{ label: 'Datos Bancarios', path: '/user-banks' }];
 
@@ -109,7 +109,7 @@ const UserBanks = () => {
     </div>
   );
 
-  
+
 
   return (
     <div className="flex h-[100dvh] overflow-hidden">
@@ -138,6 +138,24 @@ const UserBanks = () => {
             ) : (
               <Table
                 columns={[
+                  {
+                    accessorKey: 'personal_information.document_number',
+                    header: 'Número de documento',
+                    cell: (info) => info.getValue(),
+                    filterFn: 'includesString',
+                    meta: {
+                      width: '200px',
+                      filterComponent: (column) => (
+                        <input
+                          type="text"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          placeholder="Filtrar número de documento"
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
+                  },
                   {
                     header: 'Nombre',
                     accessorKey: 'name',

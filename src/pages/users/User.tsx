@@ -21,6 +21,7 @@ interface UserData {
   email: string;
   roles: { name: string }[];
   status_id: number;
+  personal_information: { document_number: string };
 }
 
 const User = () => {
@@ -207,6 +208,24 @@ const User = () => {
   // Define the columns with filter components
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const columns: ColumnDef<UserData, any>[] = [
+    {
+      accessorKey: 'personal_information.document_number',
+      header: 'Número de documento',
+      cell: (info) => info.getValue(),
+      filterFn: 'includesString',
+      meta: {
+        width: '200px',
+        filterComponent: (column) => (
+          <input
+            type="text"
+            value={(column.getFilterValue() ?? '') as string}
+            onChange={(e) => column.setFilterValue(e.target.value)}
+            placeholder="Filtrar Número de documento"
+            className="w-full px-2 py-1 text-sm border rounded"
+          />
+        ),
+      },
+    },
     {
       accessorKey: 'name',
       header: 'Apellidos y Nombres',

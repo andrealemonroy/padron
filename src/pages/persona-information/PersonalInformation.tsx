@@ -37,7 +37,7 @@ const PersonalInformation = () => {
         setLoading(true);
         const data = await fetchPersonalInformations();
         const dataDev = data.map(e => {
-         
+
           if (e.personal_information?.first_name) {
             e.name = e.personal_information.last_name_father + ' ' + e.personal_information.last_name_mother + ' ' + e.personal_information.first_name;
           }
@@ -122,6 +122,24 @@ const PersonalInformation = () => {
   // Define the columns
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const columns: ColumnDef<PersonalInformationData, any>[] = [
+    {
+      accessorKey: 'personal_information.document_number',
+      header: 'Número de documento',
+      cell: (info) => info.getValue(),
+      filterFn: 'includesString',
+      meta: {
+        width: '200px',
+        filterComponent: (column) => (
+          <input
+            type="text"
+            value={(column.getFilterValue() ?? '') as string}
+            onChange={(e) => column.setFilterValue(e.target.value)}
+            placeholder="Filtrar número de documento"
+            className="w-full px-2 py-1 text-sm border rounded"
+          />
+        ),
+      },
+    },
     {
       header: 'Nombre',
       accessorKey: 'name',
