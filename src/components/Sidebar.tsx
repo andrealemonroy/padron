@@ -3,7 +3,17 @@ import { NavLink, useLocation } from 'react-router-dom';
 
 import SidebarLinkGroup from './SidebarLinkGroup';
 import { fetchMenu } from '../api/menuApi';
-import { HiAnnotation, HiBell, HiDocument, HiDocumentReport, HiPaperClip, HiTable, HiUser, HiUserCircle, HiUsers } from 'react-icons/hi';
+import {
+  HiAnnotation,
+  HiBell,
+  HiDocument,
+  HiDocumentReport,
+  HiPaperClip,
+  HiTable,
+  HiUser,
+  HiUserCircle,
+  HiUsers
+} from 'react-icons/hi';
 
 function Sidebar({ sidebarOpen, setSidebarOpen, variant = 'default' }) {
   const [menuStructure, setMenuStructure] = useState(null);
@@ -22,19 +32,14 @@ function Sidebar({ sidebarOpen, setSidebarOpen, variant = 'default' }) {
   useEffect(() => {
     const loadMenuStructure = async () => {
       try {
-        // Primero, intentamos obtener los datos del localStorage
         const cachedMenuData = localStorage.getItem('menuStructure');
 
         if (cachedMenuData) {
-          // Si los datos existen en localStorage, los usamos
           setMenuStructure(JSON.parse(cachedMenuData));
           console.log('Datos del menú cargados desde localStorage');
         } else {
-          // Si no hay datos en localStorage, hacemos la petición al backend
           const menuData = await fetchMenu();
           setMenuStructure(menuData);
-
-          // Guardamos los datos en localStorage para futuras visitas
           localStorage.setItem('menuStructure', JSON.stringify(menuData));
           console.log(
             'Datos del menú cargados desde el backend y guardados en localStorage'
@@ -80,13 +85,17 @@ function Sidebar({ sidebarOpen, setSidebarOpen, variant = 'default' }) {
     }
   }, [sidebarExpanded]);
 
+  // Helper para asegurar que menuStructure sea un array (por si el backend manda un objeto)
+  const menuArray = menuStructure
+    ? (Array.isArray(menuStructure) ? menuStructure : Object.values(menuStructure))
+    : [];
+
   return (
     <div className="min-w-fit">
       {/* Sidebar backdrop (mobile only) */}
       <div
-        className={`fixed inset-0 bg-gray-900 bg-opacity-30 z-40 lg:hidden lg:z-auto transition-opacity duration-200 ${
-          sidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        }`}
+        className={`fixed inset-0 bg-gray-900 bg-opacity-30 z-40 lg:hidden lg:z-auto transition-opacity duration-200 ${sidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+          }`}
         aria-hidden="true"
       ></div>
 
@@ -94,13 +103,11 @@ function Sidebar({ sidebarOpen, setSidebarOpen, variant = 'default' }) {
       <div
         id="sidebar"
         ref={sidebar}
-        className={`flex lg:!flex flex-col absolute z-40 left-0 top-0 lg:static lg:left-auto lg:top-auto lg:translate-x-0 h-[100dvh] overflow-y-scroll lg:overflow-y-auto no-scrollbar w-64 lg:w-20 lg:sidebar-expanded:!w-64 2xl:!w-64 shrink-0 bg-white dark:bg-gray-800 p-4 transition-all duration-200 ease-in-out ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-64'
-        } ${
-          variant === 'v2'
+        className={`flex lg:!flex flex-col absolute z-40 left-0 top-0 lg:static lg:left-auto lg:top-auto lg:translate-x-0 h-[100dvh] overflow-y-scroll lg:overflow-y-auto no-scrollbar w-64 lg:w-20 lg:sidebar-expanded:!w-64 2xl:!w-64 shrink-0 bg-white dark:bg-gray-800 p-4 transition-all duration-200 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-64'
+          } ${variant === 'v2'
             ? 'border-r border-gray-200 dark:border-gray-700/60'
             : 'rounded-r-2xl shadow-sm'
-        }`}
+          }`}
       >
         {/* Sidebar header */}
         <div className="flex justify-between mb-10 pr-3 sm:px-2">
@@ -128,116 +135,83 @@ function Sidebar({ sidebarOpen, setSidebarOpen, variant = 'default' }) {
         </div>
 
         {/* Links */}
+        <ul className="space-y-2 list-none m-0 p-0">
+          {menuArray.map((item, index) => {
+            // Verificar si alguna ruta hija coincide con la URL actual para mantener el acordeón abierto
+            const isGroupActive = item.children?.some(child => pathname.includes(child.route));
 
-        <div className="space-y-8">
-          {/* Pages group */}
-          {menuStructure &&
-            menuStructure.map((item, index) => (
-              <div key={index}>
-                <h3 className="text-xs uppercase text-gray-400 dark:text-gray-500 font-semibold pl-3">
-                  <span
-                    className="hidden lg:block lg:sidebar-expanded:hidden 2xl:hidden text-center w-6"
-                    aria-hidden="true"
-                  >
-                    •••
-                  </span>
-                  <span className="lg:hidden lg:sidebar-expanded:block 2xl:block">
-                    {item.title}
-                  </span>
-                </h3>
-                <ul className="mt-3">
-                  {Object.entries(item.children).map(([key, child]: any) => (
-                    <SidebarLinkGroup
-                      key={key}
-                      activecondition={pathname.includes(
-                        (child as { route: string }).route
-                      )}
-                    >
-                      {(handleClick, open) => {
-                        return (
-                          <React.Fragment>
-                            <a
-                              href="#0"
-                              className={`block text-gray-800 dark:text-gray-100 truncate transition duration-150 ${
-                                pathname.includes('trabajador')
-                                  ? ''
-                                  : 'hover:text-gray-900 dark:hover:text-white'
-                              }`}
-                              onClick={(e) => {
-                                e.preventDefault();
-                                handleClick();
-                                setSidebarExpanded(true);
-                              }}
-                            >
-                              <div className="flex items-center justify-between">
-                                <div className="flex items-center">
-                                  {/* Icon */}
-                                  <span className="w-6 h-6 flex-shrink-0 m-auto">
-                                    {child.title === 'Usuarios' ? <HiUser size={20} /> : null}
-                                    {child.title === 'Tablas' ? <HiTable size={20}/> : null}
-                                    {child.title === 'Notificaciones' ? <HiBell size={20}/> : null}
-                                    {child.title === 'Trabajador' ? <HiUserCircle size={20} /> : null}
-                                    {child.title === 'RRHH' ? <HiUsers size={20} /> : null}
-                                    {child.title === 'Nóminas' ? <HiPaperClip size={20} /> : null}
-                                    {child.title === 'Contratos' ? <HiDocument size={20} /> : null}
-                                    {child.title === 'Evaluación' ? <HiAnnotation size={20} /> : null}
-                                    {child.title === 'Reportes' ? <HiDocumentReport size={20} /> : null}
-                                  </span>
-                                  <span className="text-sm font-medium ml-4 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                                    {(child as { title: string })?.title}
-                                  </span>
-                                </div>
-                                {/* Icon */}
-                                <div className="flex shrink-0 ml-2">
-                                  <svg
-                                    className={`w-3 h-3 shrink-0 ml-1 fill-current text-gray-400 dark:text-gray-500 ${
-                                      open && 'rotate-180'
-                                    }`}
-                                    viewBox="0 0 12 12"
-                                  >
-                                    <path d="M5.9 11.4L.5 6l1.4-1.4 4 4 4-4L11.3 6z" />
-                                  </svg>
-                                </div>
-                              </div>
-                            </a>
-
-                            <div className="lg:hidden lg:sidebar-expanded:block 2xl:block">
-                              <ul className={`pl-8 mt-1 ${!open && 'hidden'}`}>
-                                {Object.entries(
-                                  (
-                                    child as {
-                                      children: Record<string, unknown>;
-                                    }
-                                  ).children
-                                ).map(([keyi, subChild]) => (
-                                  <li key={keyi} className="mb-1 last:mb-0">
-                                    <NavLink
-                                      end
-                                      to={(subChild as { route: string }).route}
-                                      className={({ isActive }) =>
-                                        'block transition duration-150 truncate ' +
-                                        (isActive
-                                          ? 'text-violet-500'
-                                          : 'text-gray-500/90 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200')
-                                      }
-                                    >
-                                      <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                                        {(subChild as { title: string }).title}
-                                      </span>
-                                    </NavLink>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          </React.Fragment>
-                        );
+            return (
+              <SidebarLinkGroup key={index} activecondition={isGroupActive}>
+                {(handleClick, open) => (
+                  <React.Fragment>
+                    <a
+                      href="#0"
+                      className={`block text-gray-800 dark:text-gray-100 truncate transition duration-150 py-2 ${isGroupActive ? '' : 'hover:text-gray-900 dark:hover:text-white'
+                        }`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleClick();
+                        setSidebarExpanded(true);
                       }}
-                    </SidebarLinkGroup>
-                  ))}
-                </ul>
-              </div>
-            ))}
-        </div>
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center">
+                          {/* Asignación de Iconos por Categoría */}
+                          <span className="w-6 h-6 flex-shrink-0 m-auto flex items-center justify-center text-gray-600 dark:text-gray-400">
+                            {item.title.toUpperCase() === 'CONFIGURACIÓN' ? <HiTable size={20} /> : null}
+                            {item.title.toUpperCase() === 'TRABAJADOR' ? <HiUserCircle size={20} /> : null}
+                            {item.title.toUpperCase() === 'RRHH' ? <HiUsers size={20} /> : null}
+                            {item.title.toUpperCase() === 'NÓMINA' ? <HiPaperClip size={20} /> : null}
+                            {item.title.toUpperCase() === 'PROYECTOS' ? <HiAnnotation size={20} /> : null}
+                            {item.title.toUpperCase() === 'CONTRATOS' ? <HiDocument size={20} /> : null}
+                            {item.title.toUpperCase() === 'REPORTES' ? <HiDocumentReport size={20} /> : null}
+                          </span>
+                          <span className="text-sm font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                            {item.title}
+                          </span>
+                        </div>
+                        {/* Icono de Flecha (Expandir/Contraer) */}
+                        <div className="flex shrink-0 ml-2">
+                          <svg
+                            className={`w-3 h-3 shrink-0 ml-1 fill-current text-gray-400 dark:text-gray-500 transition-transform duration-200 ${open && 'rotate-180'
+                              }`}
+                            viewBox="0 0 12 12"
+                          >
+                            <path d="M5.9 11.4L.5 6l1.4-1.4 4 4 4-4L11.3 6z" />
+                          </svg>
+                        </div>
+                      </div>
+                    </a>
+
+                    {/* Sub Menú (Opciones internas) */}
+                    <div className="lg:hidden lg:sidebar-expanded:block 2xl:block">
+                      <ul className={`pl-9 mt-1 space-y-2 list-none m-0 ${!open && 'hidden'}`}>
+                        {item.children && item.children.map((child, childIndex) => (
+                          <li key={childIndex} className="last:mb-0 list-none">
+                            <NavLink
+                              end
+                              to={child.route || '#'}
+                              className={({ isActive }) =>
+                                'block transition duration-150 truncate ' +
+                                (isActive
+                                  ? 'text-violet-500 font-semibold'
+                                  : 'text-gray-500/90 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200')
+                              }
+                            >
+                              <span className="text-sm lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                                {child.title}
+                              </span>
+                            </NavLink>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </React.Fragment>
+                )}
+              </SidebarLinkGroup>
+            );
+          })}
+        </ul>
 
         {/* Expand / collapse button */}
         <div className="pt-3 hidden lg:inline-flex 2xl:hidden justify-end mt-auto">

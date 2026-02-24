@@ -63,7 +63,7 @@ const CreateEvaluation = () => {
       setError(null);
       setTimeout(() => {
         navigate('/evaluations');
-      }, 2000); 
+      }, 2000);
     } catch (error) {
       const errorMessage = id ? 'Error al actualizar la evaluación' : 'Error al crear la evaluación';
       toast.error(`${errorMessage}. ${error}`);
@@ -85,6 +85,7 @@ const CreateEvaluation = () => {
       type: 'date',
       validation: { required: 'La fecha de evaluación es requerida' }
     },
+    /*
     {
       name: 'predefined_options',
       label: 'Opciones Predefinidas',
@@ -96,6 +97,7 @@ const CreateEvaluation = () => {
       ],
       validation: { required: 'La opción predefinida es requerida' }
     },
+    */
     {
       name: 'quality',
       label: 'Evaluación',
@@ -110,7 +112,7 @@ const CreateEvaluation = () => {
       validation: { required: 'Los detalles son requeridos' }
     }// quality
   ];
-  
+
   const breadcrumbItems = [
     { label: 'Evaluación de Campo', path: '/evaluations' },
     { label: id ? 'Editar Evaluación de Campo' : 'Crear Evaluación de Campo', path: id ? `/edit-evaluations/${id}` : '/create-evaluations' },
@@ -136,7 +138,7 @@ const CreateEvaluation = () => {
           </div>
         </main>
       </div>
-      
+
     </div>
   );
 };

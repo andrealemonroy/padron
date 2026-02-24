@@ -48,67 +48,82 @@ interface PermissionPivot {
 
 
 export const fetchUsers = async (): Promise<User[]> => {
-    
-    const response = await axios.get<User[]>(`/users`)
-    .then(response => {
-        return response;
-    })
-    .catch(error => {
-        console.error('Error fetching users:', error.response || error);
-        throw error;
-    });
 
- 
-  return response.data;
+    const response = await axios.get<User[]>(`/users`)
+        .then(response => {
+            return response;
+        })
+        .catch(error => {
+            console.error('Error fetching users:', error.response || error);
+            throw error;
+        });
+
+
+    return response.data;
+};
+
+export const fetchPadron = async (): Promise<any[]> => {
+
+    const response = await axios.get<User[]>(`/padron-reporte`)
+        .then(response => {
+            return response;
+        })
+        .catch(error => {
+            console.error('Error fetching users:', error.response || error);
+            throw error;
+        });
+
+
+    return response.data;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const fetchCoordinator = async (): Promise<any[]> => {
-    
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const response = await axios.get<any[]>(`/coordinator`)
-    .then(response => {
-        return response;
-    })
-    .catch(error => {
-        console.error('Error fetching users:', error.response || error);
-        throw error;
-    });
+        .then(response => {
+            return response;
+        })
+        .catch(error => {
+            console.error('Error fetching users:', error.response || error);
+            throw error;
+        });
 
- 
-  return response.data;
+
+    return response.data;
 };
 
 export const createUser = async (userData: Omit<User, 'id'>): Promise<User> => {
-  const response = await axios.post<User>(`${import.meta.env.VITE_API_URL}/users`, {...userData, status_id: 1, password: '12345678' })
-    .then(response => {
-        return response;
-    })
-    .catch(error => {
-        console.error('Error fetching users:', error.response || error);
-        throw error;
-    });
+    const response = await axios.post<User>(`${import.meta.env.VITE_API_URL}/users`, { ...userData, status_id: 1, password: '12345678' })
+        .then(response => {
+            return response;
+        })
+        .catch(error => {
+            console.error('Error fetching users:', error.response || error);
+            throw error;
+        });
     console.log(response);
-  return response.data;
+    return response.data;
 };
 
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const envoForm = async (userData): Promise<any> => {
     const response = await axios.post<User>(`${import.meta.env.VITE_API_URL}/create-forms`, userData)
-      .then(response => {
-          return response;
-      })
-      .catch(error => {
-          console.error('Error fetching users:', error.response || error);
-          throw error;
-      });
-      console.log(response);
+        .then(response => {
+            return response;
+        })
+        .catch(error => {
+            console.error('Error fetching users:', error.response || error);
+            throw error;
+        });
+    console.log(response);
     return response.data;
-  };
+};
 
 export const editUser = async (userData: Omit<User, 'id'>, id: number): Promise<User> => {
-    const response = await axios.put<User>(`${import.meta.env.VITE_API_URL}/users/${id}`, {...userData, status_id: 1, password: '12345678' });
+    const response = await axios.put<User>(`${import.meta.env.VITE_API_URL}/users/${id}`, { ...userData, status_id: 1, password: '12345678' });
     return response.data;
 };
 
@@ -119,74 +134,74 @@ export const deleteUser = async (id: number): Promise<User> => {
 
 export const fetchUser = async (id): Promise<User> => {
     const response = await axios.get<User>(`${import.meta.env.VITE_API_URL}/users/${id}`)
-    .then(response => {
-        return response;
-    })
-    .catch(error => {
-        console.error('Error fetching users:', error.response || error);
-        throw error;
-    });
-  return response.data;
+        .then(response => {
+            return response;
+        })
+        .catch(error => {
+            console.error('Error fetching users:', error.response || error);
+            throw error;
+        });
+    return response.data;
 };
 
 export const sendEmailApi = async (id): Promise<User> => {
     const response = await axios.get<User>(`${import.meta.env.VITE_API_URL}/send-api/${id}`)
-    .then(response => {
-        return response;
-    })
-    .catch(error => {
-        console.error('Error fetching users:', error.response || error);
-        throw error;
-    });
-  return response.data;
+        .then(response => {
+            return response;
+        })
+        .catch(error => {
+            console.error('Error fetching users:', error.response || error);
+            throw error;
+        });
+    return response.data;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const createPassword = async (userData): Promise<any> => {
     const response = await axios.post<User>(`${import.meta.env.VITE_API_URL}/password`, userData)
-      .then(response => {
-          return response;
-      })
-      .catch(error => {
-          console.error('Error fetching users:', error.response || error);
-          throw error;
-      });
-      console.log(response);
+        .then(response => {
+            return response;
+        })
+        .catch(error => {
+            console.error('Error fetching users:', error.response || error);
+            throw error;
+        });
+    console.log(response);
     return response.data;
-  };
+};
 
 // send-api
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const fetchNotification = async (): Promise<any> => {
-    
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const response = await axios.get<any>(`/notification`)
-    .then(response => {
-        return response;
-    })
-    .catch(error => {
-        console.error('Error fetching users:', error.response || error);
-        throw error;
-    });
+        .then(response => {
+            return response;
+        })
+        .catch(error => {
+            console.error('Error fetching users:', error.response || error);
+            throw error;
+        });
 
- 
-  return response.data;
+
+    return response.data;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const fetchSendEmail = async (): Promise<any> => {
-    
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const response = await axios.get<any>(`/send-contract-emails`)
-    .then(response => {
-        return response;
-    })
-    .catch(error => {
-        console.error('Error fetching users:', error.response || error);
-        throw error;
-    });
+        .then(response => {
+            return response;
+        })
+        .catch(error => {
+            console.error('Error fetching users:', error.response || error);
+            throw error;
+        });
 
- 
-  return response.data;
+
+    return response.data;
 };

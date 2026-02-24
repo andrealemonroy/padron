@@ -10,6 +10,9 @@ import Breadcrumb from '../../components/BreadCrumb';
 import { deleteProject, fetchProjects } from '../../api/projectApi';
 import Alert from '../../components/Alert';
 import { getActions } from '../../utils/actions';
+import { HiCloudUpload, HiUserAdd } from 'react-icons/hi';
+import Button from '../../components/Button';
+import { fetchImportProjectsData } from '../../api/ImportsApi';
 
 const Project = () => {
   const navigate = useNavigate();
@@ -32,7 +35,7 @@ const Project = () => {
         setLoading(false);
       }
     };
-    
+
     load();
   }, []);
 
@@ -48,18 +51,46 @@ const Project = () => {
   const confirmDelete = async () => {
     if (idToDelete) {
       setLoading(true);
-        try {
-            await deleteProject(idToDelete);
-            setDataValues((prev) => prev.filter(dev => dev.id !== idToDelete));
-            setShowAlert(false);
-            toast.success('Proyecto eliminado exitosamente');
-            navigate('/projects');
-        } catch (error) {
-            console.error('Error al eliminar el proyecto:', error);
-            toast.error('Error al eliminar el proyecto');
-        } finally {
-          setLoading(false);
-        }
+      try {
+        await deleteProject(idToDelete);
+        setDataValues((prev) => prev.filter(dev => dev.id !== idToDelete));
+        setShowAlert(false);
+        toast.success('Proyecto eliminado exitosamente');
+        navigate('/projects');
+      } catch (error) {
+        console.error('Error al eliminar el proyecto:', error);
+        toast.error('Error al eliminar el proyecto');
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  const handleAddMassiveUsers = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (!event.target.files || event.target.files.length === 0) {
+      toast.error('No se seleccionó ningún archivo');
+      return;
+    }
+
+    const file = event.target.files[0];
+    const formData = new FormData();
+    formData.append('file', file);
+    setLoading(true);
+    try {
+      const result = await fetchImportProjectsData(formData);
+      console.log('Usuarios importados exitosamente:', result);
+      toast.success('Usuarios importados exitosamente');
+
+      setLoading(true);
+      const data = await fetchProjects();
+      setDataValues(data);
+    } catch (error) {
+      console.error('Error al importar usuarios:', error);
+      toast.error('Error al importar usuarios. Por favor, intente de nuevo.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -76,16 +107,40 @@ const Project = () => {
     navigate('/create-projects');
   };
 
+  const addButton = (
+    <div className="flex space-x-4">
+      <Button
+        type="button"
+        className="w-44 h-10 btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white rounded-md flex gap-1 items-center"
+        onClick={handleAdd}
+      >
+        <HiUserAdd size={20} />
+        <span className="max-xs:sr-only">Crear Proyecto</span>
+      </Button>
+      <label className="w-44 h-10 btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white cursor-pointer flex gap-1 items-center">
+        <input
+          type="file"
+          className="hidden"
+          onChange={handleAddMassiveUsers}
+          accept=".xlsx,.xls,.csv"
+        />
+        <HiCloudUpload size={20} />
+        <span className="max-xs:sr-only">Importar Proyectos</span>
+      </label>
+
+    </div>
+  );
+
   return (
     <div className="flex h-[100dvh] overflow-hidden">
       <ToastContainer />
       {showAlert && (
-                <Alert
-                    message="¿Estás seguro de que deseas eliminar este usuario?"
-                    onConfirm={confirmDelete}
-                    onCancel={cancelDelete}
-                />
-            )}
+        <Alert
+          message="¿Estás seguro de que deseas eliminar este usuario?"
+          onConfirm={confirmDelete}
+          onCancel={cancelDelete}
+        />
+      )}
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       {/* Content area */}
       <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
@@ -100,100 +155,101 @@ const Project = () => {
 
             <div className="sm:flex sm:justify-between sm:items-center">
               {/* Add breadcrumb here */}
-              <Breadcrumb items={breadcrumbItems} buttons={[{ text: 'Crear Proyecto', action: handleAdd }]} />
+
+              <Breadcrumb items={breadcrumbItems} >{addButton}</Breadcrumb>
             </div>
 
             {loading ? (
               <Spinner loading={loading} size={50} color="#3498db" />
             ) : (
-                <Table
-              columns={[
-                {
-                  header: 'Código',
-                  accessorKey: 'code',
-                  cell: (info) => info.getValue(),
-                  meta: {
-                    width: '120px',
-                    filterComponent: (column) => (
-                      <input
-                        type="text"
-                        value={(column.getFilterValue() ?? '') as string}
-                        onChange={(e) => column.setFilterValue(e.target.value)}
-                        placeholder="Filtrar Código"
-                        className="w-full px-2 py-1 text-sm border rounded"
-                      />
-                    ),
+              <Table
+                columns={[
+                  {
+                    header: 'Código',
+                    accessorKey: 'code',
+                    cell: (info) => info.getValue(),
+                    meta: {
+                      width: '120px',
+                      filterComponent: (column) => (
+                        <input
+                          type="text"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          placeholder="Filtrar Código"
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
                   },
-                },
-                {
-                  header: 'Nombre',
-                  accessorKey: 'name',
-                  cell: (info) => info.getValue(),
-                  meta: {
-                    width: '350px',
-                    filterComponent: (column) => (
-                      <input
-                        type="text"
-                        value={(column.getFilterValue() ?? '') as string}
-                        onChange={(e) => column.setFilterValue(e.target.value)}
-                        placeholder="Filtrar Nombre"
-                        className="w-full px-2 py-1 text-sm border rounded"
-                      />
-                    ),
+                  {
+                    header: 'Nombre',
+                    accessorKey: 'name',
+                    cell: (info) => info.getValue(),
+                    meta: {
+                      width: '350px',
+                      filterComponent: (column) => (
+                        <input
+                          type="text"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          placeholder="Filtrar Nombre"
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
                   },
-                },
-                {
-                  header: 'Cliente',
-                  accessorKey: 'client',
-                  cell: (info) => info.getValue(),
-                  meta: {
-                    filterComponent: (column) => (
-                      <input
-                        type="text"
-                        value={(column.getFilterValue() ?? '') as string}
-                        onChange={(e) => column.setFilterValue(e.target.value)}
-                        placeholder="Filtrar Cliente"
-                        className="w-full px-2 py-1 text-sm border rounded"
-                      />
-                    ),
+                  {
+                    header: 'Cliente',
+                    accessorKey: 'client',
+                    cell: (info) => info.getValue(),
+                    meta: {
+                      filterComponent: (column) => (
+                        <input
+                          type="text"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          placeholder="Filtrar Cliente"
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
                   },
-                },
-                {
-                  header: 'Fecha de inicio',
-                  accessorKey: 'start_date',
-                  cell: (info) => info.getValue(),
-                  meta: {
-                    filterComponent: (column) => (
-                      <input
-                        type="date"
-                        value={(column.getFilterValue() ?? '') as string}
-                        onChange={(e) => column.setFilterValue(e.target.value)}
-                        className="w-full px-2 py-1 text-sm border rounded"
-                      />
-                    ),
+                  {
+                    header: 'Fecha de inicio',
+                    accessorKey: 'start_date',
+                    cell: (info) => info.getValue(),
+                    meta: {
+                      filterComponent: (column) => (
+                        <input
+                          type="date"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
                   },
-                },
-                {
-                  header: 'Fecha de finalización',
-                  accessorKey: 'end_date',
-                  cell: (info) => info.getValue(),
-                  meta: {
-                    filterComponent: (column) => (
-                      <input
-                        type="date"
-                        value={(column.getFilterValue() ?? '') as string}
-                        onChange={(e) => column.setFilterValue(e.target.value)}
-                        className="w-full px-2 py-1 text-sm border rounded"
-                      />
-                    ),
+                  {
+                    header: 'Fecha de finalización',
+                    accessorKey: 'end_date',
+                    cell: (info) => info.getValue(),
+                    meta: {
+                      filterComponent: (column) => (
+                        <input
+                          type="date"
+                          value={(column.getFilterValue() ?? '') as string}
+                          onChange={(e) => column.setFilterValue(e.target.value)}
+                          className="w-full px-2 py-1 text-sm border rounded"
+                        />
+                      ),
+                    },
                   },
-                },
-              ]}
-              data={dataValues}
-              actions={getActions({ handleEdit, handleDelete })}
-            />
+                ]}
+                data={dataValues}
+                actions={getActions({ handleEdit, handleDelete })}
+              />
             )}
-            
+
 
           </div>
 
