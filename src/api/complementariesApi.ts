@@ -66,8 +66,13 @@ export const fetchComplementaries = async (): Promise<User[]> => {
 return response.data;
 };
 
-export const editComplementary = async (userData: Omit<User, 'id'>, id: number): Promise<User> => {
-  const response = await axios.put<User>(`${import.meta.env.VITE_API_URL}/complementaries/${id}`, {...userData, status: '1' });
+export const createComplementary = async (userData: Omit<User, 'id'>): Promise<User> => {
+  const response = await axios.post<User>(`${import.meta.env.VITE_API_URL}/complementaries`, {...userData, guard_name: 'web' });
+  return response.data;
+};
+
+export const editComplementary = async (userData: Omit<User, 'id'>, id: number, accion: string = 'actualizar'): Promise<User> => {
+  const response = await axios.put<User>(`${import.meta.env.VITE_API_URL}/complementaries/${id}`, {...userData, status: '1', accion: accion });
   return response.data;
 };
 

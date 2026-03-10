@@ -76,8 +76,13 @@ return response.data;
 };
 
 
-export const editWorkCondition = async (userData: Omit<User, 'id'>, id: number): Promise<User> => {
-  const response = await axios.put<User>(`${import.meta.env.VITE_API_URL}/work-conditions/${id}`, {...userData, status: '1' });
+export const createWorkCondition = async (userData: Omit<User, 'id'>): Promise<User> => {
+  const response = await axios.post<User>(`${import.meta.env.VITE_API_URL}/work-conditions`, {...userData, guard_name: 'web' });
+  return response.data;
+};
+
+export const editWorkCondition = async (userData: Omit<User, 'id'>, id: number, accion: string = 'actualizar'): Promise<User> => {
+  const response = await axios.put<User>(`${import.meta.env.VITE_API_URL}/work-conditions/${id}`, {...userData, status: '1', accion: accion });
   return response.data;
 };
 

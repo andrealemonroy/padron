@@ -45,8 +45,13 @@ return response.data;
 };
 
 
-export const editEducation = async (userData: Omit<User, 'id'>, id: number): Promise<User> => {
-  const response = await axios.put<User>(`${import.meta.env.VITE_API_URL}/educations/${id}`, {...userData, status: '1' });
+export const createEducation = async (userData: Omit<User, 'id'>): Promise<User> => {
+  const response = await axios.post<User>(`${import.meta.env.VITE_API_URL}/educations`, {...userData, guard_name: 'web' });
+  return response.data;
+};
+
+export const editEducation = async (userData: Omit<User, 'id'>, id: number, accion: string = 'actualizar'): Promise<User> => {
+  const response = await axios.put<User>(`${import.meta.env.VITE_API_URL}/educations/${id}`, {...userData, status: '1', accion: accion });
   return response.data;
 };
 

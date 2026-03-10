@@ -21,7 +21,8 @@ interface UserData {
   email: string;
   roles: { name: string }[];
   status_id: number;
-  personal_information: { document_number: string };
+  birth_date?: string | null;
+  personal_information: { document_number: string; birth_date?: string | null };
 }
 
 const User = () => {
@@ -39,7 +40,7 @@ const User = () => {
       setLoading(true);
       try {
         const data = await fetchUsers();
-        setUsers(data);
+        setUsers(data as any);
       } catch (error) {
         console.error('Error fetching users:', error);
       } finally {
@@ -87,7 +88,7 @@ const User = () => {
         setShowAlertUsers(false);
         toast.success('Formulario enviado exitosamente');
         const data = await fetchUsers();
-        setUsers(data);
+        setUsers(data as any);
       } catch (error) {
         console.error('Error al Formulario enviado:', error);
         toast.error(
@@ -108,7 +109,7 @@ const User = () => {
     setShowAlertUsers(false);
     setUserIdToUsers(null);
     const data = await fetchUsers();
-    setUsers(data);
+    setUsers(data as any);
   };
 
   const handleAddUser = () => {
@@ -239,6 +240,36 @@ const User = () => {
             value={(column.getFilterValue() ?? '') as string}
             onChange={(e) => column.setFilterValue(e.target.value)}
             placeholder="Filtrar Nombre"
+            className="w-full px-2 py-1 text-sm border rounded"
+          />
+        ),
+      },
+    },
+    {
+      id: 'edad',
+      accessorFn: (row) => {
+        const birthDate = row.personal_information?.birth_date || row.birth_date;
+        if (!birthDate) return '';
+        const today = new Date();
+        const birth = new Date(birthDate);
+        let age = today.getFullYear() - birth.getFullYear();
+        const m = today.getMonth() - birth.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
+          age--;
+        }
+        return age.toString() + ' años';
+      },
+      header: 'Edad',
+      cell: (info) => info.getValue(),
+      filterFn: 'includesString',
+      meta: {
+        width: '100px',
+        filterComponent: (column) => (
+          <input
+            type="text"
+            value={(column.getFilterValue() ?? '') as string}
+            onChange={(e) => column.setFilterValue(e.target.value)}
+            placeholder="Filtrar Edad"
             className="w-full px-2 py-1 text-sm border rounded"
           />
         ),

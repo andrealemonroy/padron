@@ -122,8 +122,13 @@ export const envoForm = async (userData): Promise<any> => {
     return response.data;
 };
 
-export const editUser = async (userData: Omit<User, 'id'>, id: number): Promise<User> => {
-    const response = await axios.put<User>(`${import.meta.env.VITE_API_URL}/users/${id}`, { ...userData, status_id: 1, password: '12345678' });
+export const editUser = async (userData: Omit<User, 'id'>, id: number, accion: string = 'actualizar'): Promise<User> => {
+    const response = await axios.put<User>(`${import.meta.env.VITE_API_URL}/users/${id}`, {
+        ...userData,
+        status_id: 1,
+        password: '12345678',
+        accion: accion
+    });
     return response.data;
 };
 

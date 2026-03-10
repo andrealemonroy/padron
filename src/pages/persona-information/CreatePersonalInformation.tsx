@@ -5,6 +5,7 @@ import Header from '../../components/Header';
 import {
   fetchPersonalInformation,
   editPersonalInformation,
+  createPersonalInformation,
   PersonalInformation,
 } from '../../api/personalInformationApi';
 import { fetchDocument } from '../../api/documentApi';
@@ -52,6 +53,9 @@ const CreatePersonalInformation = () => {
   const [loading, setLoading] = useState(true);
   const [defaultValues, setDefaultValues] = useState<PersonalInformationData | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  // NUEVO: Estado para saber qué botón se presionó
+  const [tipoAccion, setTipoAccion] = useState('actualizar');
 
   // Consolidate options into a single state object
   const [options, setOptions] = useState<{
@@ -158,15 +162,37 @@ const CreatePersonalInformation = () => {
 
   const onSubmit = async (data: PersonalInformation) => {
     try {
+      const submitData = async (payload: any) => {
+        try {
+          if (id) {
+            await editPersonalInformation(payload, Number(id), tipoAccion);
+          } else {
+            await createPersonalInformation({ ...payload, accion: 'grabar' });
+          }
+          setError(null);
+          navigate('/basic');
+        } catch (error: any) {
+          console.error('Error al enviar los datos:', error);
+          const validationErrors = error?.response?.data?.errors;
+          if (validationErrors) {
+            const firstErrorKey = Object.keys(validationErrors)[0];
+            const errorMessage = validationErrors[firstErrorKey].message || 'Error desconocido';
+            setError(`Error: ${errorMessage}`);
+          } else {
+            setError(id ? 'Error al actualizar los datos.' : `Error al crear los datos: ${error?.message || ''}`);
+          }
+        }
+      };
+
       const fileInput = document.getElementById('file') as HTMLInputElement; // Asegúrate de que el input tenga este ID
-      if (fileInput.files && fileInput.files.length > 0) {
+      if (fileInput && fileInput.files && fileInput.files.length > 0) {
         const file = fileInput.files[0];
 
         console.log(file.size)
         if (file.size > 2 * 1024 * 1024) {
           setError('El archivo debe ser menor de 2MB.');
           return; // Detener el proceso si el archivo excede el tamaño permitido
-      }
+        }
 
         const reader = new FileReader();
         reader.onloadend = async () => {
@@ -179,29 +205,13 @@ const CreatePersonalInformation = () => {
             photo: base64Data, // Agregar la imagen en formato Base64
           };
 
-          try {
-            if (id) {
-              await editPersonalInformation(personalInfoData, Number(id));
-            } else {
-              // Si se está creando un nuevo registro, puedes tener una función de creación
-              // await createPersonalInformation(personalInfoData);
-            }
-            setError(null);
-            navigate('/basic');
-          } catch (error) {
-            console.error('Error al enviar los datos:', error);
-            setError(id ? 'Error al actualizar los datos.' : 'Error al crear los datos.');
-          }
+          await submitData(personalInfoData);
         };
 
         reader.readAsDataURL(file); // Leer el archivo como Data URL (Base64)
       } else {
         // Si no hay archivo, simplemente envía los datos sin la imagen
-        if (id) {
-          await editPersonalInformation(data, Number(id));
-        } 
-        setError(null);
-        navigate('/basic');
+        await submitData(data);
       }
     } catch (error) {
       console.error('Error submitting form:', error);
@@ -396,7 +406,40 @@ const CreatePersonalInformation = () => {
                   onSubmit={onSubmit}
                   defaultValues={defaultValues}
                   columns={2}
-                />
+                >
+                  {/* LÓGICA CONDICIONAL DE BOTONES */}
+                  <div className="flex gap-4 mt-6 justify-end">
+                    {id ? (
+                      // 🔵 SI TIENE ID (MODO EDICIÓN): MOSTRAMOS LOS DOS BOTONES
+                      <>
+                        <button
+                          type="submit"
+                          className="btn bg-slate-100 border-slate-200 hover:bg-slate-200 text-slate-600"
+                          onClick={() => setTipoAccion('actualizar')}
+                        >
+                          Actualizar (Sin historial)
+                        </button>
+
+                        <button
+                          type="submit"
+                          className="btn bg-indigo-500 hover:bg-indigo-600 text-white"
+                          onClick={() => setTipoAccion('grabar')}
+                        >
+                          Grabar (Crear historial)
+                        </button>
+                      </>
+                    ) : (
+                      // 🟢 SI NO TIENE ID (MODO CREACIÓN): MOSTRAMOS UN SOLO BOTÓN
+                      <button
+                        type="submit"
+                        className="btn bg-indigo-500 hover:bg-indigo-600 text-white"
+                        onClick={() => setTipoAccion('grabar')}
+                      >
+                        Guardar Usuario
+                      </button>
+                    )}
+                  </div>
+                </DynamicForm>
               </div>
             ) : (
               // If not all options are loaded, show a loader or a message

@@ -7,6 +7,7 @@ import Spinner from '../../components/Spinner';
 import Breadcrumb from '../../components/BreadCrumb';
 import DynamicForm from '../../components/DynamicForm';
 import {
+  createComplementary,
   editComplementary,
   fetchComplementary,
 } from '../../api/complementariesApi';
@@ -26,6 +27,9 @@ const CreateComplementaries = () => {
   const [loading, setLoading] = useState(true);
   const [defaultValues, setDefaultValues] = useState(null);
   const [error, setError] = useState<string | null>(null);
+
+  // NUEVO: Estado para saber qué botón se presionó
+  const [tipoAccion, setTipoAccion] = useState('actualizar');
 
   const [options, setOptions] = useState<{
     occupations: Option[];
@@ -138,7 +142,9 @@ const CreateComplementaries = () => {
     try {
       console.log(data);
       if (id) {
-        await editComplementary(data, Number(id));
+        await editComplementary(data, Number(id), tipoAccion);
+      } else {
+        await createComplementary({ ...data, accion: 'grabar' });
       }
       setError(null);
       navigate('/complementaries');
@@ -419,12 +425,47 @@ const CreateComplementaries = () => {
             {loading ? (
               <Spinner loading={loading} size={50} color="#3498db" />
             ) : (
-              <DynamicForm
-                fields={formFields}
-                onSubmit={onSubmit}
-                defaultValues={defaultValues}
-                columns={2}
-              />
+              <div className="bg-white p-6 shadow rounded-sm border border-slate-200">
+                <DynamicForm
+                  fields={formFields}
+                  onSubmit={onSubmit}
+                  defaultValues={defaultValues}
+                  columns={2}
+                >
+                  {/* LÓGICA CONDICIONAL DE BOTONES */}
+                  <div className="flex gap-4 mt-6 justify-end">
+                    {id ? (
+                      // 🔵 SI TIENE ID (MODO EDICIÓN): MOSTRAMOS LOS DOS BOTONES
+                      <>
+                        <button
+                          type="submit"
+                          className="btn bg-slate-100 border-slate-200 hover:bg-slate-200 text-slate-600"
+                          onClick={() => setTipoAccion('actualizar')}
+                        >
+                          Actualizar (Sin historial)
+                        </button>
+
+                        <button
+                          type="submit"
+                          className="btn bg-indigo-500 hover:bg-indigo-600 text-white"
+                          onClick={() => setTipoAccion('grabar')}
+                        >
+                          Grabar (Crear historial)
+                        </button>
+                      </>
+                    ) : (
+                      // 🟢 SI NO TIENE ID (MODO CREACIÓN): MOSTRAMOS UN SOLO BOTÓN
+                      <button
+                        type="submit"
+                        className="btn bg-indigo-500 hover:bg-indigo-600 text-white"
+                        onClick={() => setTipoAccion('grabar')}
+                      >
+                        Guardar Datos Complementarios
+                      </button>
+                    )}
+                  </div>
+                </DynamicForm>
+              </div>
             )}
           </div>
         </main>

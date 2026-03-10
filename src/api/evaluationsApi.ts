@@ -31,8 +31,8 @@ export const createEvaluation = async (userData: Omit<Evaluations, 'id'>): Promi
   return response.data;
 };
 
-export const editEvaluation = async (userData: Omit<Evaluations, 'id'>, id: number): Promise<Evaluations> => {
-  const response = await axios.put<Evaluations>(`${import.meta.env.VITE_API_URL}/evaluations/${id}`, {...userData, status: '1' });
+export const editEvaluation = async (userData: Omit<Evaluations, 'id'>, id: number, tipoAccion: string = 'actualizar'): Promise<Evaluations> => {
+  const response = await axios.put<Evaluations>(`${import.meta.env.VITE_API_URL}/evaluations/${id}`, {...userData, status: '1', accion: tipoAccion });
   return response.data;
 };
 

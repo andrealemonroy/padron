@@ -64,8 +64,8 @@ export const createAddresses = async (userData: Omit<User, 'id'>): Promise<User>
   return response.data;
 };
 
-export const editAddresses = async (userData: Omit<User, 'id'>, id: number): Promise<User> => {
-    const response = await axios.put<User>(`${import.meta.env.VITE_API_URL}/addresses/${id}`, {...userData, status: '1' });
+export const editAddresses = async (userData: Omit<User, 'id'>, id: number, accion: string = 'actualizar'): Promise<User> => {
+    const response = await axios.put<User>(`${import.meta.env.VITE_API_URL}/addresses/${id}`, {...userData, status: '1', accion: accion });
     return response.data;
 };
 

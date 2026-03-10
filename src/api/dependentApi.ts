@@ -53,8 +53,13 @@ export const fetchDependents = async (): Promise<User[]> => {
 return response.data;
 };
 
-export const editDependent = async (userData: Omit<User, 'id'>, id: number): Promise<User> => {
-  const response = await axios.put<User>(`${import.meta.env.VITE_API_URL}/dependent/${id}`, {...userData, status: '1' });
+export const createDependent = async (userData: Omit<User, 'id'>): Promise<User> => {
+  const response = await axios.post<User>(`${import.meta.env.VITE_API_URL}/dependent`, {...userData, guard_name: 'web' });
+  return response.data;
+};
+
+export const editDependent = async (userData: Omit<User, 'id'>, id: number, accion: string = 'actualizar'): Promise<User> => {
+  const response = await axios.put<User>(`${import.meta.env.VITE_API_URL}/dependent/${id}`, {...userData, status: '1', accion: accion });
   return response.data;
 };
 

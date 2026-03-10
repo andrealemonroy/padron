@@ -54,8 +54,8 @@ export const createIncidence = async (data: Omit<Incidence, 'id'>): Promise<Inci
   return response.data;
 };
 
-export const editIncidence = async (data: Omit<Incidence, 'id'>, id: number): Promise<Incidence> => {
-  const response = await axios.put<Incidence>(`${import.meta.env.VITE_API_URL}/incidences/${id}`, {...data, status: 'A' });
+export const editIncidence = async (data: Omit<Incidence, 'id'>, id: number, accion: string = 'actualizar'): Promise<Incidence> => {
+  const response = await axios.put<Incidence>(`${import.meta.env.VITE_API_URL}/incidences/${id}`, {...data, status: 'A', accion: accion });
   return response.data;
 };
 

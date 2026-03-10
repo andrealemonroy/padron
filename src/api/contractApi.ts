@@ -33,8 +33,8 @@ export const createContract = async (userData: Omit<Contract, 'id'>): Promise<Co
   return response.data;
 };
 
-export const editContract = async (userData: Omit<Contract, 'id'>, id: number): Promise<Contract> => {
-  const response = await axios.put<Contract>(`${import.meta.env.VITE_API_URL}/contracts/${id}`, {...userData, status: '1' });
+export const editContract = async (userData: Omit<Contract, 'id'>, id: number, tipoAccion: string = 'actualizar'): Promise<Contract> => {
+  const response = await axios.put<Contract>(`${import.meta.env.VITE_API_URL}/contracts/${id}`, {...userData, status: '1', accion: tipoAccion });
   return response.data;
 };
 

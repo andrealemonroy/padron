@@ -22,6 +22,9 @@ const CreateIncidences = () => {
   const [defaultValues, setDefaultValues] = useState(null);
   const [error, setError] = useState<string | null>(null);
 
+  // NUEVO: Estado para saber qué botón se presionó
+  const [tipoAccion, setTipoAccion] = useState('actualizar');
+
   const [options, setOptions] = useState<{
     users: Option[];
     ratings: Option[];
@@ -52,10 +55,10 @@ const CreateIncidences = () => {
             label: value.description ?? value.name,
           }));
 
-          setOptions({
-            users: formatOptions(usersData),
-            ratings: formatOptions(ratingsData),
-          });
+        setOptions({
+          users: formatOptions(usersData),
+          ratings: formatOptions(ratingsData),
+        });
 
         setDefaultValues(responseData);
 
@@ -70,12 +73,11 @@ const CreateIncidences = () => {
   }, [id]);
 
   const onSubmit = async (data) => {
-    console.log(data);
     try {
       if (id) {
-        await editIncidence(data, Number(id));
+        await editIncidence(data, Number(id), tipoAccion);
       } else {
-        await createIncidence(data);
+        await createIncidence({ ...data, accion: 'grabar' });
       }
       navigate('/incidences');
     } catch (error) {
@@ -190,7 +192,7 @@ const CreateIncidences = () => {
         {
           value: 2025,
           label: '2025',
-        }       
+        }
       ],
       validation: { required: 'El año es requerido' },
     },
@@ -220,9 +222,42 @@ const CreateIncidences = () => {
             {loading ? (
               <Spinner loading={loading} size={50} color="#3498db" /> // Show spinner while loading
             ) : (
-              <>
-                <DynamicForm fields={formFields} onSubmit={onSubmit} defaultValues={defaultValues} />
-              </>
+              <div className="bg-white p-6 shadow rounded-sm border border-slate-200">
+                <DynamicForm fields={formFields} onSubmit={onSubmit} defaultValues={defaultValues}>
+                  {/* LÓGICA CONDICIONAL DE BOTONES */}
+                  <div className="flex gap-4 mt-6 justify-end">
+                    {id ? (
+                      // 🔵 SI TIENE ID (MODO EDICIÓN): MOSTRAMOS LOS DOS BOTONES
+                      <>
+                        <button
+                          type="submit"
+                          className="btn bg-slate-100 border-slate-200 hover:bg-slate-200 text-slate-600"
+                          onClick={() => setTipoAccion('actualizar')}
+                        >
+                          Actualizar (Sin historial)
+                        </button>
+
+                        <button
+                          type="submit"
+                          className="btn bg-indigo-500 hover:bg-indigo-600 text-white"
+                          onClick={() => setTipoAccion('grabar')}
+                        >
+                          Grabar (Crear historial)
+                        </button>
+                      </>
+                    ) : (
+                      // 🟢 SI NO TIENE ID (MODO CREACIÓN): MOSTRAMOS UN SOLO BOTÓN
+                      <button
+                        type="submit"
+                        className="btn bg-indigo-500 hover:bg-indigo-600 text-white"
+                        onClick={() => setTipoAccion('grabar')}
+                      >
+                        Guardar Incidencia
+                      </button>
+                    )}
+                  </div>
+                </DynamicForm>
+              </div>
             )}
           </div>
         </main>

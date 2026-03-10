@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
-import { fetchAddresses, editAddresses, fetchViaType, fetchZoneType, fetchDepartment, fetchProvince, fetchDistrict } from '../api/addressesApi';
+import { fetchAddresses, editAddresses, createAddresses, fetchViaType, fetchZoneType, fetchDepartment, fetchProvince, fetchDistrict } from '../api/addressesApi';
 import Spinner from '../components/Spinner';
 import Breadcrumb from '../components/BreadCrumb';
 import DynamicForm from '../components/DynamicForm';
@@ -23,6 +23,9 @@ const CreateAddresses = () => {
 
   const [defaultProvincie, setDefaultProvincie] = useState(null);
   const [defaultDistrict, setDefaultDistrict] = useState(null);
+
+  // NUEVO: Estado para saber qué botón se presionó
+  const [tipoAccion, setTipoAccion] = useState('actualizar');
 
   const [options, setOptions] = useState<{
     viaType?: Option[];
@@ -101,7 +104,9 @@ const CreateAddresses = () => {
   const onSubmit = async (data) => {
     try {
       if (id) {
-        await editAddresses(data, Number(id));
+        await editAddresses(data, Number(id), tipoAccion);
+      } else {
+        await createAddresses({ ...data, accion: 'grabar' });
       }
       setError(null);
       navigate('/addresses');
@@ -360,11 +365,47 @@ const CreateAddresses = () => {
             {loading ? (
               <Spinner loading={loading} size={50} color="#3498db" />
             ) : (
-              <DynamicForm 
-              fields={formFields} 
-              onSubmit={onSubmit} defaultValues={defaultValues} 
-              columns={2}
-              />
+              <div className="bg-white p-6 shadow rounded-sm border border-slate-200">
+                <DynamicForm 
+                  fields={formFields} 
+                  onSubmit={onSubmit} 
+                  defaultValues={defaultValues} 
+                  columns={2}
+                >
+                  {/* LÓGICA CONDICIONAL DE BOTONES */}
+                  <div className="flex gap-4 mt-6 justify-end">
+                    {id ? (
+                      // 🔵 SI TIENE ID (MODO EDICIÓN): MOSTRAMOS LOS DOS BOTONES
+                      <>
+                        <button
+                          type="submit"
+                          className="btn bg-slate-100 border-slate-200 hover:bg-slate-200 text-slate-600"
+                          onClick={() => setTipoAccion('actualizar')}
+                        >
+                          Actualizar (Sin historial)
+                        </button>
+
+                        <button
+                          type="submit"
+                          className="btn bg-indigo-500 hover:bg-indigo-600 text-white"
+                          onClick={() => setTipoAccion('grabar')}
+                        >
+                          Grabar (Crear historial)
+                        </button>
+                      </>
+                    ) : (
+                      // 🟢 SI NO TIENE ID (MODO CREACIÓN): MOSTRAMOS UN SOLO BOTÓN
+                      <button
+                        type="submit"
+                        className="btn bg-indigo-500 hover:bg-indigo-600 text-white"
+                        onClick={() => setTipoAccion('grabar')}
+                      >
+                        Guardar Dirección
+                      </button>
+                    )}
+                  </div>
+                </DynamicForm>
+              </div>
             )}
           </div>
         </main>

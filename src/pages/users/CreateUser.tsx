@@ -11,17 +11,19 @@ import Breadcrumb from '../../components/BreadCrumb';
 const CreateUser = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [roles, setRoles] = useState([]);
-  const [loading, setLoading] = useState(true); // Loading state for all data
-  const { id } = useParams<{ id: string }>(); // Detect if it's an edit
-  const navigate = useNavigate(); // Initialize the navigate function
+  const [loading, setLoading] = useState(true);
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [defaultValues, setDefaultValues] = useState(null);
   const [error, setError] = useState<string | null>(null);
+
+  // NUEVO: Estado para saber qué botón se presionó
+  const [tipoAccion, setTipoAccion] = useState('actualizar');
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        setLoading(true); // Set loading to true before fetching data
-
+        setLoading(true);
         const rolesData = await fetchRoles();
         const formattedRoles = rolesData.map((role) => ({ value: role.id, label: role.name }));
         setRoles(formattedRoles);
@@ -32,11 +34,10 @@ const CreateUser = () => {
           setDefaultValues({
             name,
             email,
-            role_id: roles[0]?.id, // Set the first role as default
+            role_id: roles[0]?.id,
           });
         }
-
-        setLoading(false); // Data has been fetched, stop loading
+        setLoading(false);
       } catch (error) {
         setError(`Error al cargar los datos del usuario o los roles. ${error}`);
         setLoading(false);
@@ -48,52 +49,35 @@ const CreateUser = () => {
 
   const onSubmit = async (data) => {
     try {
-      let response
+      let response;
       if (id) {
-         response = await editUser(data, Number(id));
+        // NUEVO: Pasamos el tipoAccion al servicio editUser
+        response = await editUser(data, Number(id), tipoAccion);
       } else {
-        response = await createUser(data);
+        // Si es creación nueva, siempre debería guardar en auditoría ('grabar')
+        response = await createUser({ ...data, accion: 'grabar' });
       }
       console.log(response);
-      navigate('/usuarios'); // Navigate to usuarios after success
+      navigate('/usuarios');
     } catch (error) {
-      console.log(error.response.data.errors);
+      console.log(error.response?.data?.errors);
       const validationErrors = error.response?.data?.errors;
       if (validationErrors) {
-        // Obtener el primer mensaje de error de validación
         const firstErrorKey = Object.keys(validationErrors)[0];
         const errorMessage = validationErrors[firstErrorKey].message || 'Error desconocido';
         setError(`Error: ${errorMessage}`);
       } else {
-        // Si no hay errores de validación, mostrar un mensaje genérico
         setError(id ? 'Error al actualizar el usuario.' : `Error al crear el usuario: ${error.message}`);
       }
     }
   };
 
   const formFields = [
-    {
-      name: 'name',
-      label: 'Nombre',
-      type: 'text',
-      validation: { required: 'Nombre es requerido' },
-    },
-    {
-      name: 'email',
-      label: 'Correo electrónico',
-      type: 'email',
-      validation: { required: 'Correo electrónico es requerido' },
-    },
-    {
-      name: 'role_id',
-      label: 'Rol',
-      type: 'select',
-      options: roles,
-      validation: { required: 'El rol es requerido' },
-    },
+    { name: 'name', label: 'Nombre', type: 'text', validation: { required: 'Nombre es requerido' } },
+    { name: 'email', label: 'Correo electrónico', type: 'email', validation: { required: 'Correo electrónico es requerido' } },
+    { name: 'role_id', label: 'Rol', type: 'select', options: roles, validation: { required: 'El rol es requerido' } },
   ];
 
-  // Define breadcrumb items
   const breadcrumbItems = [
     { label: 'Usuarios', path: '/usuarios' },
     { label: id ? 'Editar Usuario' : 'Crear Usuario', path: `${id ? '/edit-user/' + id : '/create-user'}` },
@@ -108,18 +92,56 @@ const CreateUser = () => {
         <main className="grow">
           <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
             <div className="sm:flex sm:justify-between sm:items-center">
-              {/* Add breadcrumb here */}
               <Breadcrumb items={breadcrumbItems} />
             </div>
 
             {error && <p style={{ color: 'red' }}>{error}</p>}
 
             {loading ? (
-              <Spinner loading={loading} size={50} color="#3498db" /> // Show spinner while loading
+              <Spinner loading={loading} size={50} color="#3498db" />
             ) : (
               <>
                 {roles.length > 0 && (
-                  <DynamicForm fields={formFields} onSubmit={onSubmit} defaultValues={defaultValues} />
+                  <div className="bg-white p-6 shadow rounded-sm border border-slate-200">
+                    <DynamicForm fields={formFields} onSubmit={onSubmit} defaultValues={defaultValues}>
+
+                      {/* LÓGICA CONDICIONAL DE BOTONES */}
+                      <div className="flex gap-4 mt-6 justify-end">
+
+                        {id ? (
+                          // 🔵 SI TIENE ID (MODO EDICIÓN): MOSTRAMOS LOS DOS BOTONES
+                          <>
+                            <button
+                              type="submit"
+                              className="btn bg-slate-100 border-slate-200 hover:bg-slate-200 text-slate-600"
+                              onClick={() => setTipoAccion('actualizar')}
+                            >
+                              Actualizar (Sin historial)
+                            </button>
+
+                            <button
+                              type="submit"
+                              className="btn bg-indigo-500 hover:bg-indigo-600 text-white"
+                              onClick={() => setTipoAccion('grabar')}
+                            >
+                              Grabar (Crear historial)
+                            </button>
+                          </>
+                        ) : (
+                          // 🟢 SI NO TIENE ID (MODO CREACIÓN): MOSTRAMOS UN SOLO BOTÓN
+                          <button
+                            type="submit"
+                            className="btn bg-indigo-500 hover:bg-indigo-600 text-white"
+                            onClick={() => setTipoAccion('grabar')}
+                          >
+                            Guardar Usuario
+                          </button>
+                        )}
+
+                      </div>
+
+                    </DynamicForm>
+                  </div>
                 )}
               </>
             )}

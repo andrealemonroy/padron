@@ -69,8 +69,8 @@ export const createPersonalInformation = async (userData: Omit<PersonalInformati
   return response.data;
 };
 
-export const editPersonalInformation = async (userData: Omit<PersonalInformation, 'id'>, id: number): Promise<PersonalInformation> => {
-    const response = await axios.put<PersonalInformation>(`${import.meta.env.VITE_API_URL}/personal-information/${id}`, {...userData, status: '1' });
+export const editPersonalInformation = async (userData: Omit<PersonalInformation, 'id'>, id: number, accion: string = 'actualizar'): Promise<PersonalInformation> => {
+    const response = await axios.put<PersonalInformation>(`${import.meta.env.VITE_API_URL}/personal-information/${id}`, {...userData, status: '1', accion: accion });
     return response.data;
 };
 
