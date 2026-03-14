@@ -13,28 +13,28 @@ interface Contract {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const fetchContracts = async (): Promise<any[]> => {
-    
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const response = await axios.get<any[]>(`/contracts`)
-  .then(response => {
+    .then(response => {
       return response;
-  })
-  .catch(error => {
+    })
+    .catch(error => {
       console.error('Error fetching Contracts:', error.response || error);
       throw error;
-  });
+    });
 
 
-return response.data;
+  return response.data;
 };
 
 export const createContract = async (userData: Omit<Contract, 'id'>): Promise<Contract> => {
-  const response = await axios.post<Contract>(`${import.meta.env.VITE_API_URL}/contracts`, {...userData, status: '1' });
+  const response = await axios.post<Contract>(`${import.meta.env.VITE_API_URL}/contracts`, { ...userData, status: '1' });
   return response.data;
 };
 
 export const editContract = async (userData: Omit<Contract, 'id'>, id: number, tipoAccion: string = 'actualizar'): Promise<Contract> => {
-  const response = await axios.put<Contract>(`${import.meta.env.VITE_API_URL}/contracts/${id}`, {...userData, status: '1', accion: tipoAccion });
+  const response = await axios.put<Contract>(`${import.meta.env.VITE_API_URL}/contracts/${id}`, { ...userData, status: '1', accion: tipoAccion });
   return response.data;
 };
 
@@ -46,125 +46,125 @@ export const deleteContract = async (id: number): Promise<Contract> => {
 export const fetchContract = async (id): Promise<Contract> => {
   console.log(id);
   const response = await axios.get<Contract>(`${import.meta.env.VITE_API_URL}/contracts/${id}`)
-  .then(response => {
+    .then(response => {
       return response;
-  })
-  .catch(error => {
+    })
+    .catch(error => {
       console.error('Error fetching Contracts:', error.response || error);
       throw error;
-  });
-return response.data;
+    });
+  return response.data;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const fetchHealthEntity = async (): Promise<any[]> => {
-    
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const response = await axios.get<any[]>(`/health-entity`)
-  .then(response => {
+    .then(response => {
       return response;
-  })
-  .catch(error => {
+    })
+    .catch(error => {
       console.error('Error fetching fetchHealthEntity:', error.response || error);
       throw error;
-  });
+    });
 
 
-return response.data;
+  return response.data;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const fetchTypeWorker = async (): Promise<any[]> => {
-    
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const response = await axios.get<any[]>(`/type-worker`)
-  .then(response => {
+    .then(response => {
       return response;
-  })
-  .catch(error => {
+    })
+    .catch(error => {
       console.error('Error fetching fetchTypeWorker:', error.response || error);
       throw error;
-  });
+    });
 
 
-return response.data;
+  return response.data;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const fetchWorkLine = async (): Promise<any[]> => {
-    
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const response = await axios.get<any[]>(`/work-line`)
-  .then(response => {
+    .then(response => {
       return response;
-  })
-  .catch(error => {
+    })
+    .catch(error => {
       console.error('Error fetching fetchwork-line:', error.response || error);
       throw error;
-  });
+    });
 
 
-return response.data;
+  return response.data;
 };
 
 
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const fetchHealthType = async (): Promise<any[]> => {
-    
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const response = await axios.get<any[]>(`/health-type`)
-  .then(response => {
+    .then(response => {
       return response;
-  })
-  .catch(error => {
+    })
+    .catch(error => {
       console.error('Error fetching health-type:', error.response || error);
       throw error;
-  });
+    });
 
 
-return response.data;
+  return response.data;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const fetchcessationReasons = async (): Promise<any[]> => {
-    
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const response = await axios.get<any[]>(`/cessation-reasons`)
-  .then(response => {
+    .then(response => {
       return response;
-  })
-  .catch(error => {
+    })
+    .catch(error => {
       console.error('Error fetching reasons:', error.response || error);
       throw error;
-  });
+    });
 
 
-return response.data;
+  return response.data;
 };
 
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const fetchImportData = async (data): Promise<any> => {
-    
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const response = await axios.post<any>(`${import.meta.env.VITE_API_URL}/import-contract-data`, data)
-  .then(response => {
+    .then(response => {
       return response;
-  })
-  .catch(error => {
+    })
+    .catch(error => {
       console.error('Error fetching import-contract-data:', error.response || error);
       throw error;
-  });
+    });
 
 
-return response.data;
+  return response.data;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const fetchDownload = async (id, type: number): Promise<any> => {
   console.log(id);
-  
+
   try {
     const response = await axios.get(`${import.meta.env.VITE_API_URL}/contract-${type}/${id}`, {
       responseType: 'blob', // Asegúrate de que la respuesta se maneje como Blob
@@ -208,6 +208,36 @@ export const fetchDownloadForm = async (id): Promise<any> => {
 };
 
 
+export const descargarContratoWord = async (data: any): Promise<Blob> => {
+  try {
+    const response = await axios.post(`${import.meta.env.VITE_API_URL}/descarga-contrato`, data, {
+      responseType: 'blob', // Crucial para archivos
+    });
+
+    const contentType = response.headers['content-type'];
+    console.log('Content-Type:', contentType);
+
+    // 1. EL TRUCO: Si Laravel falló (ej. error 422 o 404), devuelve un JSON, no un Word.
+    // Como pedimos un 'blob', Axios convierte ese JSON en un blob. Aquí lo volvemos a leer como texto.
+    if (contentType && contentType.includes('application/json')) {
+      const textData = await response.data.text();
+      const errorData = JSON.parse(textData);
+      throw new Error(errorData.message || 'Error en el servidor de Laravel');
+    }
+
+    // 2. Verificar que el tipo de contenido sea el de un Word (.docx)
+    if (!contentType || !contentType.includes('wordprocessingml')) {
+      throw new Error('El archivo descargado no es un documento de Word válido.');
+    }
+
+    return response.data; // Devuelve el Blob listo para ser descargado
+
+  } catch (error: any) {
+    console.error('No se pudo descargar el contrato:', error);
+    throw error;
+  }
+};
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const reportsPadron = async (data): Promise<any> => {
   try {
@@ -221,8 +251,8 @@ export const reportsPadron = async (data): Promise<any> => {
 
     // Verificar si el tipo de contenido incluye formatos esperados
     if (!contentType.includes('application/pdf') &&
-        !contentType.includes('spreadsheet') &&
-        !contentType.includes('text/csv')) {
+      !contentType.includes('spreadsheet') &&
+      !contentType.includes('text/csv')) {
       throw new Error('El archivo descargado no es del tipo esperado.');
     }
 
@@ -245,8 +275,8 @@ export const fetchRporte = async (data): Promise<any> => {
 
     // Verificar si el tipo de contenido incluye formatos esperados
     if (!contentType.includes('application/pdf') &&
-        !contentType.includes('spreadsheet') &&
-        !contentType.includes('text/csv')) {
+      !contentType.includes('spreadsheet') &&
+      !contentType.includes('text/csv')) {
       throw new Error('El archivo descargado no es del tipo esperado.');
     }
 
@@ -259,7 +289,7 @@ export const fetchRporte = async (data): Promise<any> => {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const fetchDownloadMasterData = async (): Promise<any> => {
-  
+
   try {
     const response = await axios.get(`${import.meta.env.VITE_API_URL}/masterdata-export`, {
       responseType: 'blob', // Asegúrate de que la respuesta se maneje como Blob

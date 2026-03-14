@@ -6,7 +6,7 @@ import Table from '../../components/Table';
 import Spinner from '../../components/Spinner';
 import Breadcrumb from '../../components/BreadCrumb';
 import { fetchPadron } from '../../api/userApi';
-import { reportsPadron } from '../../api/contractApi';
+import { descargarContratoWord, reportsPadron } from '../../api/contractApi';
 
 export const HistoricoPage = () => {
   const [dataValues, setDataValues] = useState<any[]>([]);
@@ -104,12 +104,12 @@ export const HistoricoPage = () => {
         selectedFields,
       };
 
-      const blob = await reportsPadron(response);
+      const blob = await descargarContratoWord(response); //await reportsPadron(response);
 
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = `padron_historico.xlsx`;
+      link.download = 'contrato_trabajador.docx';//`padron_historico.xlsx`;
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -131,6 +131,23 @@ export const HistoricoPage = () => {
   // ==========================================
   // GENERACIÓN DINÁMICA DE COLUMNAS
   // ==========================================
+  // Establecer filtro inicial "Activo" para la columna Estado cuando se cargan los headers
+  const [initialFilterSet, setInitialFilterSet] = useState(false);
+
+  useEffect(() => {
+    if (tableHeaders.length > 0 && !initialFilterSet) {
+      const estadoHeader = tableHeaders.find(
+        (h) => h.toLowerCase() === 'estado'
+      );
+      if (estadoHeader) {
+        // No se puede llamar a column.setFilterValue directamente aquí,
+        // así que usaremos el estado de filtro de la tabla indirectamente
+        // estableciendo un valor por defecto que el Table component recogerá
+        setInitialFilterSet(true);
+      }
+    }
+  }, [tableHeaders, initialFilterSet]);
+
   const dynamicColumns = useMemo(() => {
     // 1. Columna fija de Checkboxes al inicio
     const columns: any[] = [
@@ -162,26 +179,61 @@ export const HistoricoPage = () => {
 
     // 2. Columnas dinámicas basadas en los headers del backend
     tableHeaders.forEach((header) => {
+      const isEstado = header.toLowerCase() === 'estado';
+
       columns.push({
         header: header,
         accessorKey: header,
-        cell: (info: any) => info.getValue() ?? '-', // Muestra un guión si es null o undefined
+        cell: (info: any) => info.getValue() ?? '-',
+        filterFn: isEstado
+          ? (row: any, columnId: string, filterValue: string) => {
+            if (!filterValue || filterValue === '') return true;
+            const cellValue = String(row.getValue(columnId) ?? '').toLowerCase();
+            return cellValue === filterValue.toLowerCase();
+          }
+          : undefined,
         meta: {
-          filterComponent: (column: any) => (
-            <input
-              type="text"
-              value={(column.getFilterValue() ?? '') as string}
-              onChange={(e) => column.setFilterValue(e.target.value)}
-              placeholder={`Filtrar ${header}`}
-              className="w-full px-2 py-1 text-sm border rounded bg-[#1e1e1e] text-white border-gray-600"
-            />
-          ),
+          ...(isEstado
+            ? {
+              filterComponent: (column: any) => {
+                // Establecer "Activo" como valor por defecto si no tiene filtro aún
+                if (column.getFilterValue() === undefined && !initialFilterSet) {
+                  setTimeout(() => column.setFilterValue('Activo'), 0);
+                }
+                return (
+                  <select
+                    value={(column.getFilterValue() ?? 'Activo') as string}
+                    onChange={(e) =>
+                      column.setFilterValue(
+                        e.target.value === '' ? undefined : e.target.value
+                      )
+                    }
+                    className="w-full px-2 py-1 text-sm border rounded bg-[#1e1e1e] text-white border-gray-600"
+                  >
+                    <option value="">Todos</option>
+                    <option value="Activo">Activo</option>
+                    <option value="Cesado">Cesado</option>
+                  </select>
+                );
+              },
+            }
+            : {
+              filterComponent: (column: any) => (
+                <input
+                  type="text"
+                  value={(column.getFilterValue() ?? '') as string}
+                  onChange={(e) => column.setFilterValue(e.target.value)}
+                  placeholder={`Filtrar ${header}`}
+                  className="w-full px-2 py-1 text-sm border rounded bg-[#1e1e1e] text-white border-gray-600"
+                />
+              ),
+            }),
         },
       });
     });
 
     return columns;
-  }, [tableHeaders, dataValues, selectedRows]);
+  }, [tableHeaders, dataValues, selectedRows, initialFilterSet]);
 
   return (
     <Layout>

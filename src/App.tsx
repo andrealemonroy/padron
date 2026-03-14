@@ -60,6 +60,8 @@ import Nomina from './pages/management/Nomina';
 import Qualirfication from './pages/qualirfication/Qualirfication';
 import CreateQualirfication from './pages/qualirfication/CreateQualirfication';
 import { HistoricoPage } from './pages/historico';
+import CreateTemplate from './pages/plantilla/CreatePlantilla';
+import DocumentTemplates from './pages/plantilla/Plantilla';
 
 function App() {
   return (
@@ -240,6 +242,15 @@ function App() {
             <Route
               path="/create-qualirfication"
               element={<CreateQualirfication />}
+            />
+            <Route path="/templates" element={<DocumentTemplates />} />
+            <Route
+              path="/edit-template/:id"
+              element={<CreateTemplate />}
+            />
+            <Route
+              path="/create-template"
+              element={<CreateTemplate />}
             />
           </Routes>
         </Router>
