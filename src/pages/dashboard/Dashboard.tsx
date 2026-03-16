@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import Sidebar from '../../components/Sidebar';
 import Header from '../../components/Header';
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { fetchNotification, fetchSendEmail } from '../../api/userApi';
 
 const Dashboard: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
 
   useEffect(() => {
@@ -26,8 +26,8 @@ const Dashboard: React.FC = () => {
         if (data.excel > 0) {
           toast.info(data.message2);
         }
-        const notification = await fetchSendEmail();
-        console.log(data, notification);
+        //  const notification = await fetchSendEmail();
+        //  console.log(data, notification);
       } catch (error) {
         console.error('Error fetching periodic evaluations:', error);
         toast.error('Error al cargar las evaluaciones');
@@ -51,7 +51,7 @@ const Dashboard: React.FC = () => {
   };
 
   const handleStartClick = () => {
-    
+
     const menuData = localStorage.getItem('menuStructure');
     const firstRoute = findFirstRoute(JSON.parse(menuData));
     console.log(firstRoute);
@@ -70,7 +70,7 @@ const Dashboard: React.FC = () => {
         <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         <main className="grow">
           <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
-            
+
             <div className="min-h-screen flex items-center justify-center bg-gray-100">
               <div className="max-w-md w-full space-y-8 p-10 bg-white rounded-xl shadow-md">
                 <div className="text-center">
@@ -90,7 +90,7 @@ const Dashboard: React.FC = () => {
                   </button>
                 </div>
               </div>
-            </div>  
+            </div>
           </div>
         </main>
       </div>

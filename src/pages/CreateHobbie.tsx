@@ -33,13 +33,13 @@ const CreateHobbie = () => {
 
         if (id) {
           const response = await fetchHobbie(id);
-            const { name, hobbies } = response;
-            const selected = hobbies.map((perm) => (perm.hobby_id));
-            console.log(selected)
-            setDefaultValues({
-              name,
-              hoobies: selected,
-            });
+          const { name, hobbies } = response;
+          const selected = hobbies.map((perm) => (perm.hobby_id));
+          console.log(selected)
+          setDefaultValues({
+            name,
+            hoobies: selected,
+          });
         }
       } catch (error) {
         setError(`Error al cargar los datos del permission. ${error}`);
@@ -76,8 +76,8 @@ const CreateHobbie = () => {
       validation: { required: 'Hoobie es requerida' },
     },
   ];
-  
-  
+
+
 
   const breadcrumbItems = [
     { label: 'Hobbies', path: '/hobbie' },

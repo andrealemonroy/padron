@@ -62,6 +62,8 @@ import CreateQualirfication from './pages/qualirfication/CreateQualirfication';
 import { HistoricoPage } from './pages/historico';
 import CreateTemplate from './pages/plantilla/CreatePlantilla';
 import DocumentTemplates from './pages/plantilla/Plantilla';
+import CreateNotification from './pages/notification/CreateNotification';
+import NotificationComponente from './pages/notification/NotificationComponente';
 
 function App() {
   return (
@@ -251,6 +253,15 @@ function App() {
             <Route
               path="/create-template"
               element={<CreateTemplate />}
+            />
+            <Route path="/notification-rules" element={<NotificationComponente />} />
+            <Route
+              path="/edit-notification/:id"
+              element={<CreateNotification />}
+            />
+            <Route
+              path="/create-notification"
+              element={<CreateNotification />}
             />
           </Routes>
         </Router>
