@@ -9,6 +9,8 @@ import Breadcrumb from '../../components/BreadCrumb';
 import DynamicForm from '../../components/DynamicForm';
 import { fetchUsers } from '../../api/userApi';
 import { createContract, editContract, fetchcessationReasons, fetchContract, fetchHealthEntity, fetchHealthType, fetchTypeWorker } from '../../api/contractApi';
+// NUEVO: Importamos la función para traer las plantillas
+import { fetchTemplates } from '../../api/templateApi';
 
 interface Option {
   value: number | string;
@@ -23,7 +25,6 @@ const CreateContract = () => {
   const [defaultValues, setDefaultValues] = useState(null);
   const [error, setError] = useState<string | null>(null);
 
-  // NUEVO: Estado para saber qué botón se presionó
   const [tipoAccion, setTipoAccion] = useState('actualizar');
 
   const [options, setOptions] = useState<{
@@ -32,12 +33,14 @@ const CreateContract = () => {
     healthEntity: Option[];
     typeWorker: Option[];
     cessationReasons: Option[];
+    templates: Option[]; // NUEVO: Estado para las plantillas
   }>({
     users: [],
     healthType: [],
     healthEntity: [],
     typeWorker: [],
     cessationReasons: [],
+    templates: [], // Inicializado vacío
   });
 
   useEffect(() => {
@@ -52,6 +55,7 @@ const CreateContract = () => {
           healthEntityData,
           typeWorkerData,
           cessationReasonsData,
+          templatesData, // NUEVO: Traemos las plantillas
           defaultValuesData
         ] = await Promise.all([
           fetchUsers(),
@@ -59,6 +63,7 @@ const CreateContract = () => {
           fetchHealthEntity(),
           fetchTypeWorker(),
           fetchcessationReasons(),
+          fetchTemplates(), // Llamada a la API de plantillas
           id ? fetchContract(id) : Promise.resolve(null),
         ]);
 
@@ -75,6 +80,8 @@ const CreateContract = () => {
           healthEntity: formatOptions(healthEntityData),
           typeWorker: formatOptions(typeWorkerData),
           cessationReasons: formatOptions(cessationReasonsData),
+          // Solo mostramos plantillas que estén activas (is_active === 1)
+          templates: formatOptions(templatesData.filter((t: any) => t.is_active === 1)),
         });
 
         setDefaultValues(defaultValuesData);
@@ -88,88 +95,33 @@ const CreateContract = () => {
     load();
   }, [id]);
 
-  /*const onSubmit = async (data) => {
+  const onSubmit = async (data: any) => {
     try {
-      console.log(data);
+      setLoading(true);
+
+      // Ya no necesitamos leer archivos Base64 aquí.
+      // Simplemente enviamos los datos del formulario, que ahora incluyen el ID de la plantilla seleccionada (template_id)
+
+      const contractData = {
+        ...data,
+      };
+
       if (id) {
-        await editContract(data, Number(id));
-        toast.success('Registro actualizado exitosamente');
+        await editContract(contractData, Number(id), tipoAccion);
+        toast.success('Contrato actualizado exitosamente');
       } else {
-        await createContract(data);
-        toast.success('Proyecto creado exitosamente');
+        await createContract({ ...contractData, accion: 'grabar' });
+        toast.success('Contrato creado exitosamente');
       }
+
       setError(null);
-      setTimeout(() => {
-        navigate('/contract');
-      }, 2000); 
-    } catch (error) {
-      const errorMessage = id ? 'Error al actualizar el proyecto' : 'Error al crear el proyecto';
-      toast.error(`${errorMessage}. ${error}`);
-      setError(`${errorMessage}. ${error}`);
-    }
-  };*/
+      navigate('/contract');
 
-  const onSubmit = async (data) => {
-    try {
-      const fileInput = document.getElementById('pdf_contract') as HTMLInputElement; // Asegúrate de que el input tenga este ID
-
-      if (fileInput.files && fileInput.files.length > 0) {
-        const file = fileInput.files[0];
-
-        if (file.size > 2 * 1024 * 1024) {
-          setError('El archivo debe ser menor de 2MB.');
-          return; // Detener el proceso si el archivo excede el tamaño permitido
-        }
-
-        const reader = new FileReader();
-        reader.onloadend = async () => {
-          const base64String = reader.result as string; // Obtener la cadena Base64
-          const base64Data = base64String.split(',')[1]; // Extraer solo la parte Base64
-
-          // Agregar la imagen en formato Base64 a los datos
-          const personalInfoData = {
-            ...data, // Mantener otros campos
-            pdf_contract: base64Data, // Agregar la imagen en formato Base64
-          };
-
-          try {
-            if (id) {
-              await editContract(personalInfoData, Number(id), tipoAccion);
-              toast.success('Proyecto actualizado exitosamente');
-            } else {
-              await createContract({ ...personalInfoData, accion: 'grabar' });
-              toast.success('Proyecto creado exitosamente');
-            }
-            setError(null);
-            navigate('/contract');
-          } catch (error) {
-            console.error('Error al enviar los datos:', error);
-            setError(id ? 'Error al actualizar los datos.' : 'Error al crear los datos.');
-          }
-        };
-
-        reader.readAsDataURL(file); // Leer el archivo como Data URL (Base64)
-      } else {
-        // Si no hay archivo, simplemente envía los datos sin la imagen
-        console.log('No se ha seleccionado un archivo.');
-        console.log(data);
-        const personalInfoData = {
-          ...data, // Mantener otros campos
-          pdf_contract: '', // Agregar la imagen en formato Base64
-        };
-        if (id) {
-          await editContract(personalInfoData, Number(id), tipoAccion);
-          toast.success('Proyecto actualizado exitosamente');
-        } else {
-          await createContract({ ...personalInfoData, accion: 'grabar' });
-          toast.success('Proyecto creado exitosamente');
-        }
-        setError(null);
-        navigate('/contract');
-      }
     } catch (error) {
       console.error('Error submitting form:', error);
       setError(id ? 'Error al actualizar los datos.' : 'Error al crear los datos.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -181,6 +133,15 @@ const CreateContract = () => {
       options: options.users,
       validation: { required: 'El ID del usuario es requerido' }
     },
+    // --- NUEVO: CAMPO DE PLANTILLAS REEMPLAZANDO AL DE ARCHIVO ---
+    {
+      name: 'template_id', // Asegúrate de que tu base de datos y backend de contratos espere este campo
+      label: 'Tipo de Contrato (Plantilla)',
+      type: 'select',
+      options: options.templates,
+      validation: { required: 'Debes seleccionar una plantilla para generar el contrato' }
+    },
+    // -----------------------------------------------------------
     {
       name: 'health_regime',
       label: 'Régimen de Salud',
@@ -192,14 +153,8 @@ const CreateContract = () => {
       label: 'SCTR Salud',
       type: 'select',
       options: [
-        {
-          value: 1,
-          label: 'Essalud',
-        },
-        {
-          value: 2,
-          label: 'EPS',
-        }
+        { value: 1, label: 'Essalud' },
+        { value: 2, label: 'EPS' }
       ]
     },
     {
@@ -222,7 +177,7 @@ const CreateContract = () => {
     },
     {
       name: 'worker_type',
-      label: 'Tipo trabajdor',
+      label: 'Tipo de Trabajador',
       type: 'select',
       options: options.typeWorker,
       validation: { required: 'El campo es requerido' },
@@ -232,35 +187,17 @@ const CreateContract = () => {
       label: 'Estado',
       type: 'select',
       options: [
-        {
-          value: 1,
-          label: 'Renovación',
-        },
-        {
-          value: 2,
-          label: 'Baja',
-        },
-        {
-          value: 3,
-          label: 'Alta',
-        }
+        { value: 1, label: 'Renovación' },
+        { value: 2, label: 'Baja' },
+        { value: 3, label: 'Alta' }
       ],
       validation: { required: 'El estado es requerido' }
-    },
-    {
-      name: 'pdf_contract',
-      label: 'Contrato Firmado',
-      type: 'file',
-      //colSpan: 1,
-    },
-  ]
-    ;
-
-
+    }
+  ];
 
   const breadcrumbItems = [
     { label: 'Contratos', path: '/Contract' },
-    { label: id ? 'Editar Contrato' : 'Crear Contrato', path: id ? `/edit-project/${id}` : '/create-project' },
+    { label: id ? 'Editar Contrato' : 'Crear Contrato', path: id ? `/edit-contract/${id}` : '/create-contract' },
   ];
 
   return (
@@ -274,7 +211,8 @@ const CreateContract = () => {
             <div className="sm:flex sm:justify-between sm:items-center">
               <Breadcrumb items={breadcrumbItems} />
             </div>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {error && <p style={{ color: 'red', marginTop: '1rem', marginBottom: '1rem' }}>{error}</p>}
+
             {loading ? (
               <Spinner loading={loading} size={50} color="#3498db" />
             ) : (
@@ -283,7 +221,7 @@ const CreateContract = () => {
                   {/* LÓGICA CONDICIONAL DE BOTONES */}
                   <div className="flex gap-4 mt-6 justify-end">
                     {id ? (
-                      // 🔵 SI TIENE ID (MODO EDICIÓN): MOSTRAMOS LOS DOS BOTONES
+                      // 🔵 SI TIENE ID (MODO EDICIÓN)
                       <>
                         <button
                           type="submit"
@@ -302,7 +240,7 @@ const CreateContract = () => {
                         </button>
                       </>
                     ) : (
-                      // 🟢 SI NO TIENE ID (MODO CREACIÓN): MOSTRAMOS UN SOLO BOTÓN
+                      // 🟢 SI NO TIENE ID (MODO CREACIÓN)
                       <button
                         type="submit"
                         className="btn bg-indigo-500 hover:bg-indigo-600 text-white"
@@ -318,11 +256,8 @@ const CreateContract = () => {
           </div>
         </main>
       </div>
-
     </div>
   );
 };
 
 export default CreateContract;
-
-

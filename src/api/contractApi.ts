@@ -307,3 +307,57 @@ export const fetchDownloadMasterData = async (): Promise<any> => {
   }
 };
 
+// src/api/contractApi.ts
+
+export const downloadContractDocx = async (contractId: number): Promise<Blob> => {
+  const response = await axios.get(`${import.meta.env.VITE_API_URL}/contracts/${contractId}/download-docx`, {
+    responseType: 'blob', // OBLIGATORIO para que el Word no se corrompa
+  });
+
+  const contentType = response.headers['content-type'];
+  if (contentType && contentType.includes('application/json')) {
+    const textData = await response.data.text();
+    const errorData = JSON.parse(textData);
+    throw new Error(errorData.message || 'Error al generar el contrato');
+  }
+
+  return response.data;
+};
+
+
+// src/api/contractApi.ts
+
+export const downloadContractPdf = async (contractId: number): Promise<Blob> => {
+  const response = await axios.get(`${import.meta.env.VITE_API_URL}/contracts/${contractId}/download-pdf`, {
+    responseType: 'blob', // Vital para descargar PDFs
+  });
+
+  // Validar si hubo un error en Laravel
+  const contentType = response.headers['content-type'];
+  if (contentType && contentType.includes('application/json')) {
+    const textData = await response.data.text();
+    const errorData = JSON.parse(textData);
+    throw new Error(errorData.message || 'Error al generar el contrato en PDF');
+  }
+
+  return response.data;
+};
+
+// src/api/contractApi.ts
+
+export const uploadSignedContract = async (contractId: number, formData: FormData) => {
+  const response = await axios.post(`${import.meta.env.VITE_API_URL}/contracts/${contractId}/upload-signed`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return response.data;
+};
+
+// src/api/contractApi.ts
+
+export const markContractAsPhysical = async (contractId: number) => {
+  const response = await axios.post(`${import.meta.env.VITE_API_URL}/contracts/${contractId}/mark-physical`);
+  return response.data;
+};
+
